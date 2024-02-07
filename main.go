@@ -1,6 +1,7 @@
 package main
 
 import (
+	app "GoPass/backend"
 	"embed"
 	"log"
 
@@ -20,7 +21,7 @@ var icon []byte
 func main() {
 
 	// Create an instance of the app structure
-	app := NewApp()
+	appplication := app.NewApp()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -39,13 +40,9 @@ func main() {
 		Menu:              nil,
 		Logger:            nil,
 		LogLevel:          logger.DEBUG,
-		OnStartup:         app.startup,
-		OnDomReady:        app.domReady,
-		OnBeforeClose:     app.beforeClose,
-		OnShutdown:        app.shutdown,
 		WindowStartState:  options.Normal,
 		Bind: []interface{}{
-			app,
+			appplication,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{

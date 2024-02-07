@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 
 	"go.etcd.io/bbolt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateUser(db *bbolt.DB, user User) error {
@@ -126,20 +128,25 @@ func GetUserPasswords(db *bbolt.DB, userID string) (map[string]string, error) {
 	return passwords, err
 }
 
+func CheckPasswordHash(password, hash string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err
+}
+
 func SavePassword(db *bbolt.DB, userID, service, password string) error {
 	return db.Update(func(tx *bbolt.Tx) error {
 		userBucket, err := tx.CreateBucketIfNotExists([]byte(userID))
 		if err != nil {
 			return err
 		}
-		return userBucket.Put([]byte(service), []byte(password))
-	})
-}
 
-func EnsureUserPasswordsBucket(db *bbolt.DB, userID string) error {
-	return db.Update(func(tx *bbolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(userID))
-		return err
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 15)
+		if err != nil {
+			log.Println("Fallo de hashing", err)
+			return err
+		}
+
+		return userBucket.Put([]byte(service), []byte(hashedPassword))
 	})
 }
 
