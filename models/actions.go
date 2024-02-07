@@ -142,3 +142,21 @@ func EnsureUserPasswordsBucket(db *bbolt.DB, userID string) error {
 		return err
 	})
 }
+
+func DeletePass(db *bbolt.DB, userID, service string) error {
+	return db.Update(func(tx *bbolt.Tx) error {
+		// Obtiene el bucket de contraseñas del usuario.
+		userBucket := tx.Bucket([]byte(userID))
+		if userBucket == nil {
+			return fmt.Errorf("bucket not found for user %s", userID)
+		}
+
+		// Elimina la contraseña asociada al servicio.
+		err := userBucket.Delete([]byte(service))
+		if err != nil {
+			return fmt.Errorf("failed to delete password for service %s: %v", service, err)
+		}
+
+		return nil
+	})
+}

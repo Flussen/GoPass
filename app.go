@@ -131,3 +131,9 @@ func (a *App) SaveUserPassword(username, service, password string) error {
 func (a *App) Greet(username string) (string, error) {
 	return "Great!!", nil
 }
+
+func (a *App) DeletePassword(username, service string) error {
+	DB := database.OpenDB()
+	defer DB.Close()
+	return models.DeletePass(DB, username, service)
+}
