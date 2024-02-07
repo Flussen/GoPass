@@ -30,8 +30,6 @@ yarn-error.log
 # Directorio de salida de compilación
 /dist
 /build
-app/
-frontend/
 
 # Directorios y archivos de IDE
 .idea/
