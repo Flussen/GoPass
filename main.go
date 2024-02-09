@@ -39,10 +39,6 @@ func main() {
 		Menu:              nil,
 		Logger:            nil,
 		LogLevel:          logger.DEBUG,
-		OnStartup:         app.startup,
-		OnDomReady:        app.domReady,
-		OnBeforeClose:     app.beforeClose,
-		OnShutdown:        app.shutdown,
 		WindowStartState:  options.Normal,
 		Bind: []interface{}{
 			app,

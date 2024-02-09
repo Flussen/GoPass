@@ -1,9 +1,8 @@
 package main
 
 import (
-	database "GoPass/db"
-	"GoPass/models"
-	"context"
+	database "GoPass/backend/db"
+	"GoPass/backend/models"
 	"encoding/json"
 	"errors"
 	"log"
@@ -16,7 +15,6 @@ import (
 
 // App struct
 type App struct {
-	ctx context.Context
 }
 
 // NewApp creates a new App application struct
@@ -24,28 +22,7 @@ func NewApp() *App {
 	return &App{}
 }
 
-// startup is called at application startup
-func (a *App) startup(ctx context.Context) {
-}
-
-// domReady is called after front-end resources have been loaded
-func (a App) domReady(ctx context.Context) {
-	a.ctx = ctx
-}
-
-// beforeClose is called when the application is about to quit,
-// either by clicking the window close button or calling runtime.Quit.
-// Returning true will cause the application to continue, false will continue shutdown as normal.
-func (a *App) beforeClose(ctx context.Context) (prevent bool) {
-	return false
-}
-
-// shutdown is called at application termination
-func (a *App) shutdown(ctx context.Context) {
-	// Perform your teardown here
-}
-
-// Greet returns a greeting for the given name
+// Login is called when the user clicks the login button
 func (a *App) Login(username, password string) (bool, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
@@ -57,26 +34,32 @@ func (a *App) Login(username, password string) (bool, error) {
 		if b == nil {
 			return errors.New("bucket de usuarios no encontrado")
 		}
-		log.Println(username)
+
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
+			// Usuario no encontrado
 			return errors.New("usuario no encontrado")
 		}
+
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
 		log.Printf("Error al buscar al usuario: %v", err)
-		return false, err
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
-	if err != nil {
 		return false, errors.New("credenciales inválidas")
 	}
 
+	// Comparar la contraseña del usuario con el hash almacenado
+	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
+	if err != nil {
+		// Contraseña incorrecta
+		return false, errors.New("credenciales inválidas")
+	}
+
+	// Inicio de sesión exitoso
 	return true, nil
 }
 
+// Register registers a new user with the given username, email and password. Is Called when the user clicks the register button.
 func (a *App) Register(username, email, password string) (bool, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
@@ -115,25 +98,34 @@ func (a *App) Register(username, email, password string) (bool, error) {
 	}
 }
 
+// GetUserPasswords get the password of the user with the given username
 func (a *App) GetUserPasswords(username string) (map[string]string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
-
 	return models.GetUserPasswords(DB, username)
 }
 
+// SaveUserPassword saves a password for the given username and service
 func (a *App) SaveUserPassword(username, service, password string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
 	return models.SavePassword(DB, username, service, password)
 }
 
+// Test for frontend development
 func (a *App) Greet(username string) (string, error) {
+	DB := database.OpenDB()
+	defer DB.Close()
 	return "Great!!", nil
 }
 
+// Delete a password saved in the database by the given username and service. Is called when the user clicks the delete button.
 func (a *App) DeletePassword(username, service string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
 	return models.DeletePass(DB, username, service)
+}
+
+func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
+	return models.GetUsersConcurrently(db, userIDs)
 }
