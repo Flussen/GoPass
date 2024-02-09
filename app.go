@@ -125,3 +125,7 @@ func (a *App) DeletePassword(username, service string) error {
 	defer DB.Close()
 	return models.DeletePass(DB, username, service)
 }
+
+func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
+	return models.GetUsersConcurrently(db, userIDs)
+}

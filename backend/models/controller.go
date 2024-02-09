@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 
 	"go.etcd.io/bbolt"
 	"golang.org/x/crypto/bcrypt"
@@ -76,6 +77,39 @@ func GetUserByUsername(db *bbolt.DB, username string) (*User, error) {
 	}
 
 	return &user, nil
+}
+
+func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*User, error) {
+	var users []*User
+	var err error
+
+	resultChan := make(chan *User)
+
+	var wg sync.WaitGroup
+
+	for _, UserID := range userIDs {
+		wg.Add(1)
+		go func(id string) {
+			user, err := GetUserByID(db, id)
+			if err != nil {
+				log.Printf("Error al obtener el usuario con ID %s: %v", id, err)
+			}
+			resultChan <- user
+		}(UserID)
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	for range userIDs {
+		user := <-resultChan
+		if user != nil {
+			users = append(users, user)
+		}
+	}
+	return users, err
 }
 
 func CheckUserExists(db *bbolt.DB, username, email string) (exists bool, err error) {
