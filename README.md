@@ -38,7 +38,7 @@ If you are interested in contributing to GoPass, please check our contribution g
 
 ## License
 
-GoPass is distributed under an [MIT license](LICENSE), allowing broad and free use for all users.
+GoPass is distributed under an [GPL-3.0 license](LICENSE), allowing broad and free use for all users.
 
 ---
 
