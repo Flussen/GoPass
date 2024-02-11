@@ -23,7 +23,7 @@ func NewApp() *App {
 }
 
 // Login is called when the user clicks the login button
-func (a *App) Login(username, password string) (bool, error) {
+func (a *App) Login(username, password string) (string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 
@@ -37,7 +37,6 @@ func (a *App) Login(username, password string) (bool, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			// Usuario no encontrado
 			return errors.New("usuario no encontrado")
 		}
 
@@ -45,18 +44,102 @@ func (a *App) Login(username, password string) (bool, error) {
 	})
 	if err != nil {
 		log.Printf("Error al buscar al usuario: %v", err)
-		return false, errors.New("credenciales inválidas")
+		return "", errors.New("credenciales inválidas")
 	}
 
-	// Comparar la contraseña del usuario con el hash almacenado
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		// Contraseña incorrecta
-		return false, errors.New("credenciales inválidas")
+		return "", errors.New("credenciales inválidas")
 	}
 
-	// Inicio de sesión exitoso
-	return true, nil
+	token := uuid.New().String()
+	expiry := time.Now().Add(730 * time.Hour)
+	err = a.StoreSessionToken(username, token, expiry)
+	if err != nil {
+		log.Printf("Error storing session token: %v", err)
+		return "", errors.New("no se pudo iniciar sesión correctamente")
+	}
+
+	// Retorna el token como confirmación de login exitoso
+	return token, nil
+}
+
+func (a *App) StoreSessionToken(username, token string, expiry time.Time) error {
+	DB := database.OpenDB()
+	defer DB.Close()
+
+	return DB.Update(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("Users"))
+		if b == nil {
+			return errors.New("user bucket not found")
+		}
+
+		userBytes := b.Get([]byte(username))
+		if userBytes == nil {
+			return errors.New("user not found")
+		}
+
+		var user models.User
+		err := json.Unmarshal(userBytes, &user)
+		if err != nil {
+			return err
+		}
+
+		user.SessionToken = token
+		user.TokenExpiry = expiry
+
+		updateUserBytes, err := json.Marshal(user)
+		if err != nil {
+			return err
+		}
+		return b.Put([]byte(username), updateUserBytes)
+	})
+}
+
+func (a *App) VerifySessionToken(token string) (bool, error) {
+	DB := database.OpenDB()
+	defer DB.Close()
+
+	var (
+		isValid   bool
+		userFound bool
+	)
+
+	err := DB.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("Users"))
+		if b == nil {
+			return errors.New("bucket de usuarios no encontrado")
+		}
+
+		c := b.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			var user models.User
+			if err := json.Unmarshal(v, &user); err != nil {
+				return errors.New("error parsing user")
+			}
+			if user.SessionToken == token {
+				userFound = true
+				if time.Now().Before(user.TokenExpiry) {
+					isValid = true
+					return nil
+				} else {
+					return errors.New("Token expired") // Token válido
+				}
+
+			}
+		}
+
+		if !userFound {
+			return errors.New("user not found")
+		}
+		return nil
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return isValid, nil
 }
 
 // Register registers a new user with the given username, email and password. Is Called when the user clicks the register button.
