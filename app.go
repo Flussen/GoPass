@@ -97,7 +97,7 @@ func (a *App) StoreSessionToken(username, token string, expiry time.Time) error 
 		}
 
 		user.SessionToken = token
-		user.TokenExpiry = expiry
+		user.TokenExpiry = expiry.Format(time.RFC3339)
 
 		updateUserBytes, err := json.Marshal(user)
 		if err != nil {
@@ -125,13 +125,19 @@ func (a *App) VerifySessionToken(token string) (bool, error) {
 
 		c := b.Cursor()
 		for k, v := c.First(); k != nil; k, v = c.Next() {
+
 			var user models.User
 			if err := json.Unmarshal(v, &user); err != nil {
 				return errors.New("error parsing user")
 			}
+			expiryTime, err := time.Parse(time.RFC3339, user.TokenExpiry)
+			if err != nil {
+				log.Printf("Error parsing expiry time: %v", err)
+				// Maneja el error adecuadamente
+			}
 			if user.SessionToken == token {
 				userFound = true
-				if time.Now().Before(user.TokenExpiry) {
+				if time.Now().Before(expiryTime) {
 					isValid = true
 					return nil
 				} else {
@@ -182,7 +188,7 @@ func (a *App) Register(username, email, password string) (bool, error) {
 		Username:  username,
 		Email:     email,
 		Password:  string(hashedPassword),
-		CreatedAt: time.Now(),
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 
 	if err := models.CreateUser(DB, newUser); err != nil {
