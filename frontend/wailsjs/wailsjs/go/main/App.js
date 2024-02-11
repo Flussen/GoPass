@@ -10,8 +10,16 @@ export function GetUserPasswords(arg1) {
   return window['go']['main']['App']['GetUserPasswords'](arg1);
 }
 
+export function GetVersion() {
+  return window['go']['main']['App']['GetVersion']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
+}
+
+export function ListUsers(arg1, arg2, arg3) {
+  return window['go']['main']['App']['ListUsers'](arg1, arg2, arg3);
 }
 
 export function Login(arg1, arg2) {
