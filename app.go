@@ -229,9 +229,9 @@ func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*mode
 // PasswordGenerator generates a random password with a specified length and returns its strength level
 func (a *App) PasswordGenerator(lenght int) (string, string) {
 	var (
-		weak   = "LVL: very weak"
-		medium = "LVL: medium"
-		high   = "LVL: strong"
+		weak   = "Very weak"
+		medium = "Medium"
+		high   = "trong"
 	)
 
 	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
