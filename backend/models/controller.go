@@ -1,46 +1,48 @@
 package models
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"log"
-	"sync"
+	"encoding/json" // Package for JSON encoding and decoding
+	"errors"        // Package for errors
+	"fmt"           // Package for formatted I/O
+	"log"           // Package for logging
+	"sync"          // Package for synchronization
 
-	"go.etcd.io/bbolt"
-	"golang.org/x/crypto/bcrypt"
+	"go.etcd.io/bbolt"           // Package for handling Bolt databases
+	"golang.org/x/crypto/bcrypt" // Package for password hashing
 )
 
+// CreateUser serializes the user to JSON and inserts/updates it in the database
 func CreateUser(db *bbolt.DB, user User) error {
-	// Serializar el usuario a JSON
+	// Serialize the user to JSON
 	userBytes, err := json.Marshal(user)
 	if err != nil {
 		return err
 	}
 
-	// Insertar/Actualizar el usuario en la base de datos
+	// Insert/update the user in the database
 	return db.Update(func(tx *bbolt.Tx) error {
-		// Asegurarse de que el bucket existe
+		// Ensure the bucket exists
 		b, err := tx.CreateBucketIfNotExists([]byte("Users"))
 		if err != nil {
 			return err
 		}
 
-		// Usar el ID del usuario como clave para almacenar el valor serializado
+		// Use the user's ID as the key to store the serialized value
 		return b.Put([]byte(user.Username), userBytes)
 	})
 }
 
+// GetUserByID retrieves a user by its ID from the database
 func GetUserByID(db *bbolt.DB, userID string) (*User, error) {
 	var user User
 	err := db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return nil // El bucket no existe
+			return nil // Bucket doesn't exist
 		}
 		userBytes := b.Get([]byte(userID))
 		if userBytes == nil {
-			return nil // El usuario no existe
+			return nil // User doesn't exist
 		}
 		return json.Unmarshal(userBytes, &user)
 	})
@@ -50,22 +52,23 @@ func GetUserByID(db *bbolt.DB, userID string) (*User, error) {
 	return &user, nil
 }
 
+// GetUserByUsername retrieves a user by its username from the database
 func GetUserByUsername(db *bbolt.DB, username string) (*User, error) {
 	var user User
 	err := db.View(func(tx *bbolt.Tx) error {
-		// Asume que los usuarios están almacenados en un bucket llamado "Users".
+		// Assume users are stored in a bucket named "Users".
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return errors.New("bucket de usuarios no encontrado")
+			return errors.New("users bucket not found")
 		}
 
-		// Asume que el nombre de usuario es la clave para buscar el usuario.
+		// Assume username is the key to lookup the user.
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("usuario no encontrado")
+			return errors.New("user not found")
 		}
 
-		// Deserializa los bytes del usuario en la estructura User.
+		// Deserialize user bytes into User structure.
 		if err := json.Unmarshal(userBytes, &user); err != nil {
 			return err
 		}
@@ -79,6 +82,7 @@ func GetUserByUsername(db *bbolt.DB, username string) (*User, error) {
 	return &user, nil
 }
 
+// GetUsersConcurrently retrieves user information concurrently
 func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*User, error) {
 	var users []*User
 	var err error
@@ -87,15 +91,15 @@ func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*User, error) {
 
 	var wg sync.WaitGroup
 
-	for _, UserID := range userIDs {
+	for _, userID := range userIDs {
 		wg.Add(1)
 		go func(id string) {
 			user, err := GetUserByID(db, id)
 			if err != nil {
-				log.Printf("Error al obtener el usuario con ID %s: %v", id, err)
+				log.Printf("Error getting user with ID %s: %v", id, err)
 			}
 			resultChan <- user
-		}(UserID)
+		}(userID)
 	}
 
 	go func() {
@@ -112,26 +116,27 @@ func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*User, error) {
 	return users, err
 }
 
+// CheckUserExists checks if a user exists in the database by username or email
 func CheckUserExists(db *bbolt.DB, username, email string) (exists bool, err error) {
 	err = db.View(func(tx *bbolt.Tx) error {
 		usersBucket := tx.Bucket([]byte("Users"))
 		if usersBucket == nil {
-			return nil // Considera un bucket vacío como no existente
+			return nil // Consider an empty bucket as non-existent
 		}
 
-		// Busca por nombre de usuario
+		// Search by username
 		userBytes := usersBucket.Get([]byte(username))
 		if userBytes != nil {
 			exists = true
 			return nil
 		}
 
-		// Opcional: Buscar por email, requiere iterar si los emails no son claves
+		// Optional: Search by email, requires iterating if emails are not keys
 		c := usersBucket.Cursor()
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			var user User
 			if err := json.Unmarshal(v, &user); err != nil {
-				continue // o maneja el error
+				continue // or handle the error
 			}
 			if user.Email == email {
 				exists = true
@@ -144,6 +149,8 @@ func CheckUserExists(db *bbolt.DB, username, email string) (exists bool, err err
 
 	return
 }
+
+// GetUserPasswords retrieves passwords of the user from the database
 func GetUserPasswords(db *bbolt.DB, userID string) (map[string]string, error) {
 	passwords := make(map[string]string)
 
@@ -162,11 +169,13 @@ func GetUserPasswords(db *bbolt.DB, userID string) (map[string]string, error) {
 	return passwords, err
 }
 
+// CheckPasswordHash compares a password with its hashed value
 func CheckPasswordHash(password, hash string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err
 }
 
+// SavePassword saves a password for the user in the database
 func SavePassword(db *bbolt.DB, userID, service, password string) error {
 	return db.Update(func(tx *bbolt.Tx) error {
 		userBucket, err := tx.CreateBucketIfNotExists([]byte(userID))
@@ -176,7 +185,7 @@ func SavePassword(db *bbolt.DB, userID, service, password string) error {
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 15)
 		if err != nil {
-			log.Println("Fallo de hashing", err)
+			log.Println("Hashing failure", err)
 			return err
 		}
 
@@ -184,15 +193,16 @@ func SavePassword(db *bbolt.DB, userID, service, password string) error {
 	})
 }
 
+// DeletePass deletes a password for the user from the database
 func DeletePass(db *bbolt.DB, userID, service string) error {
 	return db.Update(func(tx *bbolt.Tx) error {
-		// Obtiene el bucket de contraseñas del usuario.
+		// Get the user's password bucket
 		userBucket := tx.Bucket([]byte(userID))
 		if userBucket == nil {
 			return fmt.Errorf("bucket not found for user %s", userID)
 		}
 
-		// Elimina la contraseña asociada al servicio.
+		// Delete the password associated with the service
 		err := userBucket.Delete([]byte(service))
 		if err != nil {
 			return fmt.Errorf("failed to delete password for service %s: %v", service, err)
