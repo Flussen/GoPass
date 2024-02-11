@@ -129,3 +129,7 @@ func (a *App) DeletePassword(username, service string) error {
 func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
 	return models.GetUsersConcurrently(db, userIDs)
 }
+
+func (a *App) GetVersion() string {
+	return "0.0.1-ALPHA"
+}
