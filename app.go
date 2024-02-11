@@ -3,9 +3,11 @@ package main
 import (
 	database "GoPass/backend/db"
 	"GoPass/backend/models"
+
 	"encoding/json"
 	"errors"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/google/uuid"
@@ -211,6 +213,27 @@ func (a *App) DeletePassword(username, service string) error {
 
 func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
 	return models.GetUsersConcurrently(db, userIDs)
+}
+
+func (a *App) PasswordGenerator(lenght int) (string, string) {
+	var (
+		weak   = "LVL: very weak"
+		medium = "LVL: medium"
+		high   = "LVL: strong"
+	)
+
+	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
+	password := make([]byte, lenght)
+	for i := range password {
+		password[i] = charset[rand.Intn(len(charset))]
+	}
+	if lenght >= 20 {
+		return string(password), high
+	}
+	if lenght > 10 {
+		return string(password), medium
+	}
+	return string(password), weak
 }
 
 func (a *App) GetVersion() string {
