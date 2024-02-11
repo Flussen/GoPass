@@ -1,9 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient()
+  /* background: linear-gradient(148deg, rgba(196,202,221,1) 0%, rgba(255,255,255,1) 100%); */
 }
