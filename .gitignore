@@ -28,8 +28,8 @@ yarn-error.log
 .env.production.local
 
 # Directorio de salida de compilación
-/dist
-/build
+frontend/dist/
+frontend/build
 
 # Directorios y archivos de IDE
 .idea/
