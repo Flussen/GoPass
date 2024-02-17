@@ -1,10 +1,9 @@
 package main
 
 import (
-	// Package for formatted I/O
-	"log" // Package for logging
+	"log"
 	"strings"
-	"testing" // Package for testing
+	"testing"
 
 	"github.com/stretchr/testify/assert" // Package for assertions in tests
 )
