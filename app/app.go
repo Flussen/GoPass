@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	// Package imports
@@ -39,7 +39,7 @@ func NewApp() *App {
 // if the password is comparable to the hash
 // it will also parse the data, decrypt the userKey stored in the database
 // and generate a login token. (Expiry in 30 days)
-func (a *App) Login(username, password string) (string, string, error) {
+func (a *App) DoLogin(username, password string) (string, string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 
@@ -90,7 +90,7 @@ func (a *App) Login(username, password string) (string, string, error) {
 // true if the session is valid and false if the session invalid
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
-func (a *App) TokenVerification(token string) (bool, error) {
+func (a *App) GetTokenVerification(token string) (bool, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 
@@ -138,14 +138,14 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 func (a *App) GetUserPasswords(username string) (map[string]string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
-	return models.GetUserPasswords(DB, username)
+	return controllers.GetUserPasswords(DB, username)
 }
 
 // SaveUserPassword saves a password for the given username and service
 func (a *App) SaveUserPassword(username, service, password, userKey string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
-	return models.SavePassword(DB, username, userKey, service, password)
+	return controllers.SavePassword(DB, username, userKey, service, password)
 }
 
 func (a *App) ShowPassword(username, service, userKey string) (string, error) {
@@ -172,7 +172,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 		return "", err
 	}
 
-	decrypted, err := models.RevealPassword(encryptedPassword, userKey)
+	decrypted, err := encryption.RevealPassword(encryptedPassword, userKey)
 	if err != nil {
 		return "", err
 	}
@@ -191,12 +191,12 @@ func (a *App) Greet(username string) (string, error) {
 func (a *App) DeletePassword(username, service string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
-	return models.DeletePass(DB, username, service)
+	return controllers.DeletePass(DB, username, service)
 }
 
 // ListUsers retrieves user information concurrently
 func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
-	return models.GetUsersConcurrently(db, userIDs)
+	return controllers.GetUsersConcurrently(db, userIDs)
 }
 
 // PasswordGenerator generates a random password with a specified length and returns its strength level
