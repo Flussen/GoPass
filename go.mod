@@ -4,7 +4,7 @@ go 1.21
 
 toolchain go1.21.6
 
-require github.com/wailsapp/wails/v2 v2.7.1
+require github.com/wailsapp/wails/v2 v2.8.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
