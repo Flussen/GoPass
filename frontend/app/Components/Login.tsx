@@ -16,7 +16,7 @@ interface LoginProps {
       <button className='rounded-xl h-10 pl-4 text-white w-96 bg-black' type="submit"  onClick={handleLoginSignup}>Login</button>
       <div className='flex-col  items-center justify-center mt-[-310px]'>
         <div className='text-black flex justify-center items-center opacity-80'>
-          Don't have an account? <a className='hover:text-blue' href="#signup" onClick={() => setShowSignup(true)}> &nbsp;Register</a>
+          Don&apos;t have an account? <a className='hover:text-blue' href="#signup" onClick={() => setShowSignup(true)}> &nbsp;Register</a>
         </div>
         
       </div>
