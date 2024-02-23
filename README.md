@@ -1,14 +1,21 @@
-# GoPass
+# GoPass 0.0.2 ALPHA
 
 ## Introduction
 
 GoPass is a password management software developed in Go, using wails.io for the backend and Next.js for the frontend. This project offers a secure solution for storing passwords, providing a convenient way to keep all your credentials in one place. Designed for users seeking to maximize security without sacrificing convenience, GoPass uses a local database for user registration and management, ensuring a seamless and secure user experience.
 
-## Installation
+## Installation for Developers
+GoPass requires several dependencies, you must make sure you have:
+
+1. Go 1.21 or higher - [Nodejs](https://go.dev/learn/)
+2. NodeJS 15 or higher - [Nodejs](https://nodejs.org/)
+3. Wails Framework - [Wails.io](https://wails.io/docs/gettingstarted/installation)
+
+Check these dependencies one by one to make sure you have everything, remember to use wails doctor, if you have a problem, you can contact me and I will help you!
+
+### Installation for Users
 
 To get started with GoPass, simply download the `.exe` file available in the releases section of our GitHub repository. Once downloaded, run the file to install GoPass on your system.
-
-### Installation Steps
 
 1. Download the `.exe` file.
 2. Run the downloaded file.
