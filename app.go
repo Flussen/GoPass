@@ -34,26 +34,28 @@ func NewApp() *App {
 }
 
 // Login is called when the user clicks the login button
+// Will perform various checks on the database bucket,
+// if the bucket exists, if the user exists in the bucket,
+// if the password is comparable to the hash
+// it will also parse the data, decrypt the userKey stored in the database
+// and generate a login token. (Expiry in 30 days)
 func (a *App) Login(username, password string) (string, string, error) {
-	DB := database.OpenDB() // Open the database
-	defer DB.Close()        // Ensure the database is closed at the end of the function or when returning
+	DB := database.OpenDB()
+	defer DB.Close()
 
-	var storedUser models.User // Variable to store the retrieved user from the database based in User model.
+	var storedUser models.User
 
-	// Perform a read-only transaction on the database
 	err := DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("Users")) // Get the "Users" bucket from the database
+		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return errors.New("'users' bucket not found") // Return an error if the bucket is not found
+			return errors.New("'users' bucket not found")
 		}
 
-		// Get the user data by username
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("user not found") // Return an error if the user is not found
+			return errors.New("user not found")
 		}
 
-		// Decode the user data into the user structure
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
@@ -61,7 +63,6 @@ func (a *App) Login(username, password string) (string, string, error) {
 		return "", "", errors.New("invalid credentials")
 	}
 
-	// Compare the hashed password with the provided password
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
 		return "", "", errors.New("invalid credentials")
@@ -73,99 +74,27 @@ func (a *App) Login(username, password string) (string, string, error) {
 		return "", "", errors.New("failed to decrypt user Key")
 	}
 
-	// Generate a new session token
 	token := uuid.New().String()
-	expiry := time.Now().Add(730 * time.Hour) // expires in 30 days
+	expiry := time.Now().Add(730 * time.Hour)
 
-	// Store the session token in the database
-	err = a.StoreSessionToken(username, token, expiry)
+	err = controllers.StoreSessionToken(DB, username, token, expiry)
 	if err != nil {
 		log.Printf("error storing session token: %v", err)
 		return "", "", errors.New("failed to log in successfully")
 	}
 
-	// Returns the token as confirmation of successful login
 	return token, userKey, nil
 }
 
-// StoreSessionToken stores the session token in the database
-func (a *App) StoreSessionToken(username, token string, expiry time.Time) error {
+// Verifies the validity of a session token and return to the app
+// true if the session is valid and false if the session invalid
+//
+//	components.VerifySessionToken(DB, token) // is the verificator
+func (a *App) TokenVerification(token string) (bool, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 
-	return DB.Update(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("Users"))
-		if b == nil {
-			return errors.New("'users' bucket not found")
-		}
-
-		userBytes := b.Get([]byte(username))
-		if userBytes == nil {
-			return errors.New("user not found")
-		}
-
-		var user models.User
-		err := json.Unmarshal(userBytes, &user)
-		if err != nil {
-			return err
-		}
-
-		user.SessionToken = token
-		user.TokenExpiry = expiry.Format(time.RFC3339) // format: 2006-01-02T15:04:05Z07:00
-
-		updateUserBytes, err := json.Marshal(user)
-		if err != nil {
-			return err
-		}
-		return b.Put([]byte(username), updateUserBytes)
-	})
-}
-
-// VerifySessionToken verifies the validity of a session token
-func (a *App) VerifySessionToken(token string) (bool, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
-
-	var (
-		isValid   bool
-		userFound bool
-	)
-
-	err := DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("Users"))
-		if b == nil {
-			return errors.New("'users' bucket not found")
-		}
-
-		c := b.Cursor()
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-
-			var user models.User
-			if err := json.Unmarshal(v, &user); err != nil {
-				return errors.New("error parsing user")
-			}
-			expiryTime, err := time.Parse(time.RFC3339, user.TokenExpiry)
-			if err != nil {
-				log.Printf("Error parsing expiry time: %v", err)
-			}
-			if user.SessionToken == token {
-				userFound = true
-				if time.Now().Before(expiryTime) {
-					isValid = true
-					return nil
-				} else {
-					return errors.New("token expired")
-				}
-
-			}
-		}
-
-		if !userFound {
-			return errors.New("user not found")
-		}
-		return nil
-	})
-
+	isValid, err := components.VerifySessionToken(DB, token)
 	if err != nil {
 		return false, err
 	}
