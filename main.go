@@ -1,6 +1,8 @@
 package main
 
 import (
+	"GoPass/app"
+	database "GoPass/backend/db"
 	"embed"
 	"log"
 
@@ -18,9 +20,11 @@ var assets embed.FS
 var icon []byte
 
 func main() {
+	db := database.OpenDB()
+	defer db.Close()
 
 	// Create an instance of the app structure
-	app := NewApp()
+	myApp := app.NewAppWithDB(db)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -41,7 +45,7 @@ func main() {
 		LogLevel:          logger.DEBUG,
 		WindowStartState:  options.Normal,
 		Bind: []interface{}{
-			app,
+			myApp,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{
@@ -65,7 +69,7 @@ func main() {
 			WebviewIsTransparent: true,
 			WindowIsTranslucent:  true,
 			About: &mac.AboutInfo{
-				Title:   "App",
+				Title:   "GoPass",
 				Message: "",
 				Icon:    icon,
 			},

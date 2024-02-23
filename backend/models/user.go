@@ -5,6 +5,7 @@ type User struct {
 	Username     string `json:"username"`
 	Email        string `json:"email"`
 	Password     string `json:"password"`
+	UserKey      string `json:"encryptedUserKey"`
 	CreatedAt    string `json:"created_at"`
 	SessionToken string `json:"session_token"`
 	TokenExpiry  string `json:"token_expiry"`
