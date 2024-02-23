@@ -6,31 +6,34 @@ import (
 	"GoPass/backend/models"      // Importing another custom package
 
 	"encoding/json" // Package for encoding and decoding JSON
-	"errors"        // Package for error handling
-	"log"           // Package for logging messages
-	"math/rand"     // Package for generating random numbers
-	"time"          // Package for handling time
+	"errors"
+	"log"
+	"math/rand"
+	"time"
 
 	"github.com/google/uuid"     // Package for generating unique UUIDs
 	"go.etcd.io/bbolt"           // Package for handling Bolt databases
 	"golang.org/x/crypto/bcrypt" // Package for password hashing
 )
 
-// App struct
+/*
+App is an empty struct that will add the functions that will
+be added to main.go so that wails go compiles. This is the way to
+improve the abstraction of the program so that the program scales.
+*/
 type App struct{}
 
-// NewApp creates a new App application struct
+// NewApp create an instance for wails to work on in the main package and receive the app
 func NewApp() *App {
 	return &App{}
 }
 
 // Login is called when the user clicks the login button
 func (a *App) Login(username, password string) (string, error) {
-	// Open the database
-	DB := database.OpenDB()
-	defer DB.Close() // Ensure the database is closed at the end of the function or when returning
+	DB := database.OpenDB() // Open the database
+	defer DB.Close()        // Ensure the database is closed at the end of the function or when returning
 
-	var storedUser models.User // Variable to store the retrieved user from the database
+	var storedUser models.User // Variable to store the retrieved user from the database based in User model.
 
 	// Perform a read-only transaction on the database
 	err := DB.View(func(tx *bbolt.Tx) error {
@@ -61,7 +64,7 @@ func (a *App) Login(username, password string) (string, error) {
 
 	// Generate a new session token
 	token := uuid.New().String()
-	expiry := time.Now().Add(730 * time.Hour)
+	expiry := time.Now().Add(730 * time.Hour) // expires in 30 days
 
 	// Store the session token in the database
 	err = a.StoreSessionToken(username, token, expiry)
@@ -97,7 +100,7 @@ func (a *App) StoreSessionToken(username, token string, expiry time.Time) error 
 		}
 
 		user.SessionToken = token
-		user.TokenExpiry = expiry.Format(time.RFC3339)
+		user.TokenExpiry = expiry.Format(time.RFC3339) // format: 2006-01-02T15:04:05Z07:00
 
 		updateUserBytes, err := json.Marshal(user)
 		if err != nil {
@@ -133,7 +136,6 @@ func (a *App) VerifySessionToken(token string) (bool, error) {
 			expiryTime, err := time.Parse(time.RFC3339, user.TokenExpiry)
 			if err != nil {
 				log.Printf("Error parsing expiry time: %v", err)
-				// Maneja el error adecuadamente
 			}
 			if user.SessionToken == token {
 				userFound = true
@@ -220,7 +222,8 @@ func (a *App) Greet(username string) (string, error) {
 	return "Great!!", nil
 }
 
-// DeletePassword deletes a password saved in the database by the given username and service
+// DeletePassword deletes a password saved in the database by the given username and service.
+// For examp
 func (a *App) DeletePassword(username, service string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
@@ -234,13 +237,12 @@ func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*mode
 
 // PasswordGenerator generates a random password with a specified length and returns its strength level
 func (a *App) PasswordGenerator(lenght int) (string, string) {
-	var (
-		weak   = "Very weak"
-		medium = "Medium"
-		high   = "trong"
+	const (
+		weak    = "Weak"
+		medium  = "Medium"
+		high    = "Strong"
+		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
 	)
-
-	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
 	password := make([]byte, lenght)
 	for i := range password {
 		password[i] = charset[rand.Intn(len(charset))]
@@ -254,7 +256,7 @@ func (a *App) PasswordGenerator(lenght int) (string, string) {
 	return string(password), weak
 }
 
-// GetVersion returns the version of the application
+// GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.0.1-ALPHA"
+	return "0.0.2 - ALPHA"
 }
