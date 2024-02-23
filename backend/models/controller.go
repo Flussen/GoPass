@@ -1,6 +1,7 @@
 package models
 
 import (
+	"GoPass/backend/encryption"
 	"encoding/json" // Package for JSON encoding and decoding
 	"errors"        // Package for errors
 	"fmt"           // Package for formatted I/O
@@ -151,11 +152,11 @@ func CheckUserExists(db *bbolt.DB, username, email string) (exists bool, err err
 }
 
 // GetUserPasswords retrieves passwords of the user from the database
-func GetUserPasswords(db *bbolt.DB, userID string) (map[string]string, error) {
+func GetUserPasswords(db *bbolt.DB, username string) (map[string]string, error) {
 	passwords := make(map[string]string)
 
 	err := db.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(userID))
+		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
 			return fmt.Errorf("bucket not found")
 		}
@@ -169,6 +170,37 @@ func GetUserPasswords(db *bbolt.DB, userID string) (map[string]string, error) {
 	return passwords, err
 }
 
+func CheckPasswordForService(db *bbolt.DB, service, username, inputPassword string) (bool, error) {
+	var storedHash []byte
+	err := db.View(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(username))
+		if userBucket == nil {
+			return errors.New("bucket not found")
+		}
+
+		storedHash = userBucket.Get([]byte(service))
+		if storedHash == nil {
+			return errors.New("service not found")
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	// Utiliza bcrypt para comparar la contraseña proporcionada con el hash almacenado.
+	err = bcrypt.CompareHashAndPassword(storedHash, []byte(inputPassword))
+	if err != nil {
+		// Si hay un error (lo que significa que las contraseñas no coinciden), devuelve false.
+		return false, nil
+	}
+
+	// Si llegamos aquí, significa que la contraseña coincide con el hash.
+	return true, nil
+}
+
 // CheckPasswordHash compares a password with its hashed value
 func CheckPasswordHash(password, hash string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
@@ -176,21 +208,31 @@ func CheckPasswordHash(password, hash string) error {
 }
 
 // SavePassword saves a password for the user in the database
-func SavePassword(db *bbolt.DB, userID, service, password string) error {
+func SavePassword(db *bbolt.DB, userID, service, password, userKey string) error {
+
+	encryptedPassword, err := encryption.EncryptPassword(password, userKey)
+	if err != nil {
+		log.Println("Encription failure", err)
+		return err
+	}
+
 	return db.Update(func(tx *bbolt.Tx) error {
 		userBucket, err := tx.CreateBucketIfNotExists([]byte(userID))
 		if err != nil {
 			return err
 		}
 
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 15)
-		if err != nil {
-			log.Println("Hashing failure", err)
-			return err
-		}
-
-		return userBucket.Put([]byte(service), []byte(hashedPassword))
+		return userBucket.Put([]byte(service), []byte(encryptedPassword))
 	})
+}
+
+func RevealPassword(encripterPassword, userKey string) (string, error) {
+	decrypted, err := encryption.DecryptPassword(encripterPassword, userKey)
+	if err != nil {
+		log.Printf("Decryption failure: %v", err)
+		return "", fmt.Errorf("failted to decrypt password")
+	}
+	return decrypted, nil
 }
 
 // DeletePass deletes a password for the user from the database

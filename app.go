@@ -3,7 +3,10 @@ package main
 import (
 	// Package imports
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
-	"GoPass/backend/models"      // Importing another custom package
+	"GoPass/backend/encryption"
+	"GoPass/backend/models" // Importing another custom package
+	userkeyhandler "GoPass/backend/userKeyHandler"
+	"fmt"
 
 	"encoding/json" // Package for encoding and decoding JSON
 	"errors"
@@ -29,7 +32,7 @@ func NewApp() *App {
 }
 
 // Login is called when the user clicks the login button
-func (a *App) Login(username, password string) (string, error) {
+func (a *App) Login(username, password string) (string, string, error) {
 	DB := database.OpenDB() // Open the database
 	defer DB.Close()        // Ensure the database is closed at the end of the function or when returning
 
@@ -53,13 +56,19 @@ func (a *App) Login(username, password string) (string, error) {
 	})
 	if err != nil {
 		log.Printf("error searching for user: %v", err)
-		return "", errors.New("invalid credentials")
+		return "", "", errors.New("invalid credentials")
 	}
 
 	// Compare the hashed password with the provided password
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		return "", errors.New("invalid credentials")
+		return "", "", errors.New("invalid credentials")
+	}
+
+	userKey, err := encryption.DecryptPassword(storedUser.EncryptedUserKey, password)
+	if err != nil {
+		log.Printf("error decrypting user key: %v", err)
+		return "", "", errors.New("failed to decrypt user Key")
 	}
 
 	// Generate a new session token
@@ -70,11 +79,11 @@ func (a *App) Login(username, password string) (string, error) {
 	err = a.StoreSessionToken(username, token, expiry)
 	if err != nil {
 		log.Printf("error storing session token: %v", err)
-		return "", errors.New("failed to log in successfully")
+		return "", "", errors.New("failed to log in successfully")
 	}
 
 	// Returns the token as confirmation of successful login
-	return token, nil
+	return token, userKey, nil
 }
 
 // StoreSessionToken stores the session token in the database
@@ -185,12 +194,25 @@ func (a *App) Register(username, email, password string) (bool, error) {
 		log.Println("Hashing failure")
 	}
 
+	userKey, err := userkeyhandler.GenerateRandomUserKey(32)
+	if err != nil {
+		log.Printf("failed to generate user Key: %v", err)
+		return false, err
+	}
+
+	encryptedUserKey, err := encryption.EncryptPassword(userKey, password)
+	if err != nil {
+		log.Printf("failed to encrypt user key: %v", err)
+		return false, err
+	}
+
 	newUser := models.User{
-		ID:        uuid.New().String(),
-		Username:  username,
-		Email:     email,
-		Password:  string(hashedPassword),
-		CreatedAt: time.Now().Format(time.RFC3339),
+		ID:               uuid.New().String(),
+		Username:         username,
+		Email:            email,
+		Password:         string(hashedPassword),
+		EncryptedUserKey: encryptedUserKey,
+		CreatedAt:        time.Now().Format(time.RFC3339),
 	}
 
 	if err := models.CreateUser(DB, newUser); err != nil {
@@ -209,10 +231,43 @@ func (a *App) GetUserPasswords(username string) (map[string]string, error) {
 }
 
 // SaveUserPassword saves a password for the given username and service
-func (a *App) SaveUserPassword(username, service, password string) error {
+func (a *App) SaveUserPassword(username, service, password, userKey string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
-	return models.SavePassword(DB, username, service, password)
+	// db *bbolt.DB, userID, userKey, service, password string
+	return models.SavePassword(DB, username, userKey, service, password)
+}
+
+func (a *App) ShowPassword(username, service, userKey string) (string, error) {
+	DB := database.OpenDB()
+	defer DB.Close()
+
+	var encryptedPassword string
+
+	err := DB.View(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(username))
+		if userBucket == nil {
+			return fmt.Errorf("user not found")
+		}
+
+		encryptedPasswordBytes := userBucket.Get([]byte(service))
+		if encryptedPasswordBytes == nil {
+			return fmt.Errorf("password not found for service: %s", service)
+		}
+		encryptedPassword = string(encryptedPasswordBytes)
+		return nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	decrypted, err := models.RevealPassword(encryptedPassword, userKey)
+	if err != nil {
+		return "", err
+	}
+
+	return decrypted, nil
 }
 
 // Greet test for frontend development
