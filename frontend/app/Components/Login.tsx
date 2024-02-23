@@ -18,7 +18,7 @@ interface LoginProps {
         <div className='text-black flex justify-center items-center opacity-80'>
           Don't have an account? <a className='hover:text-blue' href="#signup" onClick={() => setShowSignup(true)}> &nbsp;Register</a>
         </div>
-        <h3 className='flex justify-center items-center opacity-50 text-xs select-none'>{version}</h3>
+        
       </div>
     </div>
   );
