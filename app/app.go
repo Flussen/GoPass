@@ -33,6 +33,17 @@ func NewApp() *App {
 	return &App{}
 }
 
+/*
+   ------------------------------------------------
+   Do type function, that are exported in typescript so
+   that specific things are done, such as registering, creating
+   a login session, they generally perform actions that return
+   verification or authentication data.
+
+	->> DO type functions continue below <<--
+   ------------------------------------------------
+*/
+
 // Login is called when the user clicks the login button
 // Will perform various checks on the database bucket,
 // if the bucket exists, if the user exists in the bucket,
@@ -86,22 +97,6 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 	return token, userKey, nil
 }
 
-// Verifies the validity of a session token and return to the app
-// true if the session is valid and false if the session invalid
-//
-//	components.VerifySessionToken(DB, token) // is the verificator
-func (a *App) GetTokenVerification(token string) (bool, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
-
-	isValid, err := components.VerifySessionToken(DB, token)
-	if err != nil {
-		return false, err
-	}
-
-	return isValid, nil
-}
-
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(username, email, password string) (bool, error) {
 	DB := database.OpenDB()
@@ -134,20 +129,63 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 	}
 }
 
-// GetUserPasswords retrieves the passwords of the user with the given username
+// Saves a password for the given username and service
+//
+//	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
+func (a *App) DoSaveUserPassword(username, service, password, userKey string) error {
+	DB := database.OpenDB()
+	defer DB.Close()
+	return controllers.SavePassword(DB, username, userKey, service, password)
+}
+
+// DeletePassword deletes a password saved in the database by the given username and service.
+//
+//	controllers.DeletePass(DB, username, service) // is the controller for delete the password in the database
+func (a *App) DoDeleteUserPassword(username, service string) error {
+	DB := database.OpenDB()
+	defer DB.Close()
+	return controllers.DeletePass(DB, username, service)
+}
+
+/*
+   ------------------------------------------------
+	Get type functions, they work to receive a specific data,
+	they can do decryption processes to receive that data
+	but generally they only receive data to export it to the
+	typescript frontend.
+
+	->> GET type functions continue below <<--
+   ------------------------------------------------
+*/
+
+// Verifies the validity of a session token and return to the app
+// true if the session is valid and false if the session invalid
+//
+//	components.VerifySessionToken(DB, token) // is the verificator
+func (a *App) GetTokenVerification(token string) (bool, error) {
+	DB := database.OpenDB()
+	defer DB.Close()
+
+	isValid, err := components.VerifySessionToken(DB, token)
+	if err != nil {
+		return false, err
+	}
+
+	return isValid, nil
+}
+
+// Retrieves the passwords of the user with the given username
+//
+//	components.VerifySessionToken(DB, token) // is the controller for get the user passwords
 func (a *App) GetUserPasswords(username string) (map[string]string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 	return controllers.GetUserPasswords(DB, username)
 }
 
-// SaveUserPassword saves a password for the given username and service
-func (a *App) SaveUserPassword(username, service, password, userKey string) error {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return controllers.SavePassword(DB, username, userKey, service, password)
-}
-
+// Shows the password by the userKey decryption method
+//
+//	encryption.RevealPassword(encryptedPassword, userKey) // It is the encryption controller
 func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
@@ -180,26 +218,15 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 	return decrypted, nil
 }
 
-// Greet test for frontend development
-func (a *App) Greet(username string) (string, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return "Great!!", nil
-}
-
-// DeletePassword deletes a password saved in the database by the given username and service.
-func (a *App) DeletePassword(username, service string) error {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return controllers.DeletePass(DB, username, service)
-}
-
 // ListUsers retrieves user information concurrently
-func (a *App) ListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
+//
+//	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
+func (a *App) GetListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
 	return controllers.GetUsersConcurrently(db, userIDs)
 }
 
-// PasswordGenerator generates a random password with a specified length and returns its strength level
+// PasswordGenerator generates a random password with a specified
+// length and returns its strength level
 func (a *App) PasswordGenerator(lenght int) (string, string) {
 	const (
 		weak    = "Weak"
@@ -223,4 +250,20 @@ func (a *App) PasswordGenerator(lenght int) (string, string) {
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
 	return "0.0.2 - ALPHA"
+}
+
+/*
+   ------------------------------------------------
+	Test type functions, is only for testing the frontend
+	get and return information.
+
+	->> GET type functions continue below <<--
+   ------------------------------------------------
+*/
+
+// Greet test for frontend development
+func (a *App) TestGreet(username string) (string, error) {
+	DB := database.OpenDB()
+	defer DB.Close()
+	return "Great!!", nil
 }

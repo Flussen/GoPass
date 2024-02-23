@@ -34,5 +34,6 @@ func TestEncrypt(t *testing.T) {
 	if decryptPWD != originalPassword {
 		t.Errorf("Decrypted password does not match original. Got %s, want %s", decryptPWD, originalPassword)
 	}
+
 	fmt.Printf("Test passed - password %v, UserKey: %v", decryptPWD, userKey)
 }
