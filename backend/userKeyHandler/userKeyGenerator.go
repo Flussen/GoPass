@@ -1,14 +1,16 @@
 package userkeyhandler
 
 import (
-	"crypto/rand"
-	"encoding/hex"
+	"math/rand"
+	"time"
 )
 
-func GenerateRandomUserKey(length int) (string, error) {
-	bytes := make([]byte, length)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
+func GenerateRandomUserKey(length int) string {
+	rand.New(rand.NewSource(time.Now().Unix()))
+	characters := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+	randomNumber := make([]byte, length)
+	for i := 0; i < length; i++ {
+		randomNumber[i] = characters[rand.Intn(len(characters))]
 	}
-	return hex.EncodeToString(bytes), nil
+	return string(randomNumber)
 }

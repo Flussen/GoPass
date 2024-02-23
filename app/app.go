@@ -26,11 +26,17 @@ App is an empty struct that will add the functions that will
 be added to main.go so that wails go compiles. This is the way to
 improve the abstraction of the program so that the program scales.
 */
-type App struct{}
+type App struct {
+	DB *bbolt.DB
+}
 
 // NewApp create an instance for wails to work on in the main package and receive the app
 func NewApp() *App {
 	return &App{}
+}
+
+func NewAppWithDB(db *bbolt.DB) *App {
+	return &App{DB: db}
 }
 
 /*
@@ -51,12 +57,9 @@ func NewApp() *App {
 // it will also parse the data, decrypt the userKey stored in the database
 // and generate a login token. (Expiry in 30 days)
 func (a *App) DoLogin(username, password string) (string, string, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
-
 	var storedUser models.User
 
-	err := DB.View(func(tx *bbolt.Tx) error {
+	err := a.DB.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
 			return errors.New("'users' bucket not found")
@@ -88,7 +91,7 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 	token := uuid.New().String()
 	expiry := time.Now().Add(730 * time.Hour)
 
-	err = controllers.StoreSessionToken(DB, username, token, expiry)
+	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
 		log.Printf("error storing session token: %v", err)
 		return "", "", errors.New("failed to log in successfully")
@@ -99,10 +102,8 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(username, email, password string) (bool, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
 
-	err := components.RegistryChecker(DB, username, email, password)
+	err := components.RegistryChecker(a.DB, username, email, password)
 	if err != nil {
 		return false, err
 	}
@@ -121,30 +122,26 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 		CreatedAt:        time.Now().Format(time.RFC3339),
 	}
 
-	if err := controllers.CreateUser(DB, newUser); err != nil {
+	if err := controllers.CreateUser(a.DB, newUser); err != nil {
 		log.Printf("failed to create user: %v", err)
 		return false, err
-	} else {
-		return true, nil
 	}
+
+	return true, nil
 }
 
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
 func (a *App) DoSaveUserPassword(username, service, password, userKey string) error {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return controllers.SavePassword(DB, username, userKey, service, password)
+	return controllers.SavePassword(a.DB, username, userKey, service, password)
 }
 
 // DeletePassword deletes a password saved in the database by the given username and service.
 //
 //	controllers.DeletePass(DB, username, service) // is the controller for delete the password in the database
 func (a *App) DoDeleteUserPassword(username, service string) error {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return controllers.DeletePass(DB, username, service)
+	return controllers.DeletePass(a.DB, username, service)
 }
 
 /*
@@ -163,10 +160,8 @@ func (a *App) DoDeleteUserPassword(username, service string) error {
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
 func (a *App) GetTokenVerification(token string) (bool, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
 
-	isValid, err := components.VerifySessionToken(DB, token)
+	isValid, err := components.VerifySessionToken(a.DB, token)
 	if err != nil {
 		return false, err
 	}
@@ -178,21 +173,17 @@ func (a *App) GetTokenVerification(token string) (bool, error) {
 //
 //	components.VerifySessionToken(DB, token) // is the controller for get the user passwords
 func (a *App) GetUserPasswords(username string) (map[string]string, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
-	return controllers.GetUserPasswords(DB, username)
+	return controllers.GetUserPasswords(a.DB, username)
 }
 
 // Shows the password by the userKey decryption method
 //
 //	encryption.RevealPassword(encryptedPassword, userKey) // It is the encryption controller
 func (a *App) ShowPassword(username, service, userKey string) (string, error) {
-	DB := database.OpenDB()
-	defer DB.Close()
 
 	var encryptedPassword string
 
-	err := DB.View(func(tx *bbolt.Tx) error {
+	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
 			return fmt.Errorf("user not found")
@@ -221,8 +212,8 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 // ListUsers retrieves user information concurrently
 //
 //	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
-func (a *App) GetListUsers(userIDs []string, service string, db *bbolt.DB) ([]*models.User, error) {
-	return controllers.GetUsersConcurrently(db, userIDs)
+func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, error) {
+	return controllers.GetUsersConcurrently(a.DB, userIDs)
 }
 
 // PasswordGenerator generates a random password with a specified

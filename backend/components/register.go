@@ -35,13 +35,10 @@ func RegistrySecurer(password string) ([]byte, string, error) {
 		return nil, "", errors.New("error")
 	}
 
-	userKey, err := userkeyhandler.GenerateRandomUserKey(32)
-	if err != nil {
-		log.Printf("failed to generate user Key: %v", err)
-		return nil, "", errors.New("error")
-	}
+	userKey := userkeyhandler.GenerateRandomUserKey(32) // V2CXXloRbh6jHQRsVavLb4R8qAJ0Oz7B
+	log.Print(userKey)
 
-	encryptedUserKey, err := encryption.EncryptPassword(userKey, password)
+	encryptedUserKey, err := encryption.EncryptPassword(password, userKey)
 	if err != nil {
 		log.Printf("failed to encrypt user key: %v", err)
 		return nil, "", errors.New("error")

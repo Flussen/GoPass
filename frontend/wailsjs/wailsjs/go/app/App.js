@@ -18,8 +18,8 @@ export function DoSaveUserPassword(arg1, arg2, arg3, arg4) {
   return window['go']['app']['App']['DoSaveUserPassword'](arg1, arg2, arg3, arg4);
 }
 
-export function GetListUsers(arg1, arg2, arg3) {
-  return window['go']['app']['App']['GetListUsers'](arg1, arg2, arg3);
+export function GetListUsers(arg1, arg2) {
+  return window['go']['app']['App']['GetListUsers'](arg1, arg2);
 }
 
 export function GetTokenVerification(arg1) {
