@@ -2,10 +2,12 @@ package main
 
 import (
 	// Package imports
+
+	"GoPass/backend/components"
+	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
 	"GoPass/backend/models" // Importing another custom package
-	userkeyhandler "GoPass/backend/userKeyHandler"
 	"fmt"
 
 	"encoding/json" // Package for encoding and decoding JSON
@@ -172,37 +174,17 @@ func (a *App) VerifySessionToken(token string) (bool, error) {
 }
 
 // Register registers a new user with the given username, email, and password
-func (a *App) Register(username, email, password string) (bool, error) {
+func (a *App) DoRegister(username, email, password string) (bool, error) {
 	DB := database.OpenDB()
 	defer DB.Close()
 
-	if username == "" || password == "" {
-		return false, errors.New("invalid credentials")
-	}
-
-	exists, err := models.CheckUserExists(DB, username, email)
+	err := components.RegistryChecker(DB, username, email, password)
 	if err != nil {
-		log.Printf("error checking for user existence: %v", err)
-		return false, err
-	}
-	if exists {
-		return false, errors.New("the user or email already exists")
-	}
-
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("Hashing failure")
-	}
-
-	userKey, err := userkeyhandler.GenerateRandomUserKey(32)
-	if err != nil {
-		log.Printf("failed to generate user Key: %v", err)
 		return false, err
 	}
 
-	encryptedUserKey, err := encryption.EncryptPassword(userKey, password)
+	hashedPassword, encryptedUserKey, err := components.RegistrySecurer(password)
 	if err != nil {
-		log.Printf("failed to encrypt user key: %v", err)
 		return false, err
 	}
 
@@ -215,7 +197,7 @@ func (a *App) Register(username, email, password string) (bool, error) {
 		CreatedAt:        time.Now().Format(time.RFC3339),
 	}
 
-	if err := models.CreateUser(DB, newUser); err != nil {
+	if err := controllers.CreateUser(DB, newUser); err != nil {
 		log.Printf("failed to create user: %v", err)
 		return false, err
 	} else {
@@ -234,7 +216,6 @@ func (a *App) GetUserPasswords(username string) (map[string]string, error) {
 func (a *App) SaveUserPassword(username, service, password, userKey string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
-	// db *bbolt.DB, userID, userKey, service, password string
 	return models.SavePassword(DB, username, userKey, service, password)
 }
 
@@ -278,7 +259,6 @@ func (a *App) Greet(username string) (string, error) {
 }
 
 // DeletePassword deletes a password saved in the database by the given username and service.
-// For examp
 func (a *App) DeletePassword(username, service string) error {
 	DB := database.OpenDB()
 	defer DB.Close()
