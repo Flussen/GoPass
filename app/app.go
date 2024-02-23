@@ -3,6 +3,7 @@ package app
 import (
 	// Package imports
 
+	eh "GoPass/backend/ErrorHandler"
 	"GoPass/backend/components"
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
@@ -62,7 +63,7 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return errors.New("'users' bucket not found")
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
 		}
 
 		userBytes := b.Get([]byte(username))
@@ -82,14 +83,9 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 		return "", "", errors.New("invalid credentials")
 	}
 
-	userKey, err := encryption.DecryptPassword(storedUser.EncryptedUserKey, password)
-	if err != nil {
-		log.Printf("error decrypting user key: %v", err)
-		return "", "", errors.New("failed to decrypt user Key")
-	}
-
 	token := uuid.New().String()
 	expiry := time.Now().Add(730 * time.Hour)
+	userKey := storedUser.Password
 
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
@@ -108,18 +104,18 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 		return false, err
 	}
 
-	hashedPassword, encryptedUserKey, err := components.RegistrySecurer(password)
+	hashedPassword, UserKey, err := components.RegistrySecurer(password)
 	if err != nil {
 		return false, err
 	}
 
 	newUser := models.User{
-		ID:               uuid.New().String(),
-		Username:         username,
-		Email:            email,
-		Password:         string(hashedPassword),
-		EncryptedUserKey: encryptedUserKey,
-		CreatedAt:        time.Now().Format(time.RFC3339),
+		ID:        uuid.New().String(),
+		Username:  username,
+		Email:     email,
+		Password:  string(hashedPassword),
+		UserKey:   UserKey,
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 
 	if err := controllers.CreateUser(a.DB, newUser); err != nil {
@@ -186,7 +182,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
-			return fmt.Errorf("user not found")
+			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
 
 		encryptedPasswordBytes := userBucket.Get([]byte(service))
