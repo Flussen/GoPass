@@ -2,8 +2,6 @@ module GoPass
 
 go 1.22
 
-toolchain go1.21.6
-
 require github.com/wailsapp/wails/v2 v2.8.0
 
 require (
