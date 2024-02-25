@@ -3,11 +3,11 @@ package app
 import (
 	// Package imports
 
-	eh "GoPass/backend/ErrorHandler"
 	"GoPass/backend/components"
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models" // Importing another custom package
 	"fmt"
 

@@ -1,6 +1,9 @@
 package errorhandler
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+)
 
 type GoPassErrors struct {
 	Title   string
@@ -27,4 +30,22 @@ func NewGoPassError(title string) error {
 
 func NewGoPassDetailedError(title, message string) error {
 	return &GoPassErrors{Title: title, Message: message}
+}
+
+func NewGoPassErrorf(title string, a ...interface{}) error {
+	if len(a) == 0 {
+		warnCaller("Warning: NewGoPassErrorf called with 'title' but without formatting arguments. Consider using NewGoPassError for static messages.")
+	}
+	return &GoPassErrors{
+		Title: fmt.Sprintf(title, a...),
+	}
+}
+
+func warnCaller(msg string) {
+	_, file, line, ok := runtime.Caller(2)
+	if ok {
+		fmt.Printf("%s - %s:%d\n", msg, file, line)
+	} else {
+		fmt.Println(msg)
+	}
 }
