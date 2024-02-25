@@ -14,6 +14,7 @@ const (
 	ErrLogin_AuthenticationFailure = "authentication failure"
 	ErrBucketNotFound              = "'Users' bucket not found"
 	ErrUserNotFound                = "could not get the user within this bucket"
+	ErrInvalidCredentils           = "invalid credentials"
 )
 
 func (e *GoPassErrors) Error() string {

@@ -66,19 +66,19 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("user not found")
+			return errors.New(eh.ErrUserNotFound)
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
 		eh.NewGoPassErrorf("error searching for user: %v", err)
-		return "", "", errors.New("invalid credentials")
+		return "", "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		return "", "", errors.New("invalid credentials")
+		return "", "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	token := uuid.New().String()
@@ -88,7 +88,7 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
 		eh.NewGoPassErrorf("error storing session token: %v", err)
-		return "", "", errors.New("failed to log in successfully")
+		return "", "", errors.New("failed to log in")
 	}
 
 	return token, userKey, nil
