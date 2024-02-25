@@ -9,11 +9,9 @@ import (
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models" // Importing another custom package
-	"fmt"
 
 	"encoding/json" // Package for encoding and decoding JSON
 	"errors"
-	"log"
 	"math/rand"
 	"time"
 
@@ -74,7 +72,7 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
-		log.Printf("error searching for user: %v", err)
+		eh.NewGoPassErrorf("error searching for user: %v", err)
 		return "", "", errors.New("invalid credentials")
 	}
 
@@ -89,7 +87,7 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
-		log.Printf("error storing session token: %v", err)
+		eh.NewGoPassErrorf("error storing session token: %v", err)
 		return "", "", errors.New("failed to log in successfully")
 	}
 
@@ -119,7 +117,7 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 	}
 
 	if err := controllers.CreateUser(a.DB, newUser); err != nil {
-		log.Printf("failed to create user: %v", err)
+		// eh.NewGoPassErrorf("failed to create user: %s", username)
 		return false, err
 	}
 
@@ -187,7 +185,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 
 		encryptedPasswordBytes := userBucket.Get([]byte(service))
 		if encryptedPasswordBytes == nil {
-			return fmt.Errorf("password not found for service: %s", service)
+			return eh.NewGoPassErrorf("password not found for %s", service)
 		}
 		encryptedPassword = string(encryptedPasswordBytes)
 		return nil
