@@ -1,9 +1,15 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
+
+type Deserialize struct {
+	Token   string `json:"token"`
+	UserKey string `json:"userKey"`
+}
 
 func TestDoLogin(t *testing.T) {
 	db, cleanup := createTestDB(t)
@@ -19,10 +25,17 @@ func TestDoLogin(t *testing.T) {
 		t.Errorf("DoRegister was not successful")
 	}
 
-	token, userKey, err := app.DoLogin("testuser", "password123")
+	js, err := app.DoLogin("testuser", "password123")
 	if err != nil {
 		t.Errorf("DoRegister failed: %v", err)
-	} else {
-		fmt.Printf("Login successful\nToken: %v\nUserKey: %v", token, userKey)
 	}
+
+	var result Deserialize
+
+	err = json.Unmarshal([]byte(js), &result)
+	if err != nil {
+		t.Errorf("json.Unmarshal failed: %v", err)
+	}
+	fmt.Printf("Token: %s\n", result.Token)
+	fmt.Printf("TUserKey: %s\n", result.UserKey)
 }
