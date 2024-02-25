@@ -1,35 +1,43 @@
 "use client"
 import React from 'react';
 import { useState } from 'react';
-import { Login } from '@/wailsjs/wailsjs/go/main/App';
+import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
 
 interface LoginProps {
   setShowSignup: (value: boolean) => void;
   handleLoginSignup: () => void; // Añadir esta línea
   version: string;
+  token: string;
+  userKey: string;
+}
+
+interface LoginState {
+  token: string;
+  userKey: string;
 }
 
 
 
-const LoginPage: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version }) => {
 
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+  const [userKey, setUserKey] = useState('');
 
   async function pullLogin() {
     try {
-      const response = await Login(name, password);
-      if (response!==null) {
-        handleLoginSignup();
-        alert('Sesión iniciada');
-      } else {
-        alert('Error al iniciar sesión');
-      }
+      const response = await DoLogin(name, password);
+      const result = JSON.parse(response) as LoginState;
+      console.log("Token: ", result.token, "UserKey: ", result.userKey)
     } catch (error) {
-      console.error('Error fetching version:', error);
+      // Manejo de errores
+      console.error('Login error:', error);
+      // Mostrar mensaje de error al usuario, etc.
     }
   }
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Previene la recarga de la página
@@ -54,4 +62,4 @@ const LoginPage: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, ver
   );
 };
 
-export default LoginPage;
+export default Login;

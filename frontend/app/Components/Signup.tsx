@@ -25,6 +25,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
       const response = await DoRegister(name, email, password);
       if (response) {
         handleLoginSignup();
+        alert('Usuario registrado con éxito')
       } else {
         alert('Error al registrar usuario '+ response);
       }
