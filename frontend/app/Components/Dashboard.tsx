@@ -10,7 +10,11 @@ import ProfileOverlay from './ProfileOverlay';
 import AddOverlay from './AddOverlay';
 import OptionsOverlay from "./OptionsOverlay";
 
-const Dashboard = () => {
+interface DashboardProps {
+  setShowGenerator: (show: boolean) => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({setShowGenerator}) => {
   const [showPass, setShowPass] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [email, setEmail] = useState("example@gmail.com");
@@ -29,7 +33,7 @@ const Dashboard = () => {
         <div onClick={() => setIsOptionsOverlayOpen(!isOptionsOverlayOpen)} className='flex justify-center items-center h-14 w-14 m-5 cursor-pointer '>
           <FontAwesomeIcon icon={faBars} className='text-xl ' />
         </div>
-        <OptionsOverlay isOpen={isOptionsOverlayOpen} onClose={() => setIsOptionsOverlayOpen(!isOptionsOverlayOpen)}>
+        <OptionsOverlay setShowGenerator={setShowGenerator}  isOpen={isOptionsOverlayOpen} onClose={() => setIsOptionsOverlayOpen(!isOptionsOverlayOpen)}>
           <>
           </>
         </OptionsOverlay>
@@ -80,7 +84,7 @@ const Dashboard = () => {
                 example@gmail.com
               </div>
             </div>
-            <div className='flex justify-end w-full'>
+            <div  className='flex justify-end w-full'>
               <FontAwesomeIcon icon={faEllipsis} className='mr-4 text-blue text-xl cursor-pointer' />
             </div>
           </div>

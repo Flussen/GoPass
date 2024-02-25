@@ -31,18 +31,18 @@ export default function Home() {
   };
 
   if (showDashboard) {
-    return (
+    return ( 
       <>
-      {
-        showGenerator ? (
-          <Generator setShowGenerator={setShowGenerator} />
-        ) : (
-          <Dashboard setShowGenerator={setShowGenerator} />
-        )
-      }
+      {showGenerator ? (
+        <Generator setShowGenerator={setShowGenerator} />
+      ) : (
+        <Dashboard setShowGenerator={setShowGenerator} />
+      )}
       </>
+    
+    )
+        
       
-      ) 
   }
 
   return (

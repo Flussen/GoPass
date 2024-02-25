@@ -8,25 +8,26 @@ import { faLayerGroup } from "@fortawesome/free-solid-svg-icons/faLayerGroup";
 import { faKey } from "@fortawesome/free-solid-svg-icons/faKey";
 
 interface OptionsOverlayProps {
-    setShowGenerator:(value:boolean)=>void;
-}
+    setShowGenerator: (show: boolean) => void;
+    isOpen: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+  }
 
-
-
-export function OptionsOverlay({setShowGenerator, isOpen, onClose }: {setShowGenerator:boolean, isOpen: boolean, onClose: () => void, children: React.ReactNode }) {
+const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowGenerator, isOpen, onClose, children }) => {
 
     return (
         <>
 
             {
                 isOpen ? (
-                    <div className='absolute flex justify-start left-0 top-0  '>
+                    <div className='absolute flex justify-start left-0 top-0 z-20 '>
                         <div onClick={onClose} className="w-screen h-screen bg-black opacity-50" />
 
                         <div className="absolute bg-white flex flex-col items-center justify-between h-screen p-10 pt-14 pr-28 space-y-5 ">
                             <div className="space-y-5">
                                 {/* Primer div */}
-                                <div className="flex items-center space-x-3 hover:text-blue font-medium">
+                                <div onClick={() => setShowGenerator(false)} className="flex items-center space-x-3 hover:text-blue font-medium">
                                     <FontAwesomeIcon icon={faLayerGroup} />
                                     <div>Credentials</div>
                                 </div>
