@@ -2,7 +2,6 @@ package components
 
 import (
 	"GoPass/backend/controllers"
-	"GoPass/backend/encryption"
 	userkeyhandler "GoPass/backend/userKeyHandler"
 	"errors"
 	"log"
@@ -36,13 +35,5 @@ func RegistrySecurer(password string) ([]byte, string, error) {
 	}
 
 	userKey := userkeyhandler.GenerateRandomUserKey(32) // V2CXXloRbh6jHQRsVavLb4R8qAJ0Oz7B
-	log.Print(userKey)
-
-	encryptedUserKey, err := encryption.EncryptPassword(password, userKey)
-	if err != nil {
-		log.Printf("failed to encrypt user key: %v", err)
-		return nil, "", errors.New("error")
-	}
-
-	return hashedPassword, encryptedUserKey, nil
+	return hashedPassword, userKey, nil
 }

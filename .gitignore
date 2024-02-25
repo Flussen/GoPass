@@ -1,18 +1,18 @@
-# Archivos de sistema operativo
+# Operating system files
 .DS_Store
 Thumbs.db
 
-# Directorios de Node
+# Node directories
 node_modules/
 npm-debug.log
 yarn-error.log
 
-# Directorios de Go
+#Go directories
 /bin/
 /pkg/
 /vendor/
 
-# Archivos compilados de Go
+# Go compiled files
 *.o
 *.a
 *.so
@@ -20,25 +20,25 @@ yarn-error.log
 *.test
 *.out
 
-# Archivos de configuración local
+# Local configuration files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Directorio de salida de compilación
+# Build output directory
 frontend/dist/
 frontend/build
 
-# Directorios y archivos de IDE
+# IDE directories and files
 .idea/
 *.swp
 *.swo
 .vscode/
 *.sublime-workspace
 
-# Archivos de log
+# Log files
 *.log
 *.csv
 *.dat
@@ -47,7 +47,7 @@ frontend/build
 *.seed
 *.pid.lock
 
-# Otros archivos y directorios a ignorar
+# Other files and directories to ignore
 .cache
 .next
 coverage/
@@ -55,3 +55,4 @@ coverage/
 *.temp
 *.bak
 *.backup
+*.db

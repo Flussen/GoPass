@@ -7,12 +7,11 @@ import (
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models" // Importing another custom package
-	"fmt"
 
 	"encoding/json" // Package for encoding and decoding JSON
 	"errors"
-	"log"
 	"math/rand"
 	"time"
 
@@ -56,48 +55,48 @@ func NewAppWithDB(db *bbolt.DB) *App {
 // if the password is comparable to the hash
 // it will also parse the data, decrypt the userKey stored in the database
 // and generate a login token. (Expiry in 30 days)
-func (a *App) DoLogin(username, password string) (string, string, error) {
+func (a *App) DoLogin(username, password string) (string, error) {
 	var storedUser models.User
 
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return errors.New("'users' bucket not found")
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
 		}
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("user not found")
+			return errors.New(eh.ErrUserNotFound)
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
-		log.Printf("error searching for user: %v", err)
-		return "", "", errors.New("invalid credentials")
+		eh.NewGoPassErrorf("error searching for user: %v", err)
+		return "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		return "", "", errors.New("invalid credentials")
-	}
-
-	userKey, err := encryption.DecryptPassword(storedUser.EncryptedUserKey, password)
-	if err != nil {
-		log.Printf("error decrypting user key: %v", err)
-		return "", "", errors.New("failed to decrypt user Key")
+		return "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	token := uuid.New().String()
 	expiry := time.Now().Add(730 * time.Hour)
+	userKey := storedUser.Password
 
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
-		log.Printf("error storing session token: %v", err)
-		return "", "", errors.New("failed to log in successfully")
+		eh.NewGoPassErrorf("error storing session token: %v", err)
+		return "", errors.New("failed to log in")
 	}
 
-	return token, userKey, nil
+	result, err := json.Marshal(map[string]string{"token": token, "userKey": userKey})
+	if err != nil {
+		return "", err
+	}
+
+	return string(result), nil
 }
 
 // Register registers a new user with the given username, email, and password
@@ -108,22 +107,22 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 		return false, err
 	}
 
-	hashedPassword, encryptedUserKey, err := components.RegistrySecurer(password)
+	hashedPassword, UserKey, err := components.RegistrySecurer(password)
 	if err != nil {
 		return false, err
 	}
 
 	newUser := models.User{
-		ID:               uuid.New().String(),
-		Username:         username,
-		Email:            email,
-		Password:         string(hashedPassword),
-		EncryptedUserKey: encryptedUserKey,
-		CreatedAt:        time.Now().Format(time.RFC3339),
+		ID:        uuid.New().String(),
+		Username:  username,
+		Email:     email,
+		Password:  string(hashedPassword),
+		UserKey:   UserKey,
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 
 	if err := controllers.CreateUser(a.DB, newUser); err != nil {
-		log.Printf("failed to create user: %v", err)
+		// eh.NewGoPassErrorf("failed to create user: %s", username)
 		return false, err
 	}
 
@@ -186,12 +185,12 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
-			return fmt.Errorf("user not found")
+			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
 
 		encryptedPasswordBytes := userBucket.Get([]byte(service))
 		if encryptedPasswordBytes == nil {
-			return fmt.Errorf("password not found for service: %s", service)
+			return eh.NewGoPassErrorf("password not found for %s", service)
 		}
 		encryptedPassword = string(encryptedPasswordBytes)
 		return nil
@@ -218,24 +217,34 @@ func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, er
 
 // PasswordGenerator generates a random password with a specified
 // length and returns its strength level
-func (a *App) PasswordGenerator(lenght int) (string, string) {
+func (a *App) PasswordGenerator(lenght int) (string, error) {
+	var status string
+
 	const (
 		weak    = "Weak"
 		medium  = "Medium"
 		high    = "Strong"
 		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
 	)
+
+	if lenght >= 20 {
+		status = high
+	} else if lenght > 10 {
+		status = medium
+	} else {
+		status = weak
+	}
+
 	password := make([]byte, lenght)
 	for i := range password {
 		password[i] = charset[rand.Intn(len(charset))]
 	}
-	if lenght >= 20 {
-		return string(password), high
+
+	pwd, err := json.Marshal(map[string]string{"state": status, "password": string(password)})
+	if err != nil {
+		return "", eh.NewGoPassError("Error in backend for generate a new Password")
 	}
-	if lenght > 10 {
-		return string(password), medium
-	}
-	return string(password), weak
+	return string(pwd), nil
 }
 
 // GetVersion returns the version of the application. Example 1.0.1
