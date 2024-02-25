@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// This generate a new UserKey, is not for user account password or user password!!
 func GenerateRandomUserKey(length int) string {
 	rand.New(rand.NewSource(time.Now().Unix()))
 	characters := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
