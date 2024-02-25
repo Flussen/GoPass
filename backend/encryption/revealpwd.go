@@ -1,7 +1,7 @@
 package encryption
 
 import (
-	"fmt"
+	eh "GoPass/backend/errorHandler"
 	"log"
 )
 
@@ -9,7 +9,7 @@ func RevealPassword(encripterPassword, userKey string) (string, error) {
 	decrypted, err := DecryptPassword(encripterPassword, userKey)
 	if err != nil {
 		log.Printf("Decryption failure: %v", err)
-		return "", fmt.Errorf("failted to decrypt password")
+		return "", eh.NewGoPassErrorf("failted to decrypt password")
 	}
 	return decrypted, nil
 }

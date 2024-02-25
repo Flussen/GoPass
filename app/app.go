@@ -3,17 +3,15 @@ package app
 import (
 	// Package imports
 
-	eh "GoPass/backend/ErrorHandler"
 	"GoPass/backend/components"
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models" // Importing another custom package
-	"fmt"
 
 	"encoding/json" // Package for encoding and decoding JSON
 	"errors"
-	"log"
 	"math/rand"
 	"time"
 
@@ -68,19 +66,19 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("user not found")
+			return errors.New(eh.ErrUserNotFound)
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)
 	})
 	if err != nil {
-		log.Printf("error searching for user: %v", err)
-		return "", "", errors.New("invalid credentials")
+		eh.NewGoPassErrorf("error searching for user: %v", err)
+		return "", "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		return "", "", errors.New("invalid credentials")
+		return "", "", errors.New(eh.ErrInvalidCredentils)
 	}
 
 	token := uuid.New().String()
@@ -89,8 +87,8 @@ func (a *App) DoLogin(username, password string) (string, string, error) {
 
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
-		log.Printf("error storing session token: %v", err)
-		return "", "", errors.New("failed to log in successfully")
+		eh.NewGoPassErrorf("error storing session token: %v", err)
+		return "", "", errors.New("failed to log in")
 	}
 
 	return token, userKey, nil
@@ -119,7 +117,7 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 	}
 
 	if err := controllers.CreateUser(a.DB, newUser); err != nil {
-		log.Printf("failed to create user: %v", err)
+		// eh.NewGoPassErrorf("failed to create user: %s", username)
 		return false, err
 	}
 
@@ -187,7 +185,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 
 		encryptedPasswordBytes := userBucket.Get([]byte(service))
 		if encryptedPasswordBytes == nil {
-			return fmt.Errorf("password not found for service: %s", service)
+			return eh.NewGoPassErrorf("password not found for %s", service)
 		}
 		encryptedPassword = string(encryptedPasswordBytes)
 		return nil

@@ -5,19 +5,35 @@ import (
 	"testing"
 )
 
-func riskyOperation() error {
-	return NewGoPassError(title)
-}
-
-func riskyOperationDetailed() error {
-	return NewGoPassDetailedError(title, message)
-}
-
+// Test variables
 var (
-	title   = "failed operation"
-	message = "bad server"
+	TitleTest    = "I'am a Title for Testing"
+	MessageTest  = "I'm a message Test for give more details"
+	ArgumentTest = "thisIsATestArgument"
 )
 
+// Test 1:
+//
+//	func TestNewGoPassError(t *testing.T)
+func riskyOperation() error {
+	return NewGoPassError(TitleTest)
+}
+
+// Test 2:
+//
+//	func TestNewGoPassDetailedError(t *testing.T)
+func riskyOperationDetailed() error {
+	return NewGoPassDetailedError(TitleTest, MessageTest)
+}
+
+// Test 3:
+//
+//	func TestNewGoPassFormatError(t *testing.T)
+func riskyOperationFormat() error {
+	return NewGoPassErrorf("%s %v", TitleTest, ArgumentTest)
+}
+
+// Verifies if basic error is generated correctly
 func TestNewGoPassError(t *testing.T) {
 	var testPassed bool = false
 
@@ -31,15 +47,38 @@ func TestNewGoPassError(t *testing.T) {
 		panic("defaultTest failure")
 	}
 
-	testPassed = false
+	testPassed = true
+}
 
-	err = riskyOperationDetailed()
+// Verifies if detailed error is generated correctly
+func TestNewGoPassDetailedError(t *testing.T) {
+	err := riskyOperationDetailed()
 	if err != nil {
-		fmt.Println("Error:", err)
-		testPassed = true
+		if GoPassErr, ok := err.(*GoPassErrors); ok {
+			fmt.Println("Error:", GoPassErr.DetailedError())
+		} else {
+			t.Fatal("Error is not of type *GoPassErrors")
+		}
+	} else {
+		t.Fatal("Expected an error but got nil")
 	}
+}
 
-	if !testPassed {
-		panic("detailedTest failure")
+// Verifies if error with format is generated correctly
+func TestNewGoPassFormatError(t *testing.T) {
+	err := riskyOperationFormat()
+	if err != nil {
+		if GoPassErr, ok := err.(*GoPassErrors); ok {
+			if assertTest := GoPassErr.Error(); assertTest == TitleTest+" "+ArgumentTest {
+				fmt.Println("Passed Error:", GoPassErr.Error())
+			} else {
+				fmt.Printf("INFO: %s", assertTest)
+				panic("title and argument are not equivalent to the test")
+			}
+		} else {
+			t.Fatal("Error is not of type *GoPassErrors")
+		}
+	} else {
+		t.Fatal("Expected an error but got nil")
 	}
 }
