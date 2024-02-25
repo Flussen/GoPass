@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { Register } from '@/wailsjs/wailsjs/go/main/App';
+import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import { useState } from 'react';
 
 interface SignupProps {
@@ -22,7 +22,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
   async function pullRegister() {
 
     try {
-      const response = await Register(name, email, password);
+      const response = await DoRegister(name, email, password);
       if (response) {
         handleLoginSignup();
       } else {
