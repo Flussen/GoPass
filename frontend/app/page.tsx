@@ -46,7 +46,7 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className='bg-back h-screen'>
       {showSignup ? (
         <SignupComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version} />
       ) : (
