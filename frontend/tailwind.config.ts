@@ -14,10 +14,23 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
-        'grey': '#a7a7a7',
-        'blue': '#15a7f9',
+        'blue': '#00A3FF',
         'red': '#d50000',
+        'back': '#DEEFFF',
+        'bkblue':'#00172E',
+        'grey':'#90A8B9',
+        'lightgrey':'#D9E0E7',
+        'box':'rgb(248, 252, 255,0.45)'
       },
+      borderRadius: {
+        '2xl': '16px', // Aquí defines tu tamaño personalizado
+      },
+      scale: {
+        '80': '0.8', // Esto añade `scale-200` para escalar elementos al 200%
+      },
+      boxShadow:{
+        'shadow':'rgb(0, 0, 0, 0.25) 2px 6px 10px -10px;'
+      }
     },
   },
   plugins: [],
