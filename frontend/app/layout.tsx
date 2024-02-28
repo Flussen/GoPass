@@ -15,7 +15,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
       <body >{children}</body>
     </html>

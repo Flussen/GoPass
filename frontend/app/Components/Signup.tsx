@@ -66,7 +66,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col justify-center items-center h-full space-y-4 font-semibold text-xl'>
               <div className='xl:text-[3vw]  text-5xl font-bold mb-8'>
-                Let's Start!
+                Let&apos;s Start!
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
                 <PersonIcon className='absolute ml-4 text-grey' />

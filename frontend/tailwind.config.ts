@@ -20,7 +20,11 @@ const config: Config = {
         'bkblue':'#00172E',
         'grey':'#90A8B9',
         'lightgrey':'#D9E0E7',
-        'box':'rgb(248, 252, 255,0.45)'
+        'box':'rgb(248, 252, 255,0.45)',
+        'bgblue':'#CAE6FF',
+        'lightgreen': 'rgb(112, 255, 169,0.25)',
+        'green':'#00E55C'
+
       },
       borderRadius: {
         '2xl': '16px', // Aquí defines tu tamaño personalizado
@@ -29,8 +33,8 @@ const config: Config = {
         '80': '0.8', // Esto añade `scale-200` para escalar elementos al 200%
       },
       boxShadow:{
-        'shadow':'rgb(0, 0, 0, 0.25) 2px 6px 10px -10px;'
-      }
+        shadow: ' 2px 6px 20px -10px rgba(0, 0, 0, 0.25)',
+      },
     },
   },
   plugins: [],
