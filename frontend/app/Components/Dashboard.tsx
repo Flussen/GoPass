@@ -23,62 +23,60 @@ import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
 
 interface DashboardProps {
   setShowGenerator: (show: boolean) => void;
-
+  showGenerator: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator }) => {
-  const [showPass, setShowPass] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
+const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator }) => {
   const [email, setEmail] = useState("example@gmail.com");
   const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
   };
 
   const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
-  const [isOptionsOverlayOpen, setIsOptionsOverlayOpen] = useState(false);
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
 
   return (
-    <div>
-      <div className='flex justify-between bg-back'>
-        <OptionsOverlay setShowGenerator={setShowGenerator} children={undefined} />
-
+      <div id="Dashboard" className='flex justify-between bg-back'>
+        <OptionsOverlay setShowGenerator={setShowGenerator} 
+        showGenerator={showGenerator}>
+          <></>
+        </OptionsOverlay>
         <div className="flex flex-col justify-start items-center basis-4/5 px-16 pt-16 space-y-24">
-          <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow">
+          <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
             <div className='flex items-center '>
               <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
               <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 w-[34rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
             </div>
             <div className="flex items-center space-x-5">
-              <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
+              <div className="flex justify-center items-center h-14 px-5 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
                 <div>
                   Filter
                 </div>
                 <FilterAltRoundedIcon />
 
               </div>
-              <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
+              <div className="flex justify-center items-center h-14 px-5 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
                 <div>
-                  Sort
+                  Sarp
                 </div>
                 <FormatLineSpacingRoundedIcon sx={{ fontSize: 28 }} />
               </div>
             </div>
           </div>
-          <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5">
+          <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5 text">
             <div className="flex justify-between  items-center">
               <div className="text-5xl font-bold">
                 My Password
               </div>
-              <div className="flex justify-center items-center bg-blue h-14 px-5 rounded-2xl text-back cursor-pointer ">
+              <div className="flex justify-center items-center bg-blue h-14 px-7 rounded-2xl text-back cursor-pointer  text-xl">
                 <AddRoundedIcon sx={{ fontSize: 28 }} />
                 <div>
                   New
                 </div>
               </div>
             </div>
-            <div className="flex w-full pl-3 text-grey">
+            <div className="flex w-full pl-5 text-grey">
               <div className="basis-3/6">
                 Name
               </div>
@@ -126,7 +124,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator }) => {
 
 
 
-    </div>
+   
 
   )
 }

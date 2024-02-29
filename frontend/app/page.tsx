@@ -30,13 +30,13 @@ export default function Home() {
     setShowDashboard(true); 
   };
 
-  if (showDashboard) {
+  if (true) {
     return ( 
       <>
       {showGenerator ? (
-        <Generator setShowGenerator={setShowGenerator} />
+        <Generator setShowGenerator={setShowGenerator} showGenerator={showGenerator}  />
       ) : (
-        <Dashboard setShowGenerator={setShowGenerator} />
+        <Dashboard setShowGenerator={setShowGenerator} showGenerator={showGenerator} />
       )}
       </>
     
