@@ -7,7 +7,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func createTestDB(t *testing.T) (*bbolt.DB, func()) {
+func CreateTestDB(t *testing.T) (*bbolt.DB, func()) {
 	// Crear un archivo temporal para la base de datos
 	tmpfile, err := os.CreateTemp("", "testdb_*.db")
 	if err != nil {

@@ -11,8 +11,6 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-// CreateUser serializes the user to JSON and inserts/updates it in the database
-
 // GetUserByID retrieves a user by its ID from the database
 func GetUserByID(db *bbolt.DB, userID string) (*models.User, error) {
 	var user models.User
@@ -98,8 +96,8 @@ func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*models.User, error
 }
 
 // GetUserPasswords retrieves passwords of the user from the database
-func GetUserPasswords(db *bbolt.DB, username string) (map[string]string, error) {
-	passwords := make(map[string]string)
+func GetUserPasswords(db *bbolt.DB, username string) ([]models.Password, error) {
+	var passwords []models.Password
 
 	err := db.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
@@ -108,7 +106,11 @@ func GetUserPasswords(db *bbolt.DB, username string) (map[string]string, error) 
 		}
 
 		return userBucket.ForEach(func(k, v []byte) error {
-			passwords[string(k)] = string(v)
+			var pwd models.Password
+			if err := json.Unmarshal(v, &pwd); err != nil {
+				return err
+			}
+			passwords = append(passwords, pwd)
 			return nil
 		})
 	})

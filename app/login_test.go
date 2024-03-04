@@ -12,7 +12,7 @@ type Deserialize struct {
 }
 
 func TestDoLogin(t *testing.T) {
-	db, cleanup := createTestDB(t)
+	db, cleanup := CreateTestDB(t)
 	defer cleanup()
 
 	app := &App{DB: db}
@@ -36,6 +36,7 @@ func TestDoLogin(t *testing.T) {
 	if err != nil {
 		t.Errorf("json.Unmarshal failed: %v", err)
 	}
+	fmt.Printf("DATA: %s\n", result)
 	fmt.Printf("Token: %s\n", result.Token)
 	fmt.Printf("TUserKey: %s\n", result.UserKey)
 }

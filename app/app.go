@@ -83,7 +83,7 @@ func (a *App) DoLogin(username, password string) (string, error) {
 
 	token := uuid.New().String()
 	expiry := time.Now().Add(730 * time.Hour)
-	userKey := storedUser.Password
+	userKey := storedUser.UserKey
 
 	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
 	if err != nil {
@@ -132,8 +132,13 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(username, service, password, userKey string) error {
-	return controllers.SavePassword(a.DB, username, userKey, service, password)
+func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, userKey string) (string, error) {
+	date := time.Now().Format(time.DateTime)
+	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service, password, userKey, date)
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
 // DeletePassword deletes a password saved in the database by the given username and service.
@@ -171,16 +176,25 @@ func (a *App) GetTokenVerification(token string) (bool, error) {
 // Retrieves the passwords of the user with the given username
 //
 //	components.VerifySessionToken(DB, token) // is the controller for get the user passwords
-func (a *App) GetUserPasswords(username string) (map[string]string, error) {
-	return controllers.GetUserPasswords(a.DB, username)
+func (a *App) GetUserPasswords(username string) (string, error) {
+	pwds, err := controllers.GetUserPasswords(a.DB, username)
+	if err != nil {
+		return "", nil
+	}
+	container := models.PasswordsContainer{Passwords: pwds}
+	jsonData, err := json.Marshal(container)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonData), nil
 }
 
 // Shows the password by the userKey decryption method
 //
 //	encryption.RevealPassword(encryptedPassword, userKey) // It is the encryption controller
-func (a *App) ShowPassword(username, service, userKey string) (string, error) {
+func (a *App) ShowPassword(username, id, userKey string) (string, error) {
 
-	var encryptedPassword string
+	var dataPassword models.Password
 
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
@@ -188,11 +202,15 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
 
-		encryptedPasswordBytes := userBucket.Get([]byte(service))
+		encryptedPasswordBytes := userBucket.Get([]byte(id))
 		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s", service)
+			return eh.NewGoPassErrorf("password not found for %s", id)
 		}
-		encryptedPassword = string(encryptedPasswordBytes)
+		// encryptedPassword = string(encryptedPasswordBytes)
+		err := json.Unmarshal(encryptedPasswordBytes, &dataPassword)
+		if err != nil {
+			return eh.NewGoPassErrorf("error unmarshal in ShowPassword %v", err)
+		}
 		return nil
 	})
 
@@ -200,7 +218,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 		return "", err
 	}
 
-	decrypted, err := encryption.RevealPassword(encryptedPassword, userKey)
+	decrypted, err := encryption.RevealPassword(dataPassword.Pwd, userKey)
 	if err != nil {
 		return "", err
 	}
@@ -217,6 +235,8 @@ func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, er
 
 // PasswordGenerator generates a random password with a specified
 // length and returns its strength level
+//
+// -> Deprecated: it will be removed in a next update, this logic passes to the frontend <-
 func (a *App) PasswordGenerator(lenght int) (string, error) {
 	var status string
 
@@ -249,7 +269,7 @@ func (a *App) PasswordGenerator(lenght int) (string, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.0.2 - ALPHA"
+	return "0.0.3 - ALPHA"
 }
 
 /*
