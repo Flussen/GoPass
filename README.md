@@ -1,4 +1,4 @@
-# GoPass 0.0.2 ALPHA
+# GoPass 0.0.3 ALPHA
 
 ## Introduction
 
