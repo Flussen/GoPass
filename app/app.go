@@ -144,8 +144,13 @@ func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, userKe
 // DeletePassword deletes a password saved in the database by the given username and service.
 //
 //	controllers.DeletePass(DB, username, service) // is the controller for delete the password in the database
-func (a *App) DoDeleteUserPassword(username, service string) error {
-	return controllers.DeletePass(a.DB, username, service)
+func (a *App) DoDeleteUserPassword(username, id string) error {
+	return controllers.DeletePass(a.DB, username, id)
+}
+
+func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername, newPwd string) error {
+	newDate := time.Now().Format(time.DateTime)
+	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
 
 /*
