@@ -18,7 +18,7 @@ export function GetUserPasswords(arg1:string):Promise<{[key: string]: string}>;
 
 export function GetVersion():Promise<string>;
 
-export function PasswordGenerator(arg1:number):Promise<string|string>;
+export function PasswordGenerator(arg1:number):Promise<string>;
 
 export function ShowPassword(arg1:string,arg2:string,arg3:string):Promise<string>;
 
