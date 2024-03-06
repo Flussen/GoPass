@@ -8,13 +8,15 @@ export function DoLogin(arg1:string,arg2:string):Promise<string>;
 
 export function DoRegister(arg1:string,arg2:string,arg3:string):Promise<boolean>;
 
-export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string):Promise<void>;
+export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string):Promise<string>;
+
+export function DoUpdateUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string):Promise<void>;
 
 export function GetListUsers(arg1:Array<string>,arg2:string):Promise<Array<models.User>>;
 
 export function GetTokenVerification(arg1:string):Promise<boolean>;
 
-export function GetUserPasswords(arg1:string):Promise<{[key: string]: string}>;
+export function GetUserPasswords(arg1:string):Promise<string>;
 
 export function GetVersion():Promise<string>;
 

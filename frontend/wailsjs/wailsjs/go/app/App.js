@@ -14,8 +14,12 @@ export function DoRegister(arg1, arg2, arg3) {
   return window['go']['app']['App']['DoRegister'](arg1, arg2, arg3);
 }
 
-export function DoSaveUserPassword(arg1, arg2, arg3, arg4) {
-  return window['go']['app']['App']['DoSaveUserPassword'](arg1, arg2, arg3, arg4);
+export function DoSaveUserPassword(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['app']['App']['DoSaveUserPassword'](arg1, arg2, arg3, arg4, arg5);
+}
+
+export function DoUpdateUserPassword(arg1, arg2, arg3, arg4, arg5, arg6) {
+  return window['go']['app']['App']['DoUpdateUserPassword'](arg1, arg2, arg3, arg4, arg5, arg6);
 }
 
 export function GetListUsers(arg1, arg2) {
