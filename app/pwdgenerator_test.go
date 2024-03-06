@@ -1,12 +1,18 @@
 package app
 
 import (
+	"encoding/json"
 	"log"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert" // Package for assertions in tests
 )
+
+type InfoPass struct {
+	Status   string
+	Password string
+}
 
 // # TestPassword is a test function for PasswordGenerator.
 //
@@ -19,20 +25,29 @@ func Test_password_if_the_password_is_ok(t *testing.T) {
 	containsSpecialCharacters := false
 
 	// Generate a password and get its strength status
-	pwd, status := NewApp().PasswordGenerator(length)
+	pwd, err := NewApp().PasswordGenerator(length)
+	if err != nil {
+		panic("error in password")
+	}
+
+	var unpwd InfoPass
+	err = json.Unmarshal([]byte(pwd), &unpwd)
+	if err != nil {
+		panic("error unmarshal")
+	}
 
 	// Assert notnil that the generated password and status are not nil
-	if assert.NotNil(t, pwd, status) {
-		log.Printf("TEST GENERATED: Password generated successfully, not null.\nPassword: %s\nstatus: %s", pwd, status)
+	if assert.NotNil(t, unpwd.Password, unpwd.Status) {
+		log.Printf("TEST GENERATED: Password generated successfully, not null.\nPassword: %s\nstatus: %s", pwd, unpwd.Status)
 	}
 	// Assert len that if the length is 20
-	if assert.Len(t, pwd, 20) {
+	if assert.Len(t, unpwd.Password, 20) {
 		log.Printf("TEST LENGTH: Length is %v exactly", length)
 	}
 
 	// Assert true if the password contains at least one special character.
 	for _, char := range specialCharacters {
-		if strings.ContainsRune(pwd, char) {
+		if strings.ContainsRune(unpwd.Password, char) {
 			containsSpecialCharacters = true
 			break
 		}

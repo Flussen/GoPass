@@ -2,44 +2,104 @@ package controllers
 
 import (
 	"GoPass/backend/encryption"
+	"GoPass/backend/models"
+	"encoding/json"
 	"fmt"
-	"log"
 
+	"github.com/google/uuid"
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, userID, service, password, userKey string) error {
+func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, userKey, creationDate string) (string, error) {
 
 	encryptedPassword, err := encryption.EncryptPassword(password, userKey)
 	if err != nil {
-		log.Println("Encription failure", err)
-		return err
+		return "", err
 	}
 
-	return db.Update(func(tx *bbolt.Tx) error {
-		userBucket, err := tx.CreateBucketIfNotExists([]byte(userID))
+	id := uuid.New().String()
+
+	newPasswordData := models.Password{
+		Title:       service,
+		Id:          id,
+		Pwd:         encryptedPassword,
+		Username:    usernameToSave,
+		CreatedDate: creationDate,
+	}
+
+	dataBytes, err := json.Marshal(newPasswordData)
+	if err != nil {
+		return "", err
+	}
+	err = db.Update(func(tx *bbolt.Tx) error {
+		passwordBucket, err := tx.CreateBucketIfNotExists([]byte(user))
 		if err != nil {
 			return err
 		}
-
-		return userBucket.Put([]byte(service), []byte(encryptedPassword))
+		return passwordBucket.Put([]byte(id), dataBytes)
 	})
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
-func DeletePass(DB *bbolt.DB, userID, service string) error {
+func DeletePass(DB *bbolt.DB, user, id string) error {
+	if user == "" || id == "" {
+		return fmt.Errorf("user and id must not be empty")
+	}
 	return DB.Update(func(tx *bbolt.Tx) error {
-		// Get the user's password bucket
-		userBucket := tx.Bucket([]byte(userID))
+		userBucket := tx.Bucket([]byte(user))
 		if userBucket == nil {
-			return fmt.Errorf("bucket not found for user %s", userID)
+			return fmt.Errorf("bucket not found for user %s", user)
 		}
 
-		// Delete the password associated with the service
-		err := userBucket.Delete([]byte(service))
+		err := userBucket.Delete([]byte(id))
 		if err != nil {
-			return fmt.Errorf("failed to delete password for service %s: %v", service, err)
+			return fmt.Errorf("failed to delete password for id %s: %v", id, err)
+		}
+
+		if userBucket.Get([]byte(id)) != nil {
+			return fmt.Errorf("password for id %s was not deleted", id)
 		}
 
 		return nil
 	})
+}
+
+func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, newDate string) error {
+	if user == "" || id == "" || userKey == "" ||
+		newTitle == "" || newPwd == "" ||
+		newUsername == "" || newDate == "" {
+		return fmt.Errorf("none of the parameters can be empty")
+	}
+
+	encryptedPassword, err := encryption.EncryptPassword(newPwd, userKey)
+	if err != nil {
+		return err
+	}
+
+	newPasswordData := models.Password{
+		Title:       newTitle,
+		Pwd:         encryptedPassword,
+		Username:    newUsername,
+		CreatedDate: newDate,
+	}
+
+	dataBytes, err := json.Marshal(newPasswordData)
+	if err != nil {
+		return err
+	}
+
+	err = db.Update(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(user))
+		if userBucket == nil {
+			return fmt.Errorf("bucket not found for user %s", user)
+		}
+		return userBucket.Put([]byte(id), dataBytes)
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
