@@ -12,6 +12,8 @@ export default function Home() {
   const [showDashboard, setShowDashboard] = useState(false); 
   const [version, setVersion] = useState('');
   const [showGenerator, setShowGenerator] = useState(false);
+  const [userKey, setUserKey] = useState('');
+  const [userName, setUserName] = useState('');
 
   async function fetchVersion() {
     try {
@@ -30,13 +32,13 @@ export default function Home() {
     setShowDashboard(true); 
   };
 
-  if (true) {
+  if (showDashboard) {
     return ( 
       <>
       {showGenerator ? (
-        <Generator setShowGenerator={setShowGenerator} showGenerator={showGenerator}  />
+        <Generator setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName}  />
       ) : (
-        <Dashboard setShowGenerator={setShowGenerator} showGenerator={showGenerator} />
+        <Dashboard setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey}/>
       )}
       </>
     
@@ -48,9 +50,9 @@ export default function Home() {
   return (
     <div className='bg-back h-screen'>
       {showSignup ? (
-        <SignupComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version} />
+        <SignupComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version}  />
       ) : (
-        <LoginComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} />
+        <LoginComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} setUserKey={setUserKey} setUserName={setUserName} />
       )}
     </div>
   );

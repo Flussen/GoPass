@@ -18,7 +18,7 @@ interface SignupProps {
 
 
 
-const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSignup }) => {
+const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSignup,  }) => {
 
 
 
@@ -31,7 +31,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
     try {
       const response = await DoRegister(name, email, password);
       if (response) {
-        handleLoginSignup();
+        setShowSignup(false)
         alert('Usuario registrado con éxito')
       } else {
         alert('Error al registrar usuario ' + response);
@@ -60,8 +60,8 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
         </div>
       </div>
       {/* Login Box */}
-      <div className=' flex justify-center items-center   mt-10'>
-        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-xl py-32  bg-white'>
+      <div className=' flex justify-center items-center  mt-10'>
+        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-xl py-32  bg-box'>
           
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col justify-center items-center h-full space-y-4 font-semibold text-xl'>
@@ -70,15 +70,15 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSign
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
                 <PersonIcon className='absolute ml-4 text-grey' />
-                <input type="text" className='flex rounded-2xl border-grey border-[2px] pl-11  xl:w-full w-[34rem] h-14 py-2 focus:outline-none' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <input type="text" className='flex rounded-2xl border-grey border-[2px] pl-11 bg-transparent  xl:w-full w-[34rem] h-14 py-2 focus:outline-none' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
                 <EmailRoundedIcon className='absolute ml-4 text-grey' />
-                <input type="text" className='flex rounded-2xl border-grey border-[2px] pl-11  xl:w-full w-[34rem] h-14 py-2 focus:outline-none' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="text" className='flex rounded-2xl border-grey border-[2px] pl-11 bg-transparent  xl:w-full w-[34rem] h-14 py-2 focus:outline-none' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
                 <KeyIcon className='absolute ml-4 text-grey ' />
-                <input type="password" className='flex rounded-2xl  border-grey border-[2px] pl-11 w-full h-14 py-2 focus:outline-none' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input type="password" className='flex rounded-2xl  border-grey border-[2px] pl-11 bg-transparent w-full h-14 py-2 focus:outline-none' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 ' >
                 <button className='flex items-center justify-center w-full h-14 bg-blue rounded-2xl text-white'>

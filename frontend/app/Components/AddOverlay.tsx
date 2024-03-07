@@ -10,19 +10,25 @@ interface AddOverlayProps {
     isOpen: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    userName: string;
+    userKey: string;
+
 }
 
-const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children }) => {
+const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
 
     const [title, setTitle] = useState("");
     const [usermail, setUsermail] = useState("");
     const [pass, setPass] = useState("");
-    const [service, setService] = useState("");
 
     async function pullPasswords() {
         try {
-            await DoSaveUserPassword(title, usermail, pass, service); // Assuming it throws an error on failure
-            alert('Password Saved'); // If no error is thrown, operation is successful
+            await DoSaveUserPassword(userName, usermail, title, pass, userKey); 
+            alert('Password Saved'); 
+            onClose();
+            setTitle('');
+            setUsermail('');
+            setPass('');
         } catch (error) {
             console.error('Error saving password: ' + error);
             alert('Password not saved'); // Error handling
@@ -68,12 +74,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children }) => 
                                     <div className='flex justify-between '>
                                         <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
-                                    <div className='pl-4 font-medium'>
-                                        Site
-                                    </div>
-                                    <div className='flex justify-between pb-7'>
-                                        <input type="texto" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='www.example.com' value={service} onChange={(e) => setService(e.target.value)} />
-                                    </div>
+                                    
                                     <div className="flex justify-center ">
                                         <button type="submit" className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-full cursor-pointer hover:bg-blue hover:text-white font-semibold">
                                             Add Now
