@@ -153,6 +153,10 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
 
+func (a *App) DoChangeUserPassword(username, originalPwd, newPwd string) error {
+	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+}
+
 /*
    ------------------------------------------------
 	Get type functions, they work to receive a specific data,
