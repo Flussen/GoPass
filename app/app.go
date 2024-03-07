@@ -168,6 +168,19 @@ func (a *App) DoChangeUserPassword(username, originalPwd, newPwd string) error {
    ------------------------------------------------
 */
 
+func (a *App) GetUserInfo(username string) (string, error) {
+	model, err := controllers.GetUserInfo(a.DB, username)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+
+	byteModel, err := json.Marshal(model)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+	return string(byteModel), nil
+}
+
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 //
@@ -238,8 +251,8 @@ func (a *App) ShowPassword(username, id, userKey string) (string, error) {
 // ListUsers retrieves user information concurrently
 //
 //	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
-func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, error) {
-	return controllers.GetUsersConcurrently(a.DB, userIDs)
+func (a *App) GetListUsers() (string, error) {
+	return controllers.GetUsersConcurrently(a.DB)
 }
 
 // PasswordGenerator generates a random password with a specified

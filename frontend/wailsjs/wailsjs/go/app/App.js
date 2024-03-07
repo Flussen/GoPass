@@ -26,12 +26,16 @@ export function DoUpdateUserPassword(arg1, arg2, arg3, arg4, arg5, arg6) {
   return window['go']['app']['App']['DoUpdateUserPassword'](arg1, arg2, arg3, arg4, arg5, arg6);
 }
 
-export function GetListUsers(arg1, arg2) {
-  return window['go']['app']['App']['GetListUsers'](arg1, arg2);
+export function GetListUsers() {
+  return window['go']['app']['App']['GetListUsers']();
 }
 
 export function GetTokenVerification(arg1) {
   return window['go']['app']['App']['GetTokenVerification'](arg1);
+}
+
+export function GetUserInfo(arg1) {
+  return window['go']['app']['App']['GetUserInfo'](arg1);
 }
 
 export function GetUserPasswords(arg1) {

@@ -2,6 +2,8 @@ package app
 
 import (
 	"GoPass/backend/controllers"
+	"GoPass/backend/models"
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -25,12 +27,17 @@ func TestGetUserInfo(t *testing.T) {
 		t.Fatalf("DoRegister was not successful")
 	}
 
-	dataUser, err := controllers.GetUserInfo(db, user)
-	if err != nil {
-		t.Fatalf("Error receiving user data")
-	}
+	var userData models.User
 
-	fmt.Println(dataUser)
+	jsData, err := app.GetUserInfo(user)
+	if err != nil {
+		t.Fatalf("DoRegister was not successful")
+	}
+	err = json.Unmarshal([]byte(jsData), &userData)
+	if err != nil {
+		t.Fatalf("DoRegister was not successful")
+	}
+	fmt.Println(userData)
 }
 
 func TestChangeUserPassword(t *testing.T) {
@@ -53,7 +60,10 @@ func TestChangeUserPassword(t *testing.T) {
 	}
 
 	fmt.Printf("\n%v\n", UserInfo)
-	controllers.ChangeUserPassword(db, user, passUser, newPass)
+	err = controllers.ChangeUserPassword(db, user, passUser, newPass)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	NewUserInfo, err := controllers.GetUserInfo(db, user)
 	if err != nil {
