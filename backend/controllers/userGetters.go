@@ -4,7 +4,6 @@ import (
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
-	"fmt"
 	"log"
 	"sync"
 
@@ -79,7 +78,7 @@ func GetUserPasswords(db *bbolt.DB, username string) ([]models.Password, error) 
 	err := db.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
-			return fmt.Errorf("bucket not found")
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
 		}
 
 		return userBucket.ForEach(func(k, v []byte) error {

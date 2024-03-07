@@ -181,6 +181,14 @@ func (a *App) GetUserInfo(username string) (string, error) {
 	return string(byteModel), nil
 }
 
+func (a *App) GetUserPasswordById(username, id string) (string, error) {
+	json, err := controllers.UserPasswordByID(a.DB, username, id)
+	if err != nil {
+		return "", err
+	}
+	return string(json), nil
+}
+
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 //

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"GoPass/backend/encryption"
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
 	"fmt"
@@ -102,4 +103,25 @@ func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, 
 		return err
 	}
 	return nil
+}
+
+func UserPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
+	var pwdByte []byte
+	err := db.View(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(username))
+		if userBucket == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
+
+		encryptedPasswordBytes := userBucket.Get([]byte(id))
+		if encryptedPasswordBytes == nil {
+			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, username)
+		}
+		pwdByte = encryptedPasswordBytes
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return pwdByte, nil
 }

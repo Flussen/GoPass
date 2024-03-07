@@ -38,6 +38,10 @@ export function GetUserInfo(arg1) {
   return window['go']['app']['App']['GetUserInfo'](arg1);
 }
 
+export function GetUserPasswordById(arg1, arg2) {
+  return window['go']['app']['App']['GetUserPasswordById'](arg1, arg2);
+}
+
 export function GetUserPasswords(arg1) {
   return window['go']['app']['App']['GetUserPasswords'](arg1);
 }

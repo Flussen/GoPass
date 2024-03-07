@@ -19,6 +19,8 @@ export function GetTokenVerification(arg1:string):Promise<boolean>;
 
 export function GetUserInfo(arg1:string):Promise<string>;
 
+export function GetUserPasswordById(arg1:string,arg2:string):Promise<string>;
+
 export function GetUserPasswords(arg1:string):Promise<string>;
 
 export function GetVersion():Promise<string>;
