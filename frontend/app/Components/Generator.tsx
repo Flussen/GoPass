@@ -20,7 +20,7 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 interface GeneratorProps {
     setShowGenerator: (show: boolean) => void;
     showGenerator: boolean
-userName: string;
+    userName: string;
 }
 const PrettoSlider = styled(Slider)({
     color: "#15a7f9",
@@ -137,7 +137,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator, 
             >
                 <></>
             </OptionsOverlay>
-            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[5%]">
+            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[8.5%]">
                 <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
                     <div className='flex items-center  '>
                         <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
@@ -192,6 +192,14 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator, 
                                             <div>Weak</div>
                                             <div>Strong</div>
                                         </div>
+                                        {/* <div className="w-full">
+                                            <div className={`flex w-full text-frey ${sliderValue < 10 ? 'b' : sliderValue < 15 ? 'ml-[45%]' : sliderValue < 25 ? 'ml-[70%]' : 'ml-[95%]'}`}>
+                                                {sliderValue < 10 ? 'Weak' : sliderValue < 15 ? 'Medium' : sliderValue < 25 ? 'Strong' : 'Very Strong'
+
+                                                }
+                                            </div>
+                                        </div> */}
+
 
                                     </div>
                                     <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">

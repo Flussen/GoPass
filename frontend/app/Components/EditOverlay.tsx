@@ -4,13 +4,38 @@ import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { useState } from "react";
+import { DoUpdateUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 
 
-export function OverlayProfile({ isOpen, onClose }: { isOpen: boolean, onClose: () => void, children: React.ReactNode }) {
-    const [email, setEmail] = useState("example@gmail.com");
+
+interface OverlayProfileProps {
+    isOpen: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+    password: string;
+    title: string;
+    username:string;
+    userNames: string;
+    userKey:string;
+    id: string;
+  }
+  
+  export function OverlayProfile({ isOpen, onClose, children, password, title, username, userNames, userKey, id }: OverlayProfileProps) {
+     const [email, setEmail] = useState("example@gmail.com");
     const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(event.target.value);
     };
+
+
+    async function UpdatePasswords(){
+        try{
+            const response = await DoUpdateUserPassword(userNames,userKey, id, title, username, password)
+                
+
+        }catch{
+
+        }
+    }
     return (
         <>
 
@@ -22,7 +47,7 @@ export function OverlayProfile({ isOpen, onClose }: { isOpen: boolean, onClose: 
                             <div className='flex justify-between items-center'>
 
                                 <div className='text-2xl font-semibold'>
-                                    Credentials
+                                    Cons
                                 </div>
                                 <div onClick={onClose} className='relative flex text-xl justify-end cursor-pointer '>
                                     <FontAwesomeIcon icon={faXmark} />
@@ -35,7 +60,7 @@ export function OverlayProfile({ isOpen, onClose }: { isOpen: boolean, onClose: 
                                 <div className='flex justify-between '>
 
 
-                                    <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Title' value="Google" />
+                                    <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Title' value={title} />
 
                                     <div className='a flex items-center  pt-2.5 p-3'>
                                         <FontAwesomeIcon icon={faCopy} className='text-xl text-grey cursor-pointer ' />
@@ -48,7 +73,7 @@ export function OverlayProfile({ isOpen, onClose }: { isOpen: boolean, onClose: 
                                 <div className='flex justify-between '>
 
 
-                                    <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Username or Email' value={email} onChange={emailchange} />
+                                    <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Username or Email' value={username}  />
 
                                     <div className='a flex items-center  pt-2.5 p-3'>
                                         <FontAwesomeIcon icon={faCopy} className='text-xl text-grey cursor-pointer ' />
@@ -61,7 +86,7 @@ export function OverlayProfile({ isOpen, onClose }: { isOpen: boolean, onClose: 
                                 <div className='flex justify-between '>
 
 
-                                    <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Password' value="elcarrodemessi" />
+                                    <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Password' value={password} />
 
                                     <div className='a flex items-center  pt-2.5 p-3'>
                                         <FontAwesomeIcon icon={faCopy} className='text-xl text-grey cursor-pointer ' />

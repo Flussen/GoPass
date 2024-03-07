@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import EditOverlay from './EditOverlay';
 import ProfileOverlay from './ProfileOverlay';
 import AddOverlay from './AddOverlay';
 import OptionsOverlay from "./OptionsOverlay";
@@ -38,7 +37,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
     setEmail(event.target.value);
   };
 
-  const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
 
@@ -48,35 +46,35 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
   return (
     <div id="Dashboard" className='flex justify-between bg-back h-screen '>
 
-            <OptionsOverlay
-                setShowGenerator={setShowGenerator}
-                showGenerator={showGenerator}
-                userName={userName}
-            >
-                <></>
-            </OptionsOverlay>
-            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[7%]">
-                <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
-                    <div className='flex items-center  '>
-                        <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
-                        <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 lg:w-[34rem] w-[31.3rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
-                    </div>
-                    <div className="flex items-center space-x-5">
-                        <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
-                            <div>
-                                Filter
-                            </div>
-                            <FilterAltRoundedIcon />
+      <OptionsOverlay
+        setShowGenerator={setShowGenerator}
+        showGenerator={showGenerator}
+        userName={userName}
+      >
+        <></>
+      </OptionsOverlay>
+      <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[8.5%]">
+        <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
+          <div className='flex items-center  '>
+            <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
+            <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 lg:w-[34rem] w-[31.3rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
+          </div>
+          <div className="flex items-center space-x-5">
+            <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
+              <div>
+                Filter
+              </div>
+              <FilterAltRoundedIcon />
 
-                        </div>
-                        <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
-                            <div>
-                                Sort
-                            </div>
-                            <FormatLineSpacingRoundedIcon sx={{ fontSize: 28 }} />
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
+              <div>
+                Sort
+              </div>
+              <FormatLineSpacingRoundedIcon sx={{ fontSize: 28 }} />
+            </div>
+          </div>
+        </div>
         <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5 text">
           <div className="flex justify-between  items-center">
             <div className="text-5xl font-bold">
@@ -106,8 +104,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
           </div>
 
 
-          <PasswordComp userName={userName} userKey={userKey} />
-
+          <PasswordComp   userName={userName} userKey={userKey} />
+          
         </div>
       </div>
 
