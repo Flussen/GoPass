@@ -86,7 +86,7 @@ interface OverlayProfileProps {
                                 <div className='flex justify-between '>
 
 
-                                    <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Password' value={password} />
+                                    <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Passwordw' value={password} />
 
                                     <div className='a flex items-center  pt-2.5 p-3'>
                                         <FontAwesomeIcon icon={faCopy} className='text-xl text-grey cursor-pointer ' />
