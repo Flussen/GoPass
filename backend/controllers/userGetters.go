@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
 	"errors"
@@ -62,6 +63,7 @@ func GetUserByUsername(db *bbolt.DB, username string) (*models.User, error) {
 }
 
 // GetUsersConcurrently retrieves user information concurrently
+// under develop
 func GetUsersConcurrently(db *bbolt.DB, userIDs []string) ([]*models.User, error) {
 	var users []*models.User
 	var err error
@@ -116,4 +118,28 @@ func GetUserPasswords(db *bbolt.DB, username string) ([]models.Password, error) 
 	})
 
 	return passwords, err
+}
+
+// GetUserInfo retrieves user information from the database
+func GetUserInfo(db *bbolt.DB, username string) (models.User, error) {
+
+	var storedUser models.User
+	err := db.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("Users"))
+		if b == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
+
+		userBytes := b.Get([]byte(username))
+		if userBytes == nil {
+			return eh.NewGoPassError(eh.ErrUserNotFound)
+		}
+
+		return json.Unmarshal(userBytes, &storedUser)
+	})
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return storedUser, nil
 }
