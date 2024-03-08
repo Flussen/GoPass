@@ -15,6 +15,8 @@ const (
 	ErrBucketNotFound              = "'Users' bucket not found"
 	ErrUserNotFound                = "could not get the user within this bucket"
 	ErrInvalidCredentils           = "invalid credentials"
+	ErrUnmarshal                   = "error from Unmarshal process"
+	ErrMarshal                     = "error from Marshal process"
 )
 
 func (e *GoPassErrors) Error() string {

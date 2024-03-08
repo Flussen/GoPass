@@ -153,8 +153,13 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
 
+// Change password for the user ACCOUNT!!
 func (a *App) DoChangeUserPassword(username, originalPwd, newPwd string) error {
 	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+}
+
+func (a *App) DoChangeUserInfo(username, newUsername, newEmail, newPassword string) error {
+	panic("not implemented")
 }
 
 /*
@@ -193,9 +198,9 @@ func (a *App) GetUserPasswordById(username, id string) (string, error) {
 // true if the session is valid and false if the session invalid
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
-func (a *App) GetTokenVerification(token string) (bool, error) {
+func (a *App) GetTokenVerification(user, token string) (bool, error) {
 
-	isValid, err := components.VerifySessionToken(a.DB, token)
+	isValid, err := components.VerifySessionToken(a.DB, user, token)
 	if err != nil {
 		return false, err
 	}
