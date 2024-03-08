@@ -82,6 +82,7 @@ func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, 
 
 	newPasswordData := models.Password{
 		Title:       newTitle,
+		Id:          id,
 		Pwd:         encryptedPassword,
 		Username:    newUsername,
 		CreatedDate: newDate,
