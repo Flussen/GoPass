@@ -306,7 +306,7 @@ func (a *App) PasswordGenerator(lenght int) (string, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.0.3 - ALPHA"
+	return "0.0.4 - ALPHA"
 }
 
 /*
