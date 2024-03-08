@@ -1,6 +1,7 @@
 package components
 
 import (
+	"GoPass/backend/controllers"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
@@ -14,11 +15,11 @@ import (
 // First check the database if the bucket exists, if it does not exist it gives an error,
 // creates a cursor, receives the data and parses it. then check if the expiration time is still valid
 // if all checks were successful, it will return true, else return false with de error
-func VerifySessionToken(DB *bbolt.DB, username, token string) (bool, error) {
+func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 
 	var isValid bool
 
-	err := DB.View(func(tx *bbolt.Tx) error {
+	err := db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
 			return errors.New("'users' bucket not found")
@@ -52,4 +53,19 @@ func VerifySessionToken(DB *bbolt.DB, username, token string) (bool, error) {
 	}
 
 	return isValid, nil
+}
+
+func Logout(db *bbolt.DB, username string) error {
+	userModel, err := controllers.GetUserInfo(db, username)
+	if err != nil {
+		return eh.NewGoPassErrorf(eh.ErrLogicFunctionName, "Logout in session tokenhandler")
+	}
+
+	userModel.SessionToken = ""
+	userModel.TokenExpiry = ""
+	err = controllers.UpdateUser(db, username, *userModel)
+	if err != nil {
+		return eh.NewGoPassErrorf(eh.ErrLogicFunctionName, "Logout in session tokenhandler")
+	}
+	return nil
 }

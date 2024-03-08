@@ -162,6 +162,11 @@ func (a *App) DoChangeUserInfo(username, newUsername, newEmail, newPassword stri
 	panic("not implemented")
 }
 
+// logout system to clean the token and expirytime variable in the database
+func (a *App) DoLogout(username string) error {
+	return components.Logout(a.DB, username)
+}
+
 /*
    ------------------------------------------------
 	Get type functions, they work to receive a specific data,
