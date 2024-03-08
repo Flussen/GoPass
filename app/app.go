@@ -199,10 +199,12 @@ func (a *App) GetUserPasswordById(username, id string) (string, error) {
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
 func (a *App) GetTokenVerification(user, token string) (bool, error) {
-
 	isValid, err := components.VerifySessionToken(a.DB, user, token)
 	if err != nil {
 		return false, err
+	}
+	if !isValid {
+		return false, eh.NewGoPassErrorf(eh.ErrLogicFunctionName, "GetTokenVerification")
 	}
 
 	return isValid, nil
@@ -214,7 +216,7 @@ func (a *App) GetTokenVerification(user, token string) (bool, error) {
 func (a *App) GetUserPasswords(username string) (string, error) {
 	pwds, err := controllers.GetUserPasswords(a.DB, username)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	container := models.PasswordsContainer{Passwords: pwds}
 	jsonData, err := json.Marshal(container)

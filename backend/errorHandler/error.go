@@ -17,6 +17,7 @@ const (
 	ErrInvalidCredentils           = "invalid credentials"
 	ErrUnmarshal                   = "error from Unmarshal process"
 	ErrMarshal                     = "error from Marshal process"
+	ErrLogicFunctionName           = "logic or implementation error, please check in '%s' Go Function"
 )
 
 func (e *GoPassErrors) Error() string {

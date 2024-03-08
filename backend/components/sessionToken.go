@@ -36,18 +36,19 @@ func VerifySessionToken(DB *bbolt.DB, username, token string) (bool, error) {
 
 		expiryTime, err := time.Parse(time.RFC3339, user.TokenExpiry)
 		if err != nil {
-			return eh.NewGoPassError("Error to parse time from TokenExpiry to RFC3339")
+			return eh.NewGoPassError("error to parse time from TokenExpiry to RFC3339")
 		}
 		if time.Now().Before(expiryTime) {
 			isValid = true
 			return nil
 		} else {
-			return eh.NewGoPassError("invalid time")
+			isValid = false
+			return eh.NewGoPassError("the token has already expired")
 		}
 
 	})
 	if err != nil {
-		return false, err
+		return isValid, err
 	}
 
 	return isValid, nil
