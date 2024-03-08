@@ -42,6 +42,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     async function UpdatePasswords() {
         try {
             const response = await DoUpdateUserPassword(userNames,userKey, id, titlee, email, pass)
+            console.log(response)
             alert("SUbido correctamente")
             console.log('2us: ' + userNames, 'keys: ' + userKey, 'id: ' + id, 'uname: ' + email, 'pass: ' + pass, 'unamegenera: ' + username)
         } catch {

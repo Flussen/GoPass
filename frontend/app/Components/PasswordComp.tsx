@@ -29,7 +29,6 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
     const [openEditOverlayId, setOpenEditOverlayId] = useState<string | null>(null);
 
 
-    const [id, setId] = useState('');
     useEffect(() => {
         getPasswords();
     }, []);
@@ -40,7 +39,9 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
     async function getPasswords() {
         try {
             const response = await GetUserPasswords(userName);
+            console.log(response)
             const data = JSON.parse(response);
+            console.log(data)
             if (data && data.passwords) {
                 const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
                     const decryptedPwd = await ShowPassword(userName, password.id, userKey);
@@ -48,7 +49,6 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
 
                 }));
                 setPasswords(decryptedPasswords);
-                setId(data.passwords.id)
                 console.log(data.passwords)
             } else {
                 console.error("Passwords not found in response:", data);
