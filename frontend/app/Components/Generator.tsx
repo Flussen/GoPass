@@ -20,7 +20,7 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 interface GeneratorProps {
     setShowGenerator: (show: boolean) => void;
     showGenerator: boolean
-
+    userName: string;
 }
 const PrettoSlider = styled(Slider)({
     color: "#15a7f9",
@@ -48,20 +48,20 @@ const PrettoSlider = styled(Slider)({
         margin: 5,
         width: 28,
         height: 28,
-        borderRadius: "50% 50% 50% 0",
+        borderRadius: "20% 20% 20% 20%",
         backgroundColor: "#15a7f9",
         transformOrigin: "bottom left",
-        transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+        transform: "translate(50%, -100%)  scale(0)",
         "&::before": { display: "none" },
         "&.MuiSlider-valueLabelOpen": {
-            transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+            transform: "translate(0%, -120%)  scale(1)",
         },
         "& > *": {
-            transform: "rotate(45deg)",
+            transform: "",
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator, userName }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -128,19 +128,20 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
 
     return (
 
-        <div id="Generator" className='flex justify-between bg-back'>
+        <div id="Generator" className='flex justify-between bg-back h-screen '>
 
             <OptionsOverlay
                 setShowGenerator={setShowGenerator}
                 showGenerator={showGenerator}
+                userName={userName}
             >
                 <></>
             </OptionsOverlay>
-            <div className="flex flex-col justify-start items-center basis-4/5 px-16 pt-16 space-y-24">
+            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[8.5%]">
                 <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
-                    <div className='flex items-center '>
+                    <div className='flex items-center  '>
                         <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
-                        <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 w-[34rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
+                        <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 lg:w-[34rem] w-[31.3rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
                     </div>
                     <div className="flex items-center space-x-5">
                         <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
@@ -165,10 +166,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
                         </div>
 
                     </div>
-                    <div className='flex w-full space-x-5'>
-                        <div className="flex-col items-start justify-center bg-box rounded-2xl basis-4/5 p-3">
+                    <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
+                        <div className="flex-col items-start justify-center bg-box rounded-2xl xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">
-                                <div className='flex-col justify-center items-center basis-5/6 '>
+                                <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
                                     <div className="flex justify-between items-center mb-3 px-4 border-grey border-[2px] rounded-xl h-14 w-full">
                                         <input type="text" readOnly value={password} className="select-all w-full flex justify-center items-center bg-transparent  focus:outline-none  " />
                                         <div
@@ -191,6 +192,14 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
                                             <div>Weak</div>
                                             <div>Strong</div>
                                         </div>
+                                        {/* <div className="w-full">
+                                            <div className={`flex w-full text-frey ${sliderValue < 10 ? 'b' : sliderValue < 15 ? 'ml-[45%]' : sliderValue < 25 ? 'ml-[70%]' : 'ml-[95%]'}`}>
+                                                {sliderValue < 10 ? 'Weak' : sliderValue < 15 ? 'Medium' : sliderValue < 25 ? 'Strong' : 'Very Strong'
+
+                                                }
+                                            </div>
+                                        </div> */}
+
 
                                     </div>
                                     <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">
@@ -212,7 +221,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
                                                     defaultValue={20}
                                                     color="secondary"
                                                     min={1}
-                                                    max={70}
+                                                    max={50}
                                                     value={sliderValue}
                                                     onChange={handleSliderChange}
                                                 />
@@ -227,7 +236,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
                                     </div>
 
                                 </div>
-                                <div onClick={copyToClipboard} className="flex justify-center items-center h-14 basis-1/6 bg-blue rounded-xl text-back text-xl font-semibold space-x-3 cursor-pointer ">
+                                <div onClick={copyToClipboard} className="flex justify-center items-center h-14 xl:basis-1/6 basis-1/4 bg-blue rounded-xl text-back text-xl font-semibold space-x-3 cursor-pointer ">
                                     <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
                                     <div>
                                         Copy
@@ -242,8 +251,8 @@ const Generator: React.FC<GeneratorProps> = ({ setShowGenerator, showGenerator }
 
 
                         </div>
-                        <div className="flex items-center justify-center bg-box rounded-2xl  basis-1/5">
-                            <div className="flex-col justify-start items-center font-semibold text-2xl text-bkblue">
+                        <div className="flex items-center justify-center bg-box rounded-2xl  lg:basis-1/5 ">
+                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-bkblue max-xl:space-x-6 max-xl:py-10">
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}
 

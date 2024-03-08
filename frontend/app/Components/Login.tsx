@@ -16,6 +16,8 @@ interface LoginProps {
   version: string;
   token: string;
   userKey: string;
+  setUserKey: (userKey: string) =>void;
+  setUserName: (userKey: string) =>void;
 }
 
 interface LoginState {
@@ -25,13 +27,12 @@ interface LoginState {
 
 
 
-const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName }) => {
 
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
-  const [userKey, setUserKey] = useState('');
 
   async function pullLogin() {
     try {
@@ -39,6 +40,8 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
       const result = JSON.parse(response) as LoginState;
       if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
         handleLoginSignup();
+        setUserKey(result.userKey);
+        setUserName(name);
       }
     } catch (error) {
       // Manejo de errores

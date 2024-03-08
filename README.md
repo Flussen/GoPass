@@ -1,4 +1,4 @@
-# GoPass 0.0.2 ALPHA
+# GoPass 0.0.3 ALPHA
 
 ## Introduction
 
@@ -10,7 +10,7 @@ GoPass is a password management software developed in Go, using wails.io for the
 
 GoPass requires several dependencies, you must make sure you have:
 
-1. Go 1.21 or higher - [Nodejs](https://go.dev/learn/)
+1. Go 1.21 or higher - [Golang](https://go.dev/learn/)
 2. NodeJS 15 or higher - [Nodejs](https://nodejs.org/)
 3. Wails Framework - [Wails.io](https://wails.io/docs/gettingstarted/installation)
 
