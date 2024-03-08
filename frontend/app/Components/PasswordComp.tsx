@@ -54,7 +54,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
                 console.error("Passwords not found in response:", data);
             }
         } catch (error) {
-            console.error("Error fetching passwords:", error);
+            console.error("Error fetching passwords:", error, userName);
         }
     }
     const copyToClipboard = async (pwd: string) => {
