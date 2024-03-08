@@ -153,6 +153,10 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
 
+func (a *App) DoChangeUserPassword(username, originalPwd, newPwd string) error {
+	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+}
+
 /*
    ------------------------------------------------
 	Get type functions, they work to receive a specific data,
@@ -163,6 +167,27 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 	->> GET type functions continue below <<--
    ------------------------------------------------
 */
+
+func (a *App) GetUserInfo(username string) (string, error) {
+	model, err := controllers.GetUserInfo(a.DB, username)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+
+	byteModel, err := json.Marshal(model)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+	return string(byteModel), nil
+}
+
+func (a *App) GetUserPasswordById(username, id string) (string, error) {
+	json, err := controllers.UserPasswordByID(a.DB, username, id)
+	if err != nil {
+		return "", err
+	}
+	return string(json), nil
+}
 
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
@@ -234,8 +259,8 @@ func (a *App) ShowPassword(username, id, userKey string) (string, error) {
 // ListUsers retrieves user information concurrently
 //
 //	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
-func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, error) {
-	return controllers.GetUsersConcurrently(a.DB, userIDs)
+func (a *App) GetListUsers() (string, error) {
+	return controllers.GetUsersConcurrently(a.DB)
 }
 
 // PasswordGenerator generates a random password with a specified
