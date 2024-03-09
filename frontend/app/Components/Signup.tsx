@@ -12,13 +12,12 @@ import Mener from "../../Public/men.svg"
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 interface SignupProps {
   setShowSignup: (value: boolean) => void;
-  handleLoginSignup: () => void;
   version: string;
 }
 
 
 
-const Signup: React.FC<SignupProps> = ({ setShowSignup, version, handleLoginSignup,  }) => {
+const Signup: React.FC<SignupProps> = ({ setShowSignup, version,  }) => {
 
 
 

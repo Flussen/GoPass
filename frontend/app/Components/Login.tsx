@@ -18,6 +18,8 @@ interface LoginProps {
   userKey: string;
   setUserKey: (userKey: string) =>void;
   setUserName: (userKey: string) =>void;
+  setShowDashboard: (show: boolean) => void;
+ setIsLoading: (show: boolean) => void;
 }
 
 interface LoginState {
@@ -27,7 +29,7 @@ interface LoginState {
 
 
 
-const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName,setShowDashboard, setIsLoading }) => {
 
 
   const [name, setName] = useState('');
@@ -35,18 +37,21 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
   const [token, setToken] = useState('');
 
   async function pullLogin() {
+    setIsLoading(true); 
+
     try {
       const response = await DoLogin(name, password);
       const result = JSON.parse(response) as LoginState;
       if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
-        handleLoginSignup();
         setUserKey(result.userKey);
         setUserName(name);
+        setShowDashboard(true);
       }
     } catch (error) {
-      // Manejo de errores
       console.error('Login error:', error);
-      // Mostrar mensaje de error al usuario, etc.
+      
+    } finally {
+      setIsLoading(false); 
     }
   }
 
@@ -54,6 +59,8 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Previene la recarga de la página
     await pullLogin(); // Llama a la función pullLogin
+    // Simula una carga o espera por una operación asíncrona
+    
   };
   return (
     <div id='login' className='bg-back'>

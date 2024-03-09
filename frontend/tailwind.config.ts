@@ -8,6 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes:{
+        loading:{
+            '0%,100%':{opacity: '1'},
+            '50%':{opacity: '0'},
+        }, 
+      },
+      animation: {
+        loading: 'loading 2s linear infinite',
+      },
+      
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

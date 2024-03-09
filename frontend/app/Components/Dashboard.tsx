@@ -20,6 +20,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
 import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 import PasswordComp from "./PasswordComp"
+import { GetUserPasswords } from "@/wailsjs/wailsjs/go/app/App";
 
 
 interface DashboardProps {
@@ -27,7 +28,6 @@ interface DashboardProps {
   showGenerator: boolean;
   userKey: string;
   userName: string;
-
 }
 
 
@@ -36,10 +36,13 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
   const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
   };
-
+  const [titlee, setTitlee] = useState('')
+  const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setTitlee(event.target.value);
+  };
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
-
+  
 
 
 
@@ -57,7 +60,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
         <div id="HEADER" className="flex justify-between w-full rounded-2xl bg-box h-20 px-3 shadow-shadow text-xl">
           <div className='flex items-center  '>
             <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-grey ' />
-            <input type="text" className='flex rounded-xl border-grey border-[2px] pl-12 lg:w-[34rem] w-[31.3rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
+            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-xl border-grey border-[2px] pl-12 lg:w-[34rem] w-[31.3rem] h-14 py-2 bg-transparent font-semibold focus:outline-none placeholder-lightgrey' placeholder='Buscar' />
           </div>
           <div className="flex items-center space-x-5">
             <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
@@ -104,8 +107,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowGenerator, showGenerator, 
           </div>
 
 
-          <PasswordComp   userName={userName} userKey={userKey} />
-          
+          <PasswordComp isAddOverlayOpen={isAddOverlayOpen} userName={userName} userKey={userKey} search={titlee} />
+
         </div>
       </div>
 

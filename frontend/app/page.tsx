@@ -5,7 +5,7 @@ import LoginComp from "./Components/Login";
 import SignupComp from "./Components/Signup";
 import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
-
+import LoadingComp from './Components/Loading'
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
@@ -14,8 +14,11 @@ export default function Home() {
   const [showGenerator, setShowGenerator] = useState(false);
   const [userKey, setUserKey] = useState('');
   const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading]= useState(false);
 
-  async function fetchVersion() {
+  
+
+      async function fetchVersion() {
     try {
       const response = await GetVersion();
       setVersion(response);
@@ -29,10 +32,17 @@ export default function Home() {
   }, []);
 
   const handleLoginSignup = () => {
-    setShowDashboard(true); 
+    setIsLoading(true); // Muestra el componente de carga
+    // Simula una carga o espera por una operación asíncrona
+    setTimeout(() => {
+      setIsLoading(false); // Oculta el componente de carga
+    }, 1000); // Ajusta este tiempo según sea necesario
   };
 
-  if (showDashboard) {
+
+if(isLoading){
+  return <LoadingComp/>;
+}else if (showDashboard) {
     return ( 
       <>
       {showGenerator ? (
@@ -50,9 +60,9 @@ export default function Home() {
   return (
     <div className='bg-back h-screen'>
       {showSignup ? (
-        <SignupComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version}  />
+        <SignupComp setShowSignup={setShowSignup}  version={version}  />
       ) : (
-        <LoginComp setShowSignup={setShowSignup} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} setUserKey={setUserKey} setUserName={setUserName} />
+        <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} setUserKey={setUserKey} setUserName={setUserName}  />
       )}
     </div>
   );

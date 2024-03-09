@@ -5,7 +5,7 @@ import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { useState } from "react";
 import { DoUpdateUserPassword } from "@/wailsjs/wailsjs/go/app/App";
-
+import { DoDeleteUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 
 
 interface OverlayProfileProps {
@@ -24,7 +24,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     const [email, setEmail] = useState(username);
     const [pass, setPass] = useState(password);
     const [titlee, setTitlee] = useState(title);
-
+   
 
     const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(event.target.value);
@@ -35,23 +35,34 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     const titlechange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setTitlee(event.target.value);
     };
-    function Prueba() {
-        console.log('us: ' + userNames, 'keys: ' + userKey, 'id: ' + id, 'uname: ' + email, 'pass: ' + pass, 'unamegenera: ' + username)
+    async function DeletePassword(){
+        try{
+            const response = await DoDeleteUserPassword(userNames, id)
+            alert('Se ha eliminado correctamente')
+        }catch{
+
+        }
     }
+   
 
     async function UpdatePasswords() {
         try {
             const response = await DoUpdateUserPassword(userNames,userKey, id, titlee, email, pass)
-            console.log(response)
-            alert("SUbido correctamente")
-            console.log('2us: ' + userNames, 'keys: ' + userKey, 'id: ' + id, 'uname: ' + email, 'pass: ' + pass, 'unamegenera: ' + username)
+            console.log('mark'+response)
         } catch {
 
         }
     }
+
+    const hanldeDelete = async (event: React.FormEvent) =>{
+        event.preventDefault(); // Previene la recarga de la página 
+        await DeletePassword();
+        onClose();
+    }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
         await UpdatePasswords(); // Llama a la función pullLogin
+        onClose();
     };
     return (
         <>
@@ -70,7 +81,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
                                     <FontAwesomeIcon icon={faXmark} />
                                 </div>
                             </div>
-                            <form onSubmit={handleSubmit}>
+                            <form >
                                 <div>
                                     <div className='pl-4 font-medium'>
                                         Title
@@ -114,10 +125,10 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
 
                                     
                                     <div className="flex justify-center space-x-10">
-                                        <div onClick={Prueba} className="flex justify-center items-center w-40 h-10 border-red border-[2px] rounded-full cursor-pointer hover:bg-red hover:text-white font-semibold">
+                                        <button onClick={hanldeDelete} className="flex justify-center items-center w-40 h-10 border-red border-[2px] rounded-full cursor-pointer hover:bg-red hover:text-white font-semibold">
                                             Delete
-                                        </div>
-                                        <button className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-full cursor-pointer hover:bg-blue hover:text-white font-semibold">
+                                        </button>
+                                        <button onClick={handleSubmit} className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-full cursor-pointer hover:bg-blue hover:text-white font-semibold">
                                             Update
                                         </button>
                                     </div>

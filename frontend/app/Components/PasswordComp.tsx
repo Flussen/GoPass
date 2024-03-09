@@ -10,7 +10,8 @@ import EditOverlay from './EditOverlay';
 interface PassProps {
     userName: string;
     userKey: string;
-
+    isAddOverlayOpen: boolean;
+    search: string;
 }
 
 interface PasswordsProps {
@@ -22,7 +23,7 @@ interface PasswordsProps {
 }
 
 
-const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
+const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen, search }) => {
     const [passwords, setPasswords] = useState<PasswordsProps[]>([]);
     const [decrypted, setDecrypted] = useState('');
     const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
@@ -31,17 +32,15 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
 
     useEffect(() => {
         getPasswords();
-    }, []);
+    }, [openEditOverlayId, isAddOverlayOpen]);
 
-    
+
 
 
     async function getPasswords() {
         try {
             const response = await GetUserPasswords(userName);
-            console.log(response)
             const data = JSON.parse(response);
-            console.log(data)
             if (data && data.passwords) {
                 const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
                     const decryptedPwd = await ShowPassword(userName, password.id, userKey);
@@ -68,52 +67,55 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey }) => {
         }
     };
 
-    return (
-        <div className="flex-col w-full space-y-5">
-            {passwords.map((password, index) => (
-                <div key={index} className="w-full ">
-                    <div onClick={() => setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id)} className="flex w-full h-24 bg-box p-3 rounded-2xl text-xl">
-                        <div className="flex items-center basis-3/6 space-x-5">
-                            <div className="rounded-xl bg-white w-[4.5rem] h-full flex items-center justify-center">
-                                G
-                            </div>
-                            <div className="flex-col text-md">
-                                <div className="font-bold">
-                                    {password.title}
-                                </div>
-                                <div className="text-grey text-lg">
-                                    {password.username}
-                                </div>
-                            </div>
+const searchPasswords = passwords.filter((password) => password.title.toLowerCase().includes(search.toLowerCase()));
+
+return (
+    <div className="flex-col w-full space-y-5">
+        {searchPasswords.map((password, index) => (
+
+            <div key={index} className="w-full ">
+                <div onClick={() => setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id)} className="flex w-full h-24 bg-box p-3 rounded-2xl text-xl">
+                    <div className="flex items-center basis-3/6 space-x-5">
+                        <div className="rounded-xl bg-white w-[4.5rem] h-full flex items-center justify-center">
+                            G
                         </div>
-                        <div className="flex items-center basis-2/6">
-                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className="bg-transparent focus:outline-none cursor-pointer" />
-
-                        </div>
-                        <div className="flex items-center  xl:basis-1/6">
-
-                            <div className={`flex items-center justify-center rounded-full h-10 xl:w-40 max-xl:px-2 ${password.pwd.length > 25 ? 'bg-lightgreen  text-green' : password.pwd.length > 10 ? 'bg-red-300  text-orange-500 bg-orange-100' : 'text-red bg-rose-100'} `}>
-                                {password.pwd.length > 25 ? <GppGoodRoundedIcon /> : password.pwd.length > 10 ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />
-
-
-                                }
-
-                                <div className="hidden xl:flex">
-                                    {password.pwd.length > 25 ? 'Strong' : password.pwd.length > 10 ? 'Medium' : 'Weak'}
-                                </div>
+                        <div className="flex-col text-md">
+                            <div className="font-bold">
+                                {password.title}
+                            </div>
+                            <div className="text-grey text-lg">
+                                {password.username}
                             </div>
                         </div>
                     </div>
-                    <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>
-                        <></>
-                    </EditOverlay>
+                    <div className="flex items-center basis-2/6">
+                        <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className="bg-transparent focus:outline-none cursor-pointer" />
 
+                    </div>
+                    <div className="flex items-center  xl:basis-1/6">
+
+                        <div className={`flex items-center justify-center rounded-full h-10 xl:w-40 max-xl:px-2 ${password.pwd.length > 25 ? 'bg-lightgreen  text-green' : password.pwd.length > 10 ? 'bg-red-300  text-orange-500 bg-orange-100' : 'text-red bg-rose-100'} `}>
+                            {password.pwd.length > 25 ? <GppGoodRoundedIcon /> : password.pwd.length > 10 ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />
+
+
+                            }
+
+                            <div className="hidden xl:flex">
+                                {password.pwd.length > 25 ? 'Strong' : password.pwd.length > 10 ? 'Medium' : 'Weak'}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>
+                    <></>
+                </EditOverlay>
 
-            ))}
+            </div>
 
-        </div>
-    );
+        ))}
+
+    </div>
+);
 }
 
 export default PasswordComp;

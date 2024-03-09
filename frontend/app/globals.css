@@ -1,20 +1,35 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
+@layer utilities {
+  .delay-500 {
+    animation-delay: 0.5s;
+  }
+  .delay-1000 {
+    animation-delay: 1s;
+  }
+}
 
 body {
   color: rgb(var(--foreground-rgb));
   /* background: linear-gradient(148deg, rgba(196,202,221,1) 0%, rgba(255,255,255,1) 100%); */
 }
-
-
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-
-
-
 html{
   font-family: "Poppins", sans-serif;
 }
+
+@keyframes Loading{
+0%{
+  opacity: 1;
+
+}
+50%{
+  opacity: 0;
+  
+}
+100%{
+  opacity: 1;
+  
+}
+} 

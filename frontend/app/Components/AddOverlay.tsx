@@ -24,8 +24,6 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
     async function pullPasswords() {
         try {
             await DoSaveUserPassword(userName, usermail, title, pass, userKey); 
-            alert('Password Saved'); 
-            onClose();
             setTitle('');
             setUsermail('');
             setPass('');
@@ -34,9 +32,10 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
             alert('Password not saved'); // Error handling
         }
     }
+    
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
-        
+        onClose()
         await pullPasswords(); // Llama a la función pullRegister
     };
     return (
