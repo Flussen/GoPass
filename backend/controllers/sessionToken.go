@@ -11,7 +11,7 @@ import (
 
 // Save session token to database.
 // The format that saves the data is in RFC3339 equivalent to 2006-01-02T15:04:05Z07:00
-func StoreSessionToken(db *bbolt.DB, username, token string, expiry time.Time) error {
+func StoreSessionToken(db *bbolt.DB, username, token, userKey string, expiry time.Time) error {
 
 	err := db.Update(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
@@ -46,6 +46,7 @@ func StoreSessionToken(db *bbolt.DB, username, token string, expiry time.Time) e
 	lastSession := models.LastSession{
 		Username: username,
 		Token:    token,
+		UserKey:  userKey,
 	}
 
 	json, err := json.Marshal(lastSession)

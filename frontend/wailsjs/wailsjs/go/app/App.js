@@ -34,6 +34,10 @@ export function DoUpdateUserPassword(arg1, arg2, arg3, arg4, arg5, arg6) {
   return window['go']['app']['App']['DoUpdateUserPassword'](arg1, arg2, arg3, arg4, arg5, arg6);
 }
 
+export function GetLastSession() {
+  return window['go']['app']['App']['GetLastSession']();
+}
+
 export function GetListUsers() {
   return window['go']['app']['App']['GetListUsers']();
 }

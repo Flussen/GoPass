@@ -92,7 +92,7 @@ func (a *App) DoLogin(username, password string) (string, error) {
 	expiry := time.Now().Add(730 * time.Hour)
 	userKey := storedUser.UserKey
 
-	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
+	err = controllers.StoreSessionToken(a.DB, username, token, userKey, expiry)
 	if err != nil {
 		eh.NewGoPassErrorf("error storing session token: %v", err)
 		return "", errors.New("failed to log in")
