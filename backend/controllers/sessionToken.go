@@ -11,9 +11,9 @@ import (
 
 // Save session token to database.
 // The format that saves the data is in RFC3339 equivalent to 2006-01-02T15:04:05Z07:00
-func StoreSessionToken(DB *bbolt.DB, username, token string, expiry time.Time) error {
+func StoreSessionToken(db *bbolt.DB, username, token string, expiry time.Time) error {
 
-	return DB.Update(func(tx *bbolt.Tx) error {
+	err := db.Update(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
 			return eh.NewGoPassError(eh.ErrBucketNotFound)
@@ -38,5 +38,29 @@ func StoreSessionToken(DB *bbolt.DB, username, token string, expiry time.Time) e
 			return eh.NewGoPassError(eh.ErrMarshal)
 		}
 		return b.Put([]byte(username), updateUserBytes)
+	})
+	if err != nil {
+		return err
+	}
+
+	lastSession := models.LastSession{
+		Username: username,
+		Token:    token,
+	}
+
+	json, err := json.Marshal(lastSession)
+	if err != nil {
+		return err
+	}
+
+	return db.Update(func(tx *bbolt.Tx) error {
+		// Ensure the bucket exists
+		b, err := tx.CreateBucketIfNotExists([]byte("LastSessionSaved"))
+		if err != nil {
+			return err
+		}
+
+		// Use the user's ID as the key to store the serialized value
+		return b.Put([]byte("lastsession"), json)
 	})
 }

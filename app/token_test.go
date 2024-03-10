@@ -37,33 +37,43 @@ func TestToken(t *testing.T) {
 
 	data, err := app.GetUserInfo(user)
 	if err != nil {
-		t.Fatalf("GetUserInfo failed: %v", err)
+		t.Fatal(err)
 	}
 	var dataUser models.User
 	if err := json.Unmarshal([]byte(data), &dataUser); err != nil {
-		t.Fatalf("GetUserInfo failed: %v", err)
+		t.Fatal(err)
 	}
 
-	_ = newTime
+	// _ = newTime
 	// to try invalid token, change to:
-	// dataUser.TokenExpiry = newTime
-
-	fmt.Println(dataUser)
+	dataUser.TokenExpiry = newTime
 
 	if err = controllers.UpdateUser(db, user, dataUser); err != nil {
 		t.Fatalf("UpdateUser failed: %v", err)
 	}
 
+	fmt.Println(dataUser)
+
 	value, err := app.GetTokenVerification(user, result.Token)
 	if err != nil {
-		t.Errorf("❌ GetTokenVerification failed: %v", err)
-		return
+		t.Fatalf("internal error %v", err)
 	}
 	if !value {
 		fmt.Printf("❌ Token %v is not valid", result.Token)
-		return
+	} else {
+		fmt.Printf("✅ Token %v is valid!", result.Token)
 	}
 
-	fmt.Printf("✅ Token %v is valid!", result.Token)
+	// updated user after token verification
+	datajson, err := app.GetUserInfo(user)
+	if err != nil {
+		t.Fatal(err)
+	}
 
+	err = json.Unmarshal([]byte(datajson), &dataUser)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("\nNEWDATA:%v", dataUser)
 }
