@@ -18,6 +18,7 @@ import (
 func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 
 	var isValid bool
+	var user models.User
 
 	err := db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
@@ -29,8 +30,6 @@ func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 		if userBytes == nil {
 			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
-
-		var user models.User
 		if err := json.Unmarshal(userBytes, &user); err != nil {
 			return eh.NewGoPassError(eh.ErrUnmarshal)
 		}
@@ -44,12 +43,22 @@ func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 			return nil
 		} else {
 			isValid = false
-			return eh.NewGoPassError("the token has already expired")
+			return nil
 		}
 
 	})
 	if err != nil {
 		return isValid, err
+	}
+
+	if !isValid {
+		user.TokenExpiry = ""
+		user.SessionToken = ""
+
+		err := controllers.UpdateUser(db, username, user)
+		if err != nil {
+			return false, eh.NewGoPassError("Internal server error, by update the newUser in verify token")
+		}
 	}
 
 	return isValid, nil

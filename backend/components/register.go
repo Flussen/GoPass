@@ -2,18 +2,30 @@ package components
 
 import (
 	"GoPass/backend/controllers"
+	eh "GoPass/backend/errorHandler"
 	userkeyhandler "GoPass/backend/userKeyHandler"
 	"errors"
 	"log"
+	"regexp"
 
 	"go.etcd.io/bbolt"
 	"golang.org/x/crypto/bcrypt"
 )
 
+func validateEmail(email string) bool {
+
+	regex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+	return regex.MatchString(email)
+}
+
 func RegistryChecker(DB *bbolt.DB, username, email, password string) error {
 
 	if username == "" || password == "" {
-		return errors.New("invalid credentials")
+		return eh.NewGoPassError("fields cannot be empty")
+	}
+
+	if !validateEmail(email) {
+		return eh.NewGoPassError("email is not valid")
 	}
 
 	exists, err := controllers.CheckUserExists(DB, username, email)
@@ -22,7 +34,7 @@ func RegistryChecker(DB *bbolt.DB, username, email, password string) error {
 		return err
 	}
 	if exists {
-		return errors.New("the user or email already exists")
+		return eh.NewGoPassError("the user or email already exists!")
 	}
 	return nil
 }

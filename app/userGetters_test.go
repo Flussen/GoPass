@@ -24,7 +24,7 @@ func Test(t *testing.T) {
 	if !success {
 		t.Fatalf("DoRegister was not successful")
 	}
-	success, err = app.DoRegister(user2, "test@gASD.com", passUser) // "UserTest"
+	success, err = app.DoRegister(user2, "test@mail.com", passUser) // "UserTest"
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}

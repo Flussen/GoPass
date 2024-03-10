@@ -1,3 +1,12 @@
+// Main app golang source by @Flussen - https://github.com/Flussen 🔧
+//
+// GoPass Manager project is under a GNU license to maintain the free code
+// and intellectual protection of its creators so that it remains available to everyone. 🤖
+// https://github.com/Flussen/GoPass?tab=GPL-3.0-1-ov-file
+
+// Please consider giving us a star on github if you liked our work
+// GoPass https://github.com/Flussen/GoPass ❤️
+
 package app
 
 import (
@@ -7,10 +16,10 @@ import (
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
-	eh "GoPass/backend/errorHandler"
-	"GoPass/backend/models" // Importing another custom package
+	eh "GoPass/backend/errorHandler" // Error handler
+	"GoPass/backend/models"          // Importing another custom package
 
-	"encoding/json" // Package for encoding and decoding JSON
+	"encoding/json"
 	"errors"
 	"math/rand"
 	"time"
@@ -20,11 +29,9 @@ import (
 	"golang.org/x/crypto/bcrypt" // Package for password hashing
 )
 
-/*
-App is an empty struct that will add the functions that will
-be added to main.go so that wails go compiles. This is the way to
-improve the abstraction of the program so that the program scales.
-*/
+// App is an empty struct that will add the functions that will
+// be added to main.go so that wails go compiles. This is the way to
+// improve the abstraction of the program so that the program scales.
 type App struct {
 	DB *bbolt.DB
 }
@@ -208,9 +215,6 @@ func (a *App) GetTokenVerification(user, token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if !isValid {
-		return false, eh.NewGoPassErrorf(eh.ErrLogicFunctionName, "GetTokenVerification")
-	}
 
 	return isValid, nil
 }
@@ -275,6 +279,27 @@ func (a *App) GetListUsers() (string, error) {
 	return controllers.GetUsersConcurrently(a.DB)
 }
 
+func (a *App) GetLastSession() (string, error) {
+
+	var sessionBytes []byte
+
+	a.DB.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("LastSessionSaved"))
+		if b == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
+
+		sessionBytes = b.Get([]byte("lastsession"))
+		if sessionBytes == nil {
+			return eh.NewGoPassError("last session not found")
+		}
+
+		return nil
+	})
+
+	return string(sessionBytes), nil
+}
+
 // PasswordGenerator generates a random password with a specified
 // length and returns its strength level
 //
@@ -311,7 +336,7 @@ func (a *App) PasswordGenerator(lenght int) (string, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.0.4 - ALPHA"
+	return "0.1 BETA - Rejewski"
 }
 
 /*
