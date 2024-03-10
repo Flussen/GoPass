@@ -33,9 +33,9 @@ After installing GoPass, you can log in or register using the application's inte
 - **🧑‍💻 User Registration and Login:** Create an account and access your passwords securely.
 - **📜 Password Management:** Securely add, edit and delete passwords.
 - **💾 Local Database:** Your passwords are securely stored on your device, providing a high level of security with encryption of sensitive data.
-- **🤖 Encryption and Decryption** The password of your credentials is encrypted and always remains encrypted by the [AES](https://es.wikipedia.org/wiki/Advanced_Encryption_Standard) standard 256, the only time it is visible is when YOU decide to see it to copy and use it!
-- **🪪 Session** We will save your session in case you want to keep your account saved session (We recommend logging out every time you finish using GoPass.) based on a token that we save in the database
-- **💸 Free for Everyone!** We love writing code and programming something useful for humanity and whenever we can, we will try to make things for everyone, free and open source! (I will try to always make GoPass free for everyone! - @Flussen)
+- **🤖 Encryption and Decryption:** The password of your credentials is encrypted and always remains encrypted by the [AES](https://es.wikipedia.org/wiki/Advanced_Encryption_Standard) standard 256, the only time it is visible is when YOU decide to see it to copy and use it!
+- **🪪 Session:** We will save your session in case you want to keep your account saved session (We recommend logging out every time you finish using GoPass.) based on a token that we save in the database
+- **💸 Free for Everyone:** We love writing code and programming something useful for humanity and whenever we can, we will try to make things for everyone, free and open source! (I will try to always make GoPass free for everyone! - @Flussen)
 
 ## In Development 🔧🤖
 
