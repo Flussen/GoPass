@@ -1,8 +1,8 @@
-# GoPass 0.0.3 ALPHA
+# GoPass 0.1.0 PRE BETA - Rejewski
 
 ## Introduction
 
-GoPass is a password management software developed in Go, using wails.io for the backend and Next.js for the frontend. This project offers a secure solution for storing passwords, providing a convenient way to keep all your credentials in one place. Designed for users seeking to maximize security without sacrificing convenience, GoPass uses a local database for user registration and management, ensuring a seamless and secure user experience.
+🤖 GoPass is a password management software developed in Go, using wails.io for the backend and Next.js for the frontend. This project offers a secure solution for storing passwords, providing a convenient way to keep all your credentials in one place. Designed for users seeking to maximize security without sacrificing convenience, GoPass uses a local database for user registration and management, ensuring a seamless and secure user experience.
 
 ## Installation
 
@@ -30,17 +30,23 @@ After installing GoPass, you can log in or register using the application's inte
 
 ### Main Features
 
-- **User Registration and Login:** Create an account and access your passwords securely.
-- **Password Management:** Securely add and delete passwords.
-- **Local Database:** Your passwords are securely stored on your device, providing a high level of security.
+- **🧑‍💻 User Registration and Login:** Create an account and access your passwords securely.
+- **📜 Password Management:** Securely add, edit and delete passwords.
+- **💾 Local Database:** Your passwords are securely stored on your device, providing a high level of security with encryption of sensitive data.
+- **🤖 Encryption and Decryption** The password of your credentials is encrypted and always remains encrypted by the [AES](https://es.wikipedia.org/wiki/Advanced_Encryption_Standard) standard 256, the only time it is visible is when YOU decide to see it to copy and use it!
+- **🪪 Session** We will save your session in case you want to keep your account saved session (We recommend logging out every time you finish using GoPass.) based on a token that we save in the database
+- **💸 Free for Everyone!** We love writing code and programming something useful for humanity and whenever we can, we will try to make things for everyone, free and open source! (I will try to always make GoPass free for everyone! - @Flussen)
 
-## In Development
+## In Development 🔧🤖
 
 GoPass is currently under active development. We are working on adding new features and improving the user experience. Some of the planned functionalities include:
 
 - Enhancements in data security and encryption.
 - Synchronization of passwords across devices.
 - More intuitive and user-friendly interface.
+- Secure notes and files
+- Export and import your credentials securely, either with encrypted or decrypted data!
+- One-time password export with encryption so you can carry your credentials securely with you at all times and be compatible with any stable version of GoPass.
 
 ## Contributing
 
