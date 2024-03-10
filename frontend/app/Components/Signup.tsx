@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import { useState } from 'react';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
@@ -8,19 +8,20 @@ import KeyIcon from '@mui/icons-material/Key';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg";
 import Mener from "../../Public/men.svg"
-
+import SignupResult from './SignupResult';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 interface SignupProps {
   setShowSignup: (value: boolean) => void;
   version: string;
+  setIsLoading: (loading: boolean) => void;
 }
 
 
 
-const Signup: React.FC<SignupProps> = ({ setShowSignup, version,  }) => {
+const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading }) => {
 
 
-
+  const [isSignupResultOpen, setIsSignupResultOpen] = useState(false)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,24 +29,39 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version,  }) => {
   async function pullRegister() {
 
     try {
+      setIsLoading(true);
+      setIsSignupResultOpen(true);
+
       const response = await DoRegister(name, email, password);
       if (response) {
+        console.log('despues: ' + isSignupResultOpen)
+
+        setIsLoading(false);
+        setIsSignupResultOpen(true)
         setShowSignup(false)
-        alert('Usuario registrado con éxito')
+
+        
+
       } else {
         alert('Error al registrar usuario ' + response);
       }
     } catch (error) {
       console.error('Error fetching version:', error);
+    } finally{
+      setIsLoading(false)
     }
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Previene la recarga de la página
     await pullRegister(); // Llama a la función pullRegister
+
   };
 
-
+  useEffect(() => {
+    console.log('El estado de isSignupResultOpen ha cambiado a: ' + isSignupResultOpen);
+    // Aquí puedes colocar cualquier código que deba ejecutarse después de que isSignupResultOpen se actualice
+  }, [isSignupResultOpen]);
   return (
     <div id='login' className='bg-back'>
       {/* Header */}
@@ -61,7 +77,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version,  }) => {
       {/* Login Box */}
       <div className=' flex justify-center items-center  mt-10'>
         <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-xl py-32  bg-box'>
-          
+
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col justify-center items-center h-full space-y-4 font-semibold text-xl'>
               <div className='xl:text-[3vw]  text-5xl font-bold mb-8'>
@@ -85,12 +101,14 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version,  }) => {
                 </button>
               </div>
 
+
               <div className=' text-grey font-medium '>
                 Already have an account. <span className='text-blue font-semibold cursor-pointer' onClick={() => setShowSignup(false)}>Login</span>
               </div>
               <h3 className='flex justify-center items-center opacity-50 text-xs select-none'>{version}</h3>
             </div>
           </form>
+          <SignupResult isOpen={isSignupResultOpen} onClose={() => setIsSignupResultOpen(!isSignupResultOpen)} />
           <div className='hidden xl:flex justify-center items-center xl:opacity-100'>
 
             <Image src={Mener} alt='Women' className='absolute 2xl:scale-100 scale-80' />

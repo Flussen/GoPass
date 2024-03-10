@@ -46,9 +46,10 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
         setUserKey(result.userKey);
         setUserName(name);
         setShowDashboard(true);
+        setToken(result.token)
       }
     } catch (error) {
-      console.error('Login error:', error);
+
       
     } finally {
       setIsLoading(false); 

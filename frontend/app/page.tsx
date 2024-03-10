@@ -6,6 +6,9 @@ import SignupComp from "./Components/Signup";
 import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
+import SignupResult from './Components/SignupResult';
+
+
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
@@ -60,7 +63,7 @@ if(isLoading){
   return (
     <div className='bg-back h-screen'>
       {showSignup ? (
-        <SignupComp setShowSignup={setShowSignup}  version={version}  />
+        <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup}  version={version}  />
       ) : (
         <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} setUserKey={setUserKey} setUserName={setUserName}  />
       )}
