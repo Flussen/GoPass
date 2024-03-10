@@ -9,7 +9,6 @@ import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg"
 
 
-
 interface LoginProps {
   setShowSignup: (value: boolean) => void;
   handleLoginSignup: () => void; // Añadir esta línea
@@ -20,6 +19,7 @@ interface LoginProps {
   setUserName: (userKey: string) =>void;
   setShowDashboard: (show: boolean) => void;
  setIsLoading: (show: boolean) => void;
+ setToken: (toke: string) =>void;
 }
 
 interface LoginState {
@@ -29,12 +29,11 @@ interface LoginState {
 
 
 
-const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName,setShowDashboard, setIsLoading }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName,setShowDashboard, setIsLoading, setToken }) => {
 
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
 
   async function pullLogin() {
     setIsLoading(true); 
@@ -46,6 +45,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
         setUserKey(result.userKey);
         setUserName(name);
         setShowDashboard(true);
+        console.log('Token Saved:'+result.token)
         setToken(result.token)
       }
     } catch (error) {
