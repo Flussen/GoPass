@@ -23,7 +23,7 @@ func TestDoLogin(t *testing.T) {
 	}
 
 	// Login process
-	js, err := app.DoLogin("testuser", "password123")
+	js, err := app.DoLogin(user, passUser)
 	if err != nil {
 		t.Errorf("DoRegister failed: %v", err)
 	}

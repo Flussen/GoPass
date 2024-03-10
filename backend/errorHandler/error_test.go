@@ -82,3 +82,14 @@ func TestNewGoPassFormatError(t *testing.T) {
 		t.Fatal("Expected an error but got nil")
 	}
 }
+
+func errortodo() error {
+	return NewGoPassErrorf(ErrLogicFunctionName, "Function to Test!")
+}
+
+func TestFormatInString(t *testing.T) {
+	err := errortodo()
+	if err != nil {
+		fmt.Println(err)
+	}
+}

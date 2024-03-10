@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
-	"errors"
 	"time"
 
 	"go.etcd.io/bbolt"
@@ -16,18 +16,18 @@ func StoreSessionToken(DB *bbolt.DB, username, token string, expiry time.Time) e
 	return DB.Update(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
 		if b == nil {
-			return errors.New("'users' bucket not found")
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
 		}
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New("user not found")
+			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
 
 		var user models.User
 		err := json.Unmarshal(userBytes, &user)
 		if err != nil {
-			return err
+			return eh.NewGoPassError(eh.ErrUnmarshal)
 		}
 
 		user.SessionToken = token
@@ -35,7 +35,7 @@ func StoreSessionToken(DB *bbolt.DB, username, token string, expiry time.Time) e
 
 		updateUserBytes, err := json.Marshal(user)
 		if err != nil {
-			return err
+			return eh.NewGoPassError(eh.ErrMarshal)
 		}
 		return b.Put([]byte(username), updateUserBytes)
 	})
