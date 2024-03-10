@@ -11,15 +11,14 @@ import Women from "../../Public/undraw_secure_login_pdn4.svg"
 
 interface LoginProps {
   setShowSignup: (value: boolean) => void;
-  handleLoginSignup: () => void; // Añadir esta línea
   version: string;
   token: string;
   userKey: string;
   setUserKey: (userKey: string) =>void;
   setUserName: (userKey: string) =>void;
   setShowDashboard: (show: boolean) => void;
- setIsLoading: (show: boolean) => void;
- setToken: (toke: string) =>void;
+  setIsLoading: (show: boolean) => void;
+  setToken: (toke: string) =>void;
 }
 
 interface LoginState {
@@ -29,7 +28,7 @@ interface LoginState {
 
 
 
-const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version, setUserKey, setUserName,setShowDashboard, setIsLoading, setToken }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUserName,setShowDashboard, setIsLoading, setToken }) => {
 
 
   const [name, setName] = useState('');
@@ -43,10 +42,8 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, handleLoginSignup, version
       const result = JSON.parse(response) as LoginState;
       if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
         setUserKey(result.userKey);
-        setUserName(name);
         setShowDashboard(true);
         console.log('Token Saved:'+result.token)
-        setToken(result.token)
       }
     } catch (error) {
 

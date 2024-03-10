@@ -29,6 +29,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
             setPass('');
         } catch (error) {
             console.error('Error saving password: ' + error);
+            console.log('Username:'+userName+' userKey: '+userKey)
             alert('Password not saved'); // Error handling
         }
     }

@@ -8,7 +8,7 @@ import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
 import SignupResult from './Components/SignupResult';
 import { GetTokenVerification } from '@/wailsjs/wailsjs/go/app/App';
-
+import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 
 
 export default function Home() {
@@ -22,47 +22,40 @@ export default function Home() {
   const [tokenVerificated, setTokenVerificated] = useState(false)
   const [token, setToken] = useState('')
 
-  async function fetchVersion() {
+
+  async function GetToken() {
     try {
-      const response = await GetVersion();
-      setVersion(response);
-      console.log('Token: ' +token)
-    } catch (error) {
-      console.error('Error fetching version:', error);
+      
+      const result = await GetLastSession();
+      const data = JSON.parse(result);
+      setUserName(data.username)
+      setToken(data.token)
+      console.log('DataToke: ' + data.token+'y el token: ')
+      console.log('DataUser: ' + data.username)
+      if (data.token !== null && data.username !== null) {
+        console.log('dentro del if:' +userName,token)
+        const resultado = await GetTokenVerification(data.username, data.token);
+        if(resultado){
+          setShowDashboard(true)
+        }
+      }
+    } catch {
+      console.log('Not a saved session')
     }
   }
 
-async function VerifyToken(){
-  try{
-    const result = await GetTokenVerification(userName, token)
-    console.log('Verified: '+result)
-    setTokenVerificated(result)
-    if(result){
-      setShowDashboard(true)
-    }
-  }catch{
-console.log('verified error')
-  }
-}
 
   useEffect(() => {
-    fetchVersion();
-    VerifyToken();
+    GetToken();
   }, []);
 
-  const handleLoginSignup = () => {
-    setIsLoading(true); // Muestra el componente de carga
-    // Simula una carga o espera por una operación asíncrona
-    setTimeout(() => {
-      setIsLoading(false); // Oculta el componente de carga
-    }, 1000); // Ajusta este tiempo según sea necesario
-  };
 
- 
+
+
 
   if (isLoading) {
     return <LoadingComp />;
-  } else if (showDashboard||tokenVerificated ) {
+  } else if (showDashboard ) {
     return (
       <>
         {showGenerator ? (
@@ -82,7 +75,7 @@ console.log('verified error')
       {showSignup ? (
         <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
       ) : (
-        <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} handleLoginSignup={handleLoginSignup} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
+        <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
       )}
     </div>
   );
