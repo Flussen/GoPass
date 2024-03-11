@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // func loginFunc(db *bbolt.DB) func() {
@@ -63,4 +65,61 @@ func Test_login(t *testing.T) {
 	// fmt.Printf("Token: %s\n", result.Token)
 	// fmt.Printf("TUserKey: %s\n", result.UserKey)
 	fmt.Println(userdata)
+}
+
+func Test_login_v2(t *testing.T) {
+	assert := assert.New(t)
+	db, cleanup := CreateTestDB()
+	defer cleanup()
+
+	const (
+		userTest  = "User"
+		emailTest = "email@hotmail.com"
+		passTest  = "password"
+	)
+
+	app := &app.App{DB: db}
+	// Register process
+	_, err := app.DoRegister(userTest, emailTest, passTest)
+	if err != nil {
+		t.Fatalf("DoRegister failed: %v", err)
+	}
+
+	tests := []struct {
+		name      string
+		user      string
+		password  string
+		expectErr bool
+	}{
+		{
+			"correct login credentials",
+			"User",
+			"password",
+			false,
+		},
+		{
+			"invalid user",
+			"invalidUser",
+			"password",
+			true,
+		},
+		{
+			"invalid password",
+			"User",
+			"invalidPassword",
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := app.DoLogin(tt.user, tt.password)
+			if tt.expectErr {
+				assert.Error(err, "Expected an error!")
+			} else {
+				assert.NoErrorf(err, "Expected no error! %v", err)
+			}
+		})
+	}
+
 }
