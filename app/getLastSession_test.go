@@ -21,7 +21,7 @@ func TestGetLastSessionStored(t *testing.T) {
 	// Login process
 	_, err = app.DoLogin(user, passUser)
 	if err != nil {
-		t.Errorf("DoRegister failed: %v", err)
+		t.Fatalf("DoRegister failed: %v", err)
 	}
 
 	dataJson, err := app.GetLastSession()

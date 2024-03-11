@@ -94,8 +94,7 @@ func (a *App) DoLogin(username, password string) (string, error) {
 
 	err = controllers.StoreSessionToken(a.DB, username, token, userKey, expiry)
 	if err != nil {
-		eh.NewGoPassErrorf("error storing session token: %v", err)
-		return "", errors.New("failed to log in")
+		return "", eh.NewGoPassErrorf("error storing session token: %v", err)
 	}
 
 	result, err := json.Marshal(map[string]string{"token": token, "userKey": userKey})

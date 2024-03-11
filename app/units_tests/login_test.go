@@ -1,23 +1,36 @@
-package app
+package units_tests
 
 import (
+	"GoPass/app"
 	"GoPass/backend/models"
 	"encoding/json"
 	"fmt"
 	"testing"
 )
 
+// func loginFunc(db *bbolt.DB) func() {
+// 	return func() {
+// 		value, err :=
+// 	}
+// }
+
 // TestDoLogin verifies the functionality of the DoLogin method in the App struct.
 // It creates a test database, initializes the App instance with the test database,
 // registers a user, and then attempts to log in with valid credentials.
 // If the login process fails, the test fails with an error message.
-func TestDoLogin(t *testing.T) {
-	db, cleanup := CreateTestDB(t)
+func Test_login(t *testing.T) {
+	db, cleanup := CreateTestDB()
 	defer cleanup()
 
-	app := &App{DB: db}
+	const (
+		user      = "UserExists"
+		emailUser = "emailexists@hotmail.com"
+		passUser  = "password"
+	)
+
+	app := &app.App{DB: db}
 	// Register process
-	_, err := app.DoRegister(user, mailUser, passUser)
+	_, err := app.DoRegister(user, emailUser, passUser)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}

@@ -1,28 +1,20 @@
-package app
+package units_tests
 
 import (
 	"os"
-	"testing"
 
 	"go.etcd.io/bbolt"
 )
 
-// temp Const
-const (
-	user     = "UserTest1"
-	mailUser = "test1@gmail.com"
-	passUser = "myPass1"
-)
-
-func CreateTestDB(t *testing.T) (*bbolt.DB, func()) {
+func CreateTestDB() (*bbolt.DB, func()) {
 	tmpfile, err := os.CreateTemp("", "testdb_*.db")
 	if err != nil {
-		t.Fatalf("failed to create temp file: %v", err)
+		panic("Error in mock database")
 	}
 
 	db, err := bbolt.Open(tmpfile.Name(), 0600, nil)
 	if err != nil {
-		t.Fatalf("failed to open db: %v", err)
+		panic("Error in mock database")
 	}
 
 	cleanup := func() {
