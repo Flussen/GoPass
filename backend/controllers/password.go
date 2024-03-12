@@ -13,6 +13,10 @@ import (
 
 func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, userKey, creationDate string) (string, error) {
 
+	if user == "" || usernameToSave == "" || service == "" || password == "" || userKey == "" {
+		return "", eh.NewGoPassError("inputs cannot be empty")
+	}
+
 	encryptedPassword, err := encryption.EncryptPassword(password, userKey)
 	if err != nil {
 		return "", err
