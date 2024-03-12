@@ -309,3 +309,128 @@ func Test_edit_user_password(t *testing.T) {
 	}
 
 }
+
+func Test_delete_password(t *testing.T) {
+	assert := assert.New(t)
+	db, cleanup := CreateTestDB()
+	defer cleanup()
+
+	app := &app.App{DB: db}
+
+	const (
+		userTest  = "User"
+		emailTest = "email@hotmail.com"
+		passTest  = "password"
+	)
+
+	// Register process
+	_, err := app.DoRegister(userTest, emailTest, passTest)
+	if err != nil {
+		t.Fatalf("DoRegister failed: %v", err)
+	}
+
+	// Login process
+	js, err := app.DoLogin(userTest, passTest)
+	if err != nil {
+		t.Fatalf("DoLogin failed: %v", err)
+	}
+	var userdata models.Receive
+
+	err = json.Unmarshal([]byte(js), &userdata)
+	if err != nil {
+		t.Fatalf("json.Unmarshal failed: %v", err)
+	}
+	id1, err := app.DoSaveUserPassword(userTest, "test1", "google", "password", userdata.UserKey)
+	if err != nil {
+		t.Fatalf("DoSaveUserPassword failed: %v", err)
+	}
+	id2, err := app.DoSaveUserPassword(userTest, "test2", "google2", "password2", userdata.UserKey)
+	if err != nil {
+		t.Fatalf("DoSaveUserPassword failed: %v", err)
+	}
+	id3, err := app.DoSaveUserPassword(userTest, "test3", "google3", "password3", userdata.UserKey)
+	if err != nil {
+		t.Fatalf("DoSaveUserPassword failed: %v", err)
+	}
+	id4, err := app.DoSaveUserPassword(userTest, "test4", "google4", "password4", userdata.UserKey)
+	if err != nil {
+		t.Fatalf("DoSaveUserPassword failed: %v", err)
+	}
+
+	tests := []struct {
+		name        string
+		username    string
+		id          string
+		checkData   bool
+		expectError bool
+	}{
+		{
+			"password deleted successfully",
+			userTest,
+			id1,
+			false,
+			false,
+		},
+		{
+			"password deleted failed!",
+			"",
+			id2,
+			false,
+			true,
+		},
+		{
+			"password deleted failed and data not deleted!",
+			"",
+			id3,
+			true,
+			true,
+		},
+		{
+			"password deleted successfully and data deleted!",
+			userTest,
+			id4,
+			true,
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			errDelete := app.DoDeleteUserPassword(tt.username, tt.id)
+
+			passwords, err := app.GetUserPasswords(userTest)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var pwdsContainer models.PasswordsContainer
+			err = json.Unmarshal([]byte(passwords), &pwdsContainer)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if tt.expectError {
+				assert.NotNil(errDelete, "should return an error")
+				if tt.checkData {
+					assert.NotNil(errDelete)
+					for _, v := range pwdsContainer.Passwords {
+						if v.Id == tt.id {
+							assert.NotEmpty(v)
+						}
+
+					}
+				}
+			} else {
+				assert.Nil(errDelete, "should return a nil")
+				if tt.checkData {
+					for _, v := range pwdsContainer.Passwords {
+						if v.Id == tt.id {
+							assert.Empty(v)
+						}
+					}
+					assert.Nil(errDelete)
+				}
+			}
+		})
+	}
+}
