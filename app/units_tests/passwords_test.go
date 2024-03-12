@@ -39,8 +39,6 @@ func Test_save_user_password(t *testing.T) {
 		t.Fatalf("DoLogin failed: %v", err)
 	}
 
-	// user, usernameToSave, service, password, userKey string
-
 	var userdata models.Receive
 
 	err = json.Unmarshal([]byte(js), &userdata)
@@ -124,11 +122,11 @@ func Test_save_user_password(t *testing.T) {
 		ttest := t.Run(tt.name, func(t *testing.T) {
 			id, err := app.DoSaveUserPassword(tt.tuser, tt.tusernameToSave, tt.tuser, tt.tpassword, tt.tuserKey)
 			if tt.expectedErr {
-				assert.Empty(t, id, "expect empty for the id")
-				assert.NotNil(t, err, "expect NOT nil for err")
+				assert.Empty(id, "expect empty for the id")
+				assert.NotNil(err, "expect NOT nil for err")
 			} else {
-				assert.NotEmpty(t, id, "expect not empty for the id")
-				assert.Nil(t, err, "expect nil for err")
+				assert.NotEmpty(id, "expect not empty for the id")
+				assert.Nil(err, "expect nil for err")
 			}
 			if tt.checkData {
 				passwords, _ := app.GetUserPasswords(userTest)
@@ -155,4 +153,159 @@ func Test_save_user_password(t *testing.T) {
 			fmt.Printf("\nTest: %v passed ✅", tt.name)
 		}
 	}
+}
+
+func Test_edit_user_password(t *testing.T) {
+	assert := assert.New(t)
+	db, cleanup := CreateTestDB()
+	defer cleanup()
+
+	app := &app.App{DB: db}
+
+	const (
+		userTest  = "User"
+		emailTest = "email@hotmail.com"
+		passTest  = "password"
+	)
+
+	// Register process
+	_, err := app.DoRegister(userTest, emailTest, passTest)
+	if err != nil {
+		t.Fatalf("DoRegister failed: %v", err)
+	}
+
+	// Login process
+	js, err := app.DoLogin(userTest, passTest)
+	if err != nil {
+		t.Fatalf("DoLogin failed: %v", err)
+	}
+	var userdata models.Receive
+
+	err = json.Unmarshal([]byte(js), &userdata)
+	if err != nil {
+		t.Fatalf("json.Unmarshal failed: %v", err)
+	}
+	id, err := app.DoSaveUserPassword(userTest, "test", "google", "password", userdata.UserKey)
+	if err != nil {
+		t.Fatalf("DoSaveUserPassword failed: %v", err)
+	}
+
+	tests := []struct {
+		name         string
+		tuser        string
+		tuserKey     string
+		tid          string
+		tnewTitle    string
+		tnewUsername string
+		tnewPwd      string
+		expectError  bool
+		checkData    bool
+	}{
+		{
+			"return nil error",
+			userTest,
+			userdata.UserKey,
+			id,
+			"NewTitle1",
+			"newUserName1",
+			"passwordEncrypted",
+			false,
+			false,
+		},
+		{
+			"returns an error if any field is empty",
+			userTest,
+			userdata.UserKey,
+			id,
+			"NewTitle2",
+			"newUserName2",
+			"",
+			true,
+			false,
+		},
+		{
+			"return an error if the userKey is empty",
+			userTest,
+			"",
+			id,
+			"NewTitle3",
+			"newUserName3",
+			"passwordEncrypted",
+			true,
+			false,
+		},
+		{
+			"return nil err and the data is updated",
+			userTest,
+			userdata.UserKey,
+			id,
+			"NewTitle4",
+			"newUserName4",
+			"passwordEncrypted",
+			false,
+			true,
+		},
+		{
+			"return ERR and data is NOT updated",
+			userTest,
+			"",
+			id,
+			"NewTitle5",
+			"newUserName5",
+			"passwordEncrypted4",
+			true,
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		ttest := t.Run(tt.name, func(t *testing.T) {
+			errUpdate := app.DoUpdateUserPassword(tt.tuser, tt.tuserKey, tt.tid,
+				tt.tnewTitle, tt.tnewUsername, tt.tnewPwd)
+			if tt.expectError {
+
+				assert.NotNil(errUpdate, "expect a error")
+
+				if tt.checkData {
+					password, err := app.GetUserPasswordById(userTest, id)
+					if err != nil {
+						t.Fatalf("error by app.GetUserPasswordById: %v", err)
+					}
+
+					var pwd models.Password
+					if err = json.Unmarshal([]byte(password), &pwd); err != nil {
+						t.Fatalf("error by Unmarshal: %v", err)
+					}
+					assert.NotNil(errUpdate, "expect a error")
+					assert.Equal(tt.tid, pwd.Id, "expect same id")
+					assert.Equal("NewTitle4", pwd.Title, "expect new Title")
+					assert.Equal("newUserName4", pwd.Username, "expect new Username")
+					// NewTitle4 & newUserName4 because this is the latest updated, but it should
+					// not be updated to NewTitle5 or newUserName5
+				}
+			} else {
+				assert.Nil(errUpdate, "expect a nil in err")
+			}
+			if tt.checkData && !tt.expectError {
+				passwords, err := app.GetUserPasswordById(userTest, id)
+				if err != nil {
+					t.Fatalf("error by app.GetUserPasswordById: %v", err)
+				}
+
+				var password models.Password
+				if err = json.Unmarshal([]byte(passwords), &password); err != nil {
+					t.Fatalf("error by Unmarshal: %v", err)
+				}
+
+				assert.Equal(tt.tid, id, "expect same id")
+				assert.Equal(tt.tnewTitle, password.Title, "expect new Title")
+				assert.Equal(tt.tnewUsername, password.Username, "expect new Username")
+				// assert.Equal(tt.tnewPwd, password.Pwd, "expect new Password")
+			}
+		})
+		if ttest == true {
+			fmt.Printf("\nTest: %v passed ✅", tt.name)
+		}
+	}
+
 }

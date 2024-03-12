@@ -13,8 +13,9 @@ import (
 
 func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, userKey, creationDate string) (string, error) {
 
-	if user == "" || usernameToSave == "" || service == "" || password == "" || userKey == "" {
-		return "", eh.NewGoPassError("inputs cannot be empty")
+	if user == "" || usernameToSave == "" || service == "" ||
+		password == "" || userKey == "" {
+		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
 	encryptedPassword, err := encryption.EncryptPassword(password, userKey)
@@ -51,7 +52,7 @@ func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, userKey
 
 func DeletePass(DB *bbolt.DB, user, id string) error {
 	if user == "" || id == "" {
-		return fmt.Errorf("user and id must not be empty")
+		return fmt.Errorf(eh.ErrEmptyParameters)
 	}
 	return DB.Update(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(user))
@@ -76,38 +77,45 @@ func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, 
 	if user == "" || id == "" || userKey == "" ||
 		newTitle == "" || newPwd == "" ||
 		newUsername == "" || newDate == "" {
-		return fmt.Errorf("none of the parameters can be empty")
+		return eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
-	encryptedPassword, err := encryption.EncryptPassword(newPwd, userKey)
+	data, err := GetUserInfo(db, user)
 	if err != nil {
 		return err
 	}
-
-	newPasswordData := models.Password{
-		Title:       newTitle,
-		Id:          id,
-		Pwd:         encryptedPassword,
-		Username:    newUsername,
-		CreatedDate: newDate,
-	}
-
-	dataBytes, err := json.Marshal(newPasswordData)
-	if err != nil {
-		return err
-	}
-
-	err = db.Update(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(user))
-		if userBucket == nil {
-			return fmt.Errorf("bucket not found for user %s", user)
+	if data.UserKey == userKey {
+		encryptedPassword, err := encryption.EncryptPassword(newPwd, userKey)
+		if err != nil {
+			return err
 		}
-		return userBucket.Put([]byte(id), dataBytes)
-	})
-	if err != nil {
-		return err
+
+		newPasswordData := models.Password{
+			Title:       newTitle,
+			Id:          id,
+			Pwd:         encryptedPassword,
+			Username:    newUsername,
+			CreatedDate: newDate,
+		}
+
+		dataBytes, err := json.Marshal(newPasswordData)
+		if err != nil {
+			return err
+		}
+
+		err = db.Update(func(tx *bbolt.Tx) error {
+			userBucket := tx.Bucket([]byte(user))
+			if userBucket == nil {
+				return fmt.Errorf("bucket not found for user %s", user)
+			}
+			return userBucket.Put([]byte(id), dataBytes)
+		})
+		if err != nil {
+			return err
+		}
+		return nil
 	}
-	return nil
+	return eh.NewGoPassError(eh.ErrInvalidUserKey)
 }
 
 func UserPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
