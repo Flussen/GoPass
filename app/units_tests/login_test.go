@@ -4,7 +4,6 @@ import (
 	"GoPass/app"
 	"GoPass/backend/models"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -20,54 +19,7 @@ import (
 // It creates a test database, initializes the App instance with the test database,
 // registers a user, and then attempts to log in with valid credentials.
 // If the login process fails, the test fails with an error message.
-func Test_login(t *testing.T) {
-	db, cleanup := CreateTestDB()
-	defer cleanup()
-
-	const (
-		user      = "UserExists"
-		emailUser = "emailexists@hotmail.com"
-		passUser  = "password"
-	)
-
-	app := &app.App{DB: db}
-	// Register process
-	_, err := app.DoRegister(user, emailUser, passUser)
-	if err != nil {
-		t.Fatalf("DoRegister failed: %v", err)
-	}
-
-	// Login process
-	js, err := app.DoLogin(user, passUser)
-	if err != nil {
-		t.Errorf("DoRegister failed: %v", err)
-	}
-
-	dataUserJson, err := app.GetUserInfo(user)
-	if err != nil {
-		t.Errorf("GetUser failed: %v", err)
-	}
-
-	var userdata models.User
-
-	err = json.Unmarshal([]byte(dataUserJson), &userdata)
-	if err != nil {
-		t.Errorf("Unmarshal failed: %v", err)
-	}
-
-	var result models.Receive
-
-	err = json.Unmarshal([]byte(js), &result)
-	if err != nil {
-		t.Errorf("json.Unmarshal failed: %v", err)
-	}
-	// fmt.Printf("DATA: %s\n", result)
-	// fmt.Printf("Token: %s\n", result.Token)
-	// fmt.Printf("TUserKey: %s\n", result.UserKey)
-	fmt.Println(userdata)
-}
-
-func Test_login_v2(t *testing.T) {
+func Test_login_data_receive(t *testing.T) {
 	assert := assert.New(t)
 	db, cleanup := CreateTestDB()
 	defer cleanup()
@@ -86,38 +38,74 @@ func Test_login_v2(t *testing.T) {
 	}
 
 	tests := []struct {
-		name      string
-		user      string
-		password  string
-		expectErr bool
+		name          string
+		user          string
+		password      string
+		expectErr     bool
+		tokenLength   int
+		userKeyLength int
 	}{
 		{
 			"correct login credentials",
 			"User",
 			"password",
 			false,
+			0,
+			0,
 		},
 		{
 			"invalid user",
 			"invalidUser",
 			"password",
 			true,
+			0,
+			0,
 		},
 		{
 			"invalid password",
 			"User",
 			"invalidPassword",
 			true,
+			0,
+			0,
+		},
+		{
+			"token 36 characters",
+			"User",
+			"password",
+			false,
+			36,
+			0,
+		},
+		{
+			"userKey 32 characters",
+			"User",
+			"password",
+			false,
+			0,
+			32,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := app.DoLogin(tt.user, tt.password)
+			datajs, err := app.DoLogin(tt.user, tt.password)
+			var receive models.Receive
+			_ = json.Unmarshal([]byte(datajs), &receive)
 			if tt.expectErr {
-				assert.Error(err, "Expected an error!")
+				assert.Empty(receive.Token, "Expected nil data")
+				assert.Empty(receive.UserKey, "Expected nil data")
+				assert.Error(err, "Expected error if is nil")
 			} else {
-				assert.NoErrorf(err, "Expected no error! %v", err)
+				assert.NotEmpty(receive.Token, "Expected return data")
+				assert.NotEmpty(receive.UserKey, "Expected return data")
+				assert.NoErrorf(err, "Expected nil error! %v", err)
+			}
+			if !tt.expectErr && tt.tokenLength > 0 {
+				assert.Len(receive.Token, tt.tokenLength, "%v length expected for token", tt.tokenLength)
+			}
+			if !tt.expectErr && tt.userKeyLength > 0 {
+				assert.Len(receive.UserKey, tt.userKeyLength, "%v length expected for token", tt.userKeyLength)
 			}
 		})
 	}

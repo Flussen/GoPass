@@ -63,7 +63,7 @@ func Test_registration(t *testing.T) {
 			if tt.expectErr {
 				assert.Error(err, "Expected an error!")
 			} else {
-				assert.NoErrorf(err, "Expected no error! %v", err)
+				assert.NoErrorf(err, "Expected nil error! %v", err)
 			}
 		})
 	}
