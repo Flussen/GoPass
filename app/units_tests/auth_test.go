@@ -226,3 +226,98 @@ func Test_login_data_receive(t *testing.T) {
 	}
 
 }
+
+func Test_Logout(t *testing.T) {
+	assert := assert.New(t)
+	db, cleanup := CreateTestDB()
+	defer cleanup()
+
+	const (
+		userTest  = "User"
+		emailTest = "email@hotmail.com"
+		passTest  = "password"
+	)
+
+	app := &app.App{DB: db}
+	// Register process
+	_, err := app.DoRegister(userTest, emailTest, passTest)
+	if err != nil {
+		t.Fatalf("DoRegister failed: %v", err)
+	}
+
+	tests := []struct {
+		name      string
+		user      string
+		expectErr bool
+		checkData bool
+	}{
+		{
+			"correct logout",
+			userTest,
+			false,
+			false,
+		},
+		{
+			"incorrect logout",
+			"",
+			true,
+			false,
+		},
+		{
+			"correct logout data checked",
+			userTest,
+			false,
+			true,
+		},
+		{
+			"incorrect logout data checked",
+			"",
+			true,
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			app.DoLogin(userTest, passTest)
+
+			err := app.DoLogout(tt.user)
+			if tt.expectErr {
+				assert.NotNil(err, "should to be a error result")
+				if tt.checkData {
+					sessionByte, err := app.GetLastSession()
+					assert.Nil(err)
+
+					var session models.LastSession
+					json.Unmarshal([]byte(sessionByte), &session)
+
+					assert.NotEmpty(session.Token)
+					assert.NotEmpty(session.UserKey)
+					assert.NotEmpty(session.Username)
+
+					var user models.User
+					userData, _ := app.GetUserInfo(userTest)
+					json.Unmarshal([]byte(userData), &user)
+
+					assert.NotEmpty(user.TokenExpiry)
+					assert.NotEmpty(user.SessionToken)
+				}
+			} else {
+				assert.Nil(err, "should to be a nil result")
+				if tt.checkData {
+					sessionByte, _ := app.GetLastSession()
+					// assert.NotNil(err)
+					var session models.LastSession
+					json.Unmarshal([]byte(sessionByte), &session)
+
+					assert.Empty(session.Token)
+					assert.Empty(session.UserKey)
+					assert.Empty(session.Username)
+				}
+			}
+
+			// again login for the next test
+		})
+	}
+
+}

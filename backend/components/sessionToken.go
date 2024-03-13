@@ -17,6 +17,10 @@ import (
 // if all checks were successful, it will return true, else return false with de error
 func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 
+	if username == "" || token == "" {
+		return false, eh.NewGoPassError("user not found or token not valid, please login again.")
+	}
+
 	var isValid bool
 	var user models.User
 
@@ -32,6 +36,10 @@ func VerifySessionToken(db *bbolt.DB, username, token string) (bool, error) {
 		}
 		if err := json.Unmarshal(userBytes, &user); err != nil {
 			return eh.NewGoPassError(eh.ErrUnmarshal)
+		}
+
+		if user.SessionToken != token {
+			return eh.NewGoPassError("invalid token")
 		}
 
 		expiryTime, err := time.Parse(time.RFC3339, user.TokenExpiry)
@@ -76,5 +84,6 @@ func Logout(db *bbolt.DB, username string) error {
 	if err != nil {
 		return eh.NewGoPassErrorf(eh.ErrLogicFunctionName, "Logout in session tokenhandler")
 	}
+	controllers.CleanSessionToken(db)
 	return nil
 }

@@ -290,7 +290,7 @@ func (a *App) GetLastSession() (string, error) {
 
 		sessionBytes = b.Get([]byte("lastsession"))
 		if sessionBytes == nil {
-			return eh.NewGoPassError("last session not found")
+			return eh.NewGoPassError("the last session is empty or was deleted, login again")
 		}
 
 		return nil
