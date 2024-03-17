@@ -8,33 +8,55 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundClip: {
+        text: 'text',
+      },
+      keyframes:{
+        loading:{
+            '0%,100%':{opacity: '1', height: '2.5rem'},
+            '33%,66%':{opacity: '0.5', height: '1.75rem'},
+            '50%':{opacity: '0', height: '1rem'},
+        }, 
+      },
+      animation: {
+        loading: 'loading 0.9s linear infinite',
+      },
+      
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic':'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient':'linear-gradient(140deg, rgba(255,153,0,1) 0%, rgba(59,0,255,1) 100%)',
       },
       colors: {
         'blue': '#00A3FF',
-        'red': '#d50000',
+        'red': '#EA4335',
         'back': '#DEEFFF',
         'bkblue':'#00172E',
         'grey':'#90A8B9',
         'lightgrey':'#D9E0E7',
         'box':'rgb(248, 252, 255,0.45)',
         'bgblue':'#CAE6FF',
-        'lightgreen': 'rgb(112, 255, 169,0.25)',
-        'green':'#00E55C'
+        'purple':'#3B00FF',
+        'orange':'#FF9900',
+        'darkgrey':'#232323',
+        'border':'#1c1c1c',
+        'blackbox':'#090909',
 
       },
       borderRadius: {
-        '2xl': '16px', // Aquí defines tu tamaño personalizado
+        '2xl': '16px', 
       },
       scale: {
-        '80': '0.8', // Esto añade `scale-200` para escalar elementos al 200%
+        '80': '0.8', 
       },
       boxShadow:{
         shadow: ' 2px 6px 20px -10px rgba(0, 0, 0, 0.25)',
       },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundClip: ['hover', 'focus'],
     },
   },
   plugins: [],

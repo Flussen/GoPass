@@ -2,10 +2,18 @@
 import React, { useState, useEffect } from 'react';
 
 
-export default function Loading() {
+
+
+const LoadingComp=({}) => {
+
+
   return (
-    <div className='flex flex-col items-center justify-center h-screen space-y-2' id='loading'>
-      <h1 className='w-full flex justify-center text-3xl font-semibold mb-8'>LOADING</h1>
+    <div className='flex  items-center justify-center h-screen space-x-2 bg-black' id='loading'>
+      <div className='bg-gradient  w-2 animate-loading '/>
+      <div className='bg-gradient w-2 animate-loading delay-500'/>
+      <div className='bg-gradient w-2 animate-loading delay-1000'/>
+
     </div>
   );
 };
+export default LoadingComp;
