@@ -43,11 +43,6 @@ func StoreSessionToken(db *bbolt.DB, username, token, userKey string, expiry tim
 		return err
 	}
 
-	// encryptedUserKey, err := encryption.EncryptPassword(userKey, goPassSecretKey)
-	// if err != nil {
-	// 	return err
-	// }
-
 	lastSession := models.LastSession{
 		Username: username,
 		Token:    token,
