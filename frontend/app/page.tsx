@@ -18,22 +18,24 @@ export default function Home() {
   const [showGenerator, setShowGenerator] = useState(false);
   const [userKey, setUserKey] = useState('');
   const [userName, setUserName] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [tokenVerificated, setTokenVerificated] = useState(false)
   const [token, setToken] = useState('')
 
 
   async function GetToken() {
+    
     try {
       
       const result = await GetLastSession();
       const data = JSON.parse(result);
       setUserName(data.username)
       setToken(data.token)
-      console.log('DataToke: ' + data.token+'y el token: ')
-      console.log('DataUser: ' + data.username)
+      setUserKey(data.userKey)
+    
+      
       if (data.token !== null && data.username !== null) {
-        console.log('dentro del if:' +userName,token)
+
         const resultado = await GetTokenVerification(data.username, data.token);
         if(resultado){
           setShowDashboard(true)
@@ -41,6 +43,8 @@ export default function Home() {
       }
     } catch {
       console.log('Not a saved session')
+    }finally{
+      setIsLoading(false)
     }
   }
 
@@ -49,7 +53,10 @@ export default function Home() {
     GetToken();
   }, []);
 
-
+  useEffect(() => {
+    // Este código se ejecuta después de que `userKey` se haya actualizado.
+    console.log(userKey);
+  }, [userKey]);
 
 
 
@@ -59,9 +66,9 @@ export default function Home() {
     return (
       <>
         {showGenerator ? (
-          <Generator setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
+          <Generator setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
         ) : (
-          <Dashboard setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
+          <Dashboard setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
         )}
       </>
 
@@ -71,12 +78,21 @@ export default function Home() {
   }
 
   return (
-    <div className='bg-back h-screen'>
+    <>
+    {
+      isLoading?
+      <LoadingComp/>
+      :
+<div className='bg-black h-screen'>
       {showSignup ? (
         <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
       ) : (
         <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
       )}
     </div>
+    }
+    </>
+    
+    
   );
 };
