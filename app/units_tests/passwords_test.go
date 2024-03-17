@@ -435,3 +435,15 @@ func Test_delete_password(t *testing.T) {
 		})
 	}
 }
+
+func Test_get_ALL_passwords(t *testing.T) {
+	panic("unimplemented")
+}
+
+func Test_get_password_by_id(t *testing.T) {
+	panic("unimplemented")
+}
+
+func Test_decrypt_a_password(t *testing.T) {
+	panic("unimplemented")
+}
