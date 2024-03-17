@@ -1,9 +1,11 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightToBracket, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub  } from "@fortawesome/free-brands-svg-icons";
+
 
 
 interface AddOverlayProps {
@@ -15,13 +17,48 @@ interface AddOverlayProps {
 
 }
 
-const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
+const SvgLogos : { [key: string]: any } = {
 
+    "google" : faGoogle,
+    "facebook" : faFacebookF,
+    "instagram" : faInstagram,
+    "youtube" : faYoutube,
+    "paypal" : faPaypal,
+    "figma" : faFigma,
+    "behance" : faBehance,
+    "twitter" : faXTwitter,
+    "x" : faXTwitter,
+    "steam" : faSteam,
+    "tiktok" : faTiktok,
+    "github" : faGithub,
+
+}
+
+
+
+
+const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
+    
     const [title, setTitle] = useState("");
     const [usermail, setUsermail] = useState("");
     const [pass, setPass] = useState("");
+    const [svgItem, setSvgItem] = useState<any>(<svg>...</svg>); // Usa cualquier tipo adecuado en lugar de any si es posible
+
+    useEffect(() => {
+        const findIcon = () => {
+            // Convierte el título a minúsculas para la búsqueda
+            const search = title.toLowerCase();
+            // Encuentra la primera clave que comience con el texto ingresado
+            const matchingKey = Object.keys(SvgLogos).find(key => key.startsWith(search));
+            // Actualiza svgItem con el ícono encontrado o un svg predeterminado
+            setSvgItem(matchingKey ? SvgLogos[matchingKey] : <svg>...</svg>);
+        };
+
+        findIcon();
+    }, [title]);
 
     async function pullPasswords() {
+        console.log('userKey en Add:'+userKey)
         try {
             await DoSaveUserPassword(userName, usermail, title, pass, userKey); 
             setTitle('');
@@ -45,13 +82,18 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
                 isOpen ? (
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen '>
                         <div onClick={onClose} className='absolute bg-black opacity-50 h-screen w-screen '></div>
-                        <div className=' flex-col justify-center bg-white p-5 border-grey border-[2px] rounded-xl space-y-4 z-10'>
-                            <div className='flex justify-between items-center'>
-                                <div className='text-2xl font-semibold'>
-                                    Credentials
+                        <div className=' flex-col justify-center bg-blackbox p-5  rounded-lg border-2 border-border space-y-4 z-10'>
+                            
+
+                            <div className="flex justify-center items-center space-x-5">
+                                <div className=" flex justify-center items-center rounded lg- h-28 w-28 border-2 border-border bg-black">
+                                <FontAwesomeIcon icon={svgItem} className="text-back text-4xl" />
                                 </div>
-                                <div onClick={onClose} className='relative flex text-xl justify-end cursor-pointer '>
-                                    <FontAwesomeIcon icon={faXmark} />
+                                <div className="flex-col jusitfy-center items-center space-y-2">
+                                    
+                                    <div className="border-2 border-border  text-back px-7 py-2 rounded-lg">
+                                        Custom
+                                    </div>
                                 </div>
                             </div>
                             <div>
@@ -60,23 +102,23 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
                                         Title
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
+                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
+                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="password" className=' rounded-xl  pl-4 py-2 w-[30rem] outline-none' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
+                                        <input type="password" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back mb-5' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
                                     
                                     <div className="flex justify-center ">
-                                        <button type="submit" className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-full cursor-pointer hover:bg-blue hover:text-white font-semibold">
+                                        <button type="submit" className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-lg text-back cursor-pointer hover:bg-blue hover:text-black font-semibold">
                                             Add Now
                                         </button>
                                     </div>

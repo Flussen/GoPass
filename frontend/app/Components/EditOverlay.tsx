@@ -70,28 +70,25 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
             {
                 isOpen ? (
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen '>
-                        <div onClick={onClose} className='absolute bg-black opacity-50 h-screen w-screen '></div>
-                        <div className=' flex-col justify-center bg-back p-5 border-grey border-[2px] rounded-xl space-y-5 z-10'>
+                        <div onClick={onClose} className='absolute bg-black opacity-80 h-screen w-screen '></div>
+                        <div className=' flex-col justify-center bg-blackbox  p-5 border-border border-2 rounded-xl space-y-5 z-10'>
 
                             <form >
                                 <div className="space-y-3">
                                     <div className="">
-                                        <span className="absolute bg-back px-2 text-grey ml-4">Title</span>
-                                        <input type="text" className='border-2 border-grey bg-transparent  rounded-xl mt-3  pl-4 py-2 w-[30rem] outline-none' value={titlee} onChange={titlechange} />
+                                        <input type="text" className='border-2 border-border bg-transparent text-back  rounded-lg mt-3  pl-4 py-2 w-[30rem] outline-none' value={titlee} onChange={titlechange} />
                                     </div>
                                     <div className='flex justify-between '>
-                                        <span className="absolute bg-back px-2 text-grey ml-4">Title</span>
-                                        <input type="text" className='border-2 border-grey bg-transparent  rounded-xl mt-3  pl-4 py-2 w-[30rem] outline-none' value={email} onChange={emailchange} />
+                                        <input type="text" className='border-2 border-border bg-transparent text-back  rounded-lg mt-3  pl-4 py-2 w-[30rem] outline-none' value={email} onChange={emailchange} />
                                     </div>
                                     <div className='flex justify-between '>
-                                        <span className="absolute bg-back px-2 text-grey ml-4">Title</span>
-                                        <input type="password" className='border-2 border-grey bg-transparent  rounded-xl mt-3  pl-4 py-2 w-[30rem] outline-none' value={pass} onChange={passchange} />
+                                        <input type="password" className='border-2 border-border bg-transparent text-back  rounded-lg mt-3  pl-4 py-2 w-[30rem] outline-none' value={pass} onChange={passchange} />
                                     </div>
                                     <div className="flex justify-center space-x-10">
-                                        <button onClick={hanldeDelete} className="flex justify-center items-center w-40 h-10 border-red border-[2px] rounded-full cursor-pointer hover:bg-red hover:text-white font-semibold">
+                                        <button onClick={hanldeDelete} className="flex justify-center text-back items-center w-40 h-10 border-red border-[2px] rounded-lg cursor-pointer hover:bg-red hover:text-blackbox  font-semibold">
                                             Delete
                                         </button>
-                                        <button onClick={handleSubmit} className="flex justify-center items-center w-40 h-10 border-blue border-[2px] rounded-full cursor-pointer hover:bg-blue hover:text-white font-semibold">
+                                        <button onClick={handleSubmit} className="flex justify-center text-back items-center w-40 h-10 border-purple border-[2px] rounded-lg cursor-pointer hover:bg-purple hover:text-blackbox font-semibold">
                                             Update
                                         </button>
                                     </div>
