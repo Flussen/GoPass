@@ -22,14 +22,128 @@ html{
 @keyframes Loading{
 0%{
   opacity: 1;
+  height: 1rem;
 
 }
 50%{
   opacity: 0;
-  
+  height: 3rem;
 }
 100%{
   opacity: 1;
-  
+  height: 1rem;
 }
 } 
+
+.degradado{
+  background: linear-gradient(140deg, rgba(255,153,0,1) 0%, rgba(59,0,255,1) 100%);
+}
+
+/* button:hover span {
+  color: black;
+  background: none;
+} */
+
+
+
+.bn5 {
+  outline: none;
+  color: #DEEFFF;
+  -webkit-backdrop-filter: blur(10px) brightness(100%);
+  backdrop-filter: brightness(100%) blur(2px);
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  
+  
+}
+
+
+
+.bn5:before {
+  content: "";
+  background: linear-gradient(45deg, #FF9900, #3B00FF, #FF9900, #3B00FF, #FF9900, #3B00FF);
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowingbn5 20s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  
+}
+
+
+
+
+
+.bn5:hover:before {
+  opacity: 1;
+  
+}
+
+
+
+
+.bn5:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+
+  left: 0;
+  top: 0;
+  -webkit-backdrop-filter: blur(20px) brightness(100%);
+  backdrop-filter: brightness(100%);
+  backdrop-filter: blur(20px);
+  border-style: solid;
+  
+}
+
+@keyframes moveCircle {
+  0% {
+    transform: translate(10px, 0);
+    scale: 0.8
+  }
+
+  25% {
+    transform: translate(0, 10px);
+    
+  }
+
+  50% {
+    transform: translate(-10px, 0);
+    scale: 0.75
+  }
+
+  75% {
+    transform: translate(0, -10px);
+  }
+
+  100% {
+    transform: translate(10px, 0);
+    scale: 0.8;
+  }
+}
+
+@keyframes glowingbn5 {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.moveCircle{
+  animation: moveCircle 10s linear infinite;
+
+}
