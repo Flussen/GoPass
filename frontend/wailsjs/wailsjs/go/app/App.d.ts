@@ -13,7 +13,7 @@ export function DoLogout(arg1:string):Promise<void>;
 
 export function DoRegister(arg1:string,arg2:string,arg3:string):Promise<boolean>;
 
-export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string):Promise<string>;
+export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string):Promise<string>;
 
 export function DoUpdateUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string):Promise<void>;
 
@@ -30,8 +30,6 @@ export function GetUserPasswordById(arg1:string,arg2:string):Promise<string>;
 export function GetUserPasswords(arg1:string):Promise<string>;
 
 export function GetVersion():Promise<string>;
-
-export function PasswordGenerator(arg1:number):Promise<string>;
 
 export function ShowPassword(arg1:string,arg2:string,arg3:string):Promise<string>;
 

@@ -21,7 +21,6 @@ import (
 
 	"encoding/json"
 	"errors"
-	"math/rand"
 	"time"
 
 	"github.com/google/uuid"     // Package for generating unique UUIDs
@@ -298,40 +297,6 @@ func (a *App) GetLastSession() (string, error) {
 	})
 
 	return string(sessionBytes), nil
-}
-
-// PasswordGenerator generates a random password with a specified
-// length and returns its strength level
-//
-// -> Deprecated: it will be removed in a next update, this logic passes to the frontend <-
-func (a *App) PasswordGenerator(lenght int) (string, error) {
-	var status string
-
-	const (
-		weak    = "Weak"
-		medium  = "Medium"
-		high    = "Strong"
-		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
-	)
-
-	if lenght >= 20 {
-		status = high
-	} else if lenght > 10 {
-		status = medium
-	} else {
-		status = weak
-	}
-
-	password := make([]byte, lenght)
-	for i := range password {
-		password[i] = charset[rand.Intn(len(charset))]
-	}
-
-	pwd, err := json.Marshal(map[string]string{"state": status, "password": string(password)})
-	if err != nil {
-		return "", eh.NewGoPassError("Error in backend for generate a new Password")
-	}
-	return string(pwd), nil
 }
 
 // GetVersion returns the version of the application. Example 1.0.1

@@ -26,8 +26,8 @@ export function DoRegister(arg1, arg2, arg3) {
   return window['go']['app']['App']['DoRegister'](arg1, arg2, arg3);
 }
 
-export function DoSaveUserPassword(arg1, arg2, arg3, arg4, arg5) {
-  return window['go']['app']['App']['DoSaveUserPassword'](arg1, arg2, arg3, arg4, arg5);
+export function DoSaveUserPassword(arg1, arg2, arg3, arg4, arg5, arg6) {
+  return window['go']['app']['App']['DoSaveUserPassword'](arg1, arg2, arg3, arg4, arg5, arg6);
 }
 
 export function DoUpdateUserPassword(arg1, arg2, arg3, arg4, arg5, arg6) {
@@ -60,10 +60,6 @@ export function GetUserPasswords(arg1) {
 
 export function GetVersion() {
   return window['go']['app']['App']['GetVersion']();
-}
-
-export function PasswordGenerator(arg1) {
-  return window['go']['app']['App']['PasswordGenerator'](arg1);
 }
 
 export function ShowPassword(arg1, arg2, arg3) {
