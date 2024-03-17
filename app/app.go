@@ -94,8 +94,7 @@ func (a *App) DoLogin(username, password string) (string, error) {
 
 	err = controllers.StoreSessionToken(a.DB, username, token, userKey, expiry)
 	if err != nil {
-		eh.NewGoPassErrorf("error storing session token: %v", err)
-		return "", errors.New("failed to log in")
+		return "", eh.NewGoPassErrorf("error storing session token: %v", err)
 	}
 
 	result, err := json.Marshal(map[string]string{"token": token, "userKey": userKey})
@@ -139,9 +138,10 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, userKey string) (string, error) {
+func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, icon, userKey string) (string, error) {
 	date := time.Now().Format(time.DateTime)
-	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service, password, userKey, date)
+	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service,
+		password, icon, userKey, date)
 	if err != nil {
 		return "", err
 	}
@@ -291,7 +291,7 @@ func (a *App) GetLastSession() (string, error) {
 
 		sessionBytes = b.Get([]byte("lastsession"))
 		if sessionBytes == nil {
-			return eh.NewGoPassError("last session not found")
+			return eh.NewGoPassError("the last session is empty or was deleted, login again")
 		}
 
 		return nil

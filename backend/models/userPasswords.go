@@ -5,6 +5,7 @@ type Password struct {
 	Id          string `json:"id"`
 	Pwd         string `json:"pwd"`
 	Username    string `json:"username"`
+	Icon        string `json:"icon"`
 	CreatedDate string `json:"created_date"`
 }
 

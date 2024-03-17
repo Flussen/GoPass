@@ -65,3 +65,27 @@ func StoreSessionToken(db *bbolt.DB, username, token, userKey string, expiry tim
 		return b.Put([]byte("lastsession"), json)
 	})
 }
+
+func CleanSessionToken(db *bbolt.DB) error {
+	err := db.Update(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("LastSessionSaved"))
+		if b == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
+
+		err := b.Delete([]byte("lastsession"))
+		if err != nil {
+			return err
+		}
+
+		if b.Get([]byte("lastsession")) != nil {
+			return eh.NewGoPassErrorf("lastsession data is not deleted, err: %v", err)
+		}
+
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
