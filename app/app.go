@@ -160,11 +160,11 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 }
 
 // Change password for the user ACCOUNT!!
-func (a *App) DoChangeUserPassword(username, originalPwd, newPwd string) error {
+func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
 	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
 }
 
-func (a *App) DoChangeUserInfo(username, newUsername, newEmail, newPassword string) error {
+func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error {
 	panic("not implemented")
 }
 
