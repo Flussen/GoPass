@@ -38,7 +38,6 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     async function DeletePassword() {
         try {
             const response = await DoDeleteUserPassword(userNames, id)
-            alert('Se ha eliminado correctamente')
         } catch {
 
         }

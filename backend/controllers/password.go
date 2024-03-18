@@ -11,7 +11,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, userKey, creationDate string) (string, error) {
+func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, status, userKey, creationDate string) (string, error) {
 
 	if user == "" || usernameToSave == "" || service == "" ||
 		password == "" || userKey == "" || icon == "" {
@@ -31,6 +31,7 @@ func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, u
 		Pwd:         encryptedPassword,
 		Username:    usernameToSave,
 		Icon:        icon,
+		Status:      status,
 		CreatedDate: creationDate,
 	}
 

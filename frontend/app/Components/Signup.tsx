@@ -49,7 +49,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
       console.error('Error fetching version:', error);
     } finally {
       setIsLoading(false)
-      
+
     }
   }
 
@@ -68,7 +68,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
       {/* Header */}
       <div className='flex justify-between items-center px-[5%] pt-[3%]'>
 
-      <div className=' font-bold text-5xl'>
+        <div className=' font-bold text-5xl'>
           <span className='bg-gradient bg-clip-text text-transparent'>Go</span> <span className='text-back'>Pass</span>
         </div>
         <div className='border-2 border-border p-2 flex justify-center items-center rounded-lg '>
@@ -77,28 +77,28 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
       </div>
       {/* Login Box */}
       <div className=' flex justify-center items-center  mt-10'>
-        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-xl py-32  bg-blackbox border-2 border-border'>
+        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-lg border-2 border-border bg-blackbox  max-xl:py-20 '>
 
           <form onSubmit={handleSubmit}>
-            <div className='flex flex-col justify-center items-center h-full space-y-4 font-semibold text-xl'>
-              <div className='xl:text-[3vw]  text-5xl font-bold mb-8 text-back'>
-                Let&apos;s <span className='bg-gradient bg-clip-text text-transparent'>Start!</span> 
+            <div className='flex flex-col justify-center items-center h-full font-semibold text-xl '>
+              <div className='text-5xl font-bold mb-12 text-back'>
+                Let&apos;s <span className='bg-gradient bg-clip-text text-transparent'>Start!</span>
               </div>
-              <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
+              <div className='flex items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
                 <PersonIcon className='absolute ml-4 text-darkgrey' />
-                <input type="text" className='flex rounded-2xl  border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
-              <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
+              <div className='flex items-center w-full  2xl:px-40 xl:px-24 mb-4 '>
                 <EmailRoundedIcon className='absolute ml-4 text-darkgrey' />
-                <input type="text" className='flex rounded-2xl  border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey ' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 '>
                 <KeyIcon className='absolute ml-4 text-darkgrey ' />
-                <input type="password" className='flex rounded-2xl  border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
-              <div className='flex items-center w-full 2xl:px-40 xl:px-24 ' >
-              <div className=' flex  w-full rounded-lg p-0.5 bg-gradient'>
-                  <button className='flex items-center justify-center w-full h-14 bg-black rounded-lg hover:bg-transparent'>
+              <div className='flex items-center w-full 2xl:px-40 xl:px-24 mt-5' >
+                <div className=' flex  w-full rounded-lg p-0.5 bg-gradient group'>
+                  <button className='flex items-center justify-center w-full h-14 bg-black rounded-lg hover:bg-transparent '>
                     <span className='bg-gradient bg-clip-text text-transparent hover:text-black group-hover:text-black'>
                       Sign Up
                     </span>

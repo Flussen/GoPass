@@ -32,12 +32,12 @@ interface DashboardProps {
   userName: string;
   setShowDashboard: (show: boolean) => void;
   setShowProfile: (show: boolean) => void;
-
+showDashboard: boolean;
 }
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({ setShowProfile, setShowDashboard, setShowGenerator, showGenerator, userKey, userName }) => {
+const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, setShowDashboard, setShowGenerator, showGenerator, userKey, userName }) => {
   const [email, setEmail] = useState("example@gmail.com");
   const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
@@ -48,7 +48,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowProfile, setShowDashboard,
   };
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
-  const [arePasswords, setArePasswords] = useState(false)
+  const [arePasswords, setArePasswords] = useState(true)
 
 
 
@@ -101,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowProfile, setShowDashboard,
               </div>
             </div>
 
-            <AddOverlay isOpen={isAddOverlayOpen} onClose={() => setIsAddOverlayOpen(!isAddOverlayOpen)} userKey={userKey} userName={userName} >
+            <AddOverlay isOpen={isAddOverlayOpen} onClose={() => setIsAddOverlayOpen(!isAddOverlayOpen)} userKey={userKey} userName={userName} setArePasswords={setArePasswords} >
               <>
               </>
             </AddOverlay>
@@ -129,9 +129,25 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowProfile, setShowDashboard,
 
           
         </div>
-        <PasswordComp 
-           isAddOverlayOpen={isAddOverlayOpen} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
+        {
+          arePasswords?
+          <PasswordComp 
+          isAddOverlayOpen={isAddOverlayOpen} showDashboard={showDashboard} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
 
+          :
+          <div className="text-back w-full flex-col flex justify-center items-center space-y-7 ">
+          <div className="text-2xl">
+              Add your first password!
+          </div>
+          <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="bg-gradient p-0.5 rounded-lg bn5 group">
+              <button className="bg-black py-2 px-7 rounded-md group-hover:bg-transparent group-hover:text-black">
+                  Add Password
+              </button>
+          </div>
+
+      </div>
+        }
+       
       </div>
 
 

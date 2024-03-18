@@ -87,11 +87,11 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
                 <Image src={PersonIcon} alt='persona' className='absolute ml-4' />
-                <input type="text" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className='flex items-center w-full 2xl:px-40 xl:px-24 mb-4  '>
                 <Image src={KeyIcon} alt='key' className='absolute ml-4' />
-                <input type="password" className='flex rounded-lg border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
 
               </div>
               <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect?'mb-2':'mb-4'} `} >

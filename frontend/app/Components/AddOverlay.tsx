@@ -5,6 +5,7 @@ import { faArrowRightToBracket, faCopy } from "@fortawesome/free-solid-svg-icons
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub  } from "@fortawesome/free-brands-svg-icons";
+import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
 
 
@@ -14,7 +15,7 @@ interface AddOverlayProps {
     children: React.ReactNode;
     userName: string;
     userKey: string;
-
+    setArePasswords: (show:boolean) => void;
 }
 
 const SvgLogos : { [key: string]: any } = {
@@ -31,44 +32,45 @@ const SvgLogos : { [key: string]: any } = {
     "steam" : faSteam,
     "tiktok" : faTiktok,
     "github" : faGithub,
-
+    "discord" : faDiscord,
+    "default": faLock
 }
 
 
 
 
-const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
+const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName, setArePasswords }) => {
     const [title, setTitle] = useState("");
     const [usermail, setUsermail] = useState("");
     const [pass, setPass] = useState("");
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
+
     useEffect(() => {
         const findIcon = () => {
             const search = title.toLowerCase();
-            const matchingKey:any = Object.keys(SvgLogos).find(key => key.startsWith(search));
-            setItem(matchingKey)
-            setSvgItem(matchingKey ? SvgLogos[matchingKey] : '');
-            console.log(JSON.stringify(svgItem) + ' : manina');
+            const matchingKey = Object.keys(SvgLogos).find(key => key.startsWith(search)) || 'default';
+            setItem(matchingKey);
+            setSvgItem(SvgLogos[matchingKey] ? SvgLogos[matchingKey] : 'default');
         };
-        console.log('SVG: '+svgItem)
         findIcon();
     }, [title]);
 
     async function pullPasswords() {
-        console.log('userKey en Add:'+userKey)
-        console.log('El SVG: '+item)
         try {
+
             await DoSaveUserPassword(userName, usermail, title, pass, item, userKey); 
             setTitle('');
             setUsermail('');
             setPass('');
             setItem('')
+            setArePasswords(true)
         } catch (error) {
             console.error('Error saving password: ' + error);
-            console.log('Username:'+userName+' userKey: '+userKey)
+            
             alert('Password not saved'); // Error handling
         }
+
     }
     
     const handleSubmit = async (event: React.FormEvent) => {
@@ -102,19 +104,19 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
                                         Title
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="password" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back mb-5' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
+                                        <input autoComplete="nope" type="password" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back mb-5' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
                                     
                                     <div className="flex justify-center ">

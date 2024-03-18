@@ -10,6 +10,7 @@ import { Instance } from '@popperjs/core';
 import Box from '@mui/material/Box';
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
 
 
@@ -23,6 +24,7 @@ interface PassProps {
     setArePasswords: (pass: boolean) => void;
     arePasswords: boolean;
     setIsAddOverlayOpen: (show: boolean) => void;
+    showDashboard: boolean;
 }
 
 interface PasswordsProps {
@@ -49,10 +51,11 @@ const SvgLogos: { [key: string]: any } = {
     "tiktok": faTiktok,
     "github": faGithub,
     "discord": faDiscord,
+    "default": faLock
 }
 
 
-const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen, search, setArePasswords, arePasswords, setIsAddOverlayOpen }) => {
+const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, isAddOverlayOpen, search, setArePasswords, arePasswords, setIsAddOverlayOpen }) => {
     const [passwords, setPasswords] = useState<PasswordsProps[]>([]);
     const [decrypted, setDecrypted] = useState('');
     const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
@@ -68,7 +71,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
 
     useEffect(() => {
         getPasswords();
-    }, [openEditOverlayId, isAddOverlayOpen]);
+    }, [openEditOverlayId, isAddOverlayOpen, showDashboard]);
 
 
 
@@ -93,7 +96,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
     async function getPasswords() {
         try {
             const response = await GetUserPasswords(userName);
-            console.log(response)
+            console.log('Get passwords'+response)
             const data = JSON.parse(response);
             if (data && data.passwords) {
                 const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
@@ -101,7 +104,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
                     return { ...password, pwd: decryptedPwd };
                 }));
                 setArePasswords(true)
-
+                console.log('Cargado dentro del if')
                 setPasswords(decryptedPasswords);
 
             } else {
@@ -129,8 +132,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
 
     return (
         <>
-            {
-                arePasswords ?
+            
                     <div className=" flex-col w-full space-y-5 overflow-y-auto max-2xl:max-h-[80%] max-h-[40rem] px-2 mb-10">
                         {searchPasswords.map((password, index) => (
 
@@ -200,20 +202,10 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
                         }
 
                     </div >
-                    :
+                    
 
-                    <div className="text-back w-full flex-col flex justify-center items-center space-y-7 ">
-                        <div className="text-2xl">
-                            Add your first password!
-                        </div>
-                        <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="bg-gradient p-0.5 rounded-lg bn5 group">
-                            <button className="bg-black py-2 px-7 rounded-md group-hover:bg-transparent group-hover:text-black">
-                                Add Password
-                            </button>
-                        </div>
-
-                    </div>
-            }
+                  
+            
 
         </>
 
