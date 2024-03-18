@@ -32,7 +32,7 @@ export default function Home() {
       setUserName(data.username)
       setToken(data.token)
       setUserKey(data.userKey)
-      console.log(data)
+      console.log('Data Get Last: '+data.username)
       
       if (data.token !== null && data.username !== null) {
 
@@ -75,7 +75,7 @@ export default function Home() {
         ) 
         :
         (
-          <Dashboard setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
+          <Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
         )}
       </div>
 

@@ -14,7 +14,7 @@ interface AddOverlayProps {
     children: React.ReactNode;
     userName: string;
     userKey: string;
-
+    setArePasswords: (show:boolean) => void;
 }
 
 const SvgLogos : { [key: string]: any } = {
@@ -37,7 +37,7 @@ const SvgLogos : { [key: string]: any } = {
 
 
 
-const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
+const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName, setArePasswords }) => {
     const [title, setTitle] = useState("");
     const [usermail, setUsermail] = useState("");
     const [pass, setPass] = useState("");
@@ -49,26 +49,25 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
             const matchingKey:any = Object.keys(SvgLogos).find(key => key.startsWith(search));
             setItem(matchingKey)
             setSvgItem(matchingKey ? SvgLogos[matchingKey] : '');
-            console.log(JSON.stringify(svgItem) + ' : manina');
         };
-        console.log('SVG: '+svgItem)
         findIcon();
     }, [title]);
 
     async function pullPasswords() {
-        console.log('userKey en Add:'+userKey)
-        console.log('El SVG: '+item)
         try {
+
             await DoSaveUserPassword(userName, usermail, title, pass, item, userKey); 
             setTitle('');
             setUsermail('');
             setPass('');
             setItem('')
+            setArePasswords(true)
         } catch (error) {
             console.error('Error saving password: ' + error);
-            console.log('Username:'+userName+' userKey: '+userKey)
+            
             alert('Password not saved'); // Error handling
         }
+
     }
     
     const handleSubmit = async (event: React.FormEvent) => {
