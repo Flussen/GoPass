@@ -31,12 +31,13 @@ interface DashboardProps {
   userKey: string;
   userName: string;
   setShowDashboard: (show: boolean) => void;
+  setShowProfile: (show: boolean) => void;
 
 }
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerator, showGenerator, userKey, userName }) => {
+const Dashboard: React.FC<DashboardProps> = ({ setShowProfile, setShowDashboard, setShowGenerator, showGenerator, userKey, userName }) => {
   const [email, setEmail] = useState("example@gmail.com");
   const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
@@ -60,7 +61,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
         showGenerator={showGenerator}
         userName={userName}
         setShowDashboard={setShowDashboard}
-      >
+        setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-20  2xl:ml-[19%] ml-[8.5%]">

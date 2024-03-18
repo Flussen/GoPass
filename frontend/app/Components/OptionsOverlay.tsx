@@ -25,12 +25,13 @@ interface OptionsOverlayProps {
   children: React.ReactNode;
   userName: string;
   setShowDashboard:(show: boolean)=> void;
+  setShowProfile: (show: boolean) => void;
+
 }
 
-const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setShowGenerator, showGenerator, children, userName }) => {
+const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setShowGenerator, showGenerator, children, userName , setShowProfile}) => {
 
   const[showSecureFiles, setShowSecureFiles]= useState(false);
-  
 
   async function Logout(){
     try{
@@ -61,7 +62,7 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setSh
         <div className='flex justify-center text-back font-bold 2xl:text-5xl text-md'>
           <span className='bg-gradient bg-clip-text text-transparent'>Go</span><span >Pass</span>
         </div>
-        <div className="flex justify-center items-center text-xl space-x-2 text-back ">
+        <div onClick={() => { setShowProfile(true) }} className="flex justify-center items-center text-xl space-x-2 text-back cursor-pointer ">
           <AccountCircleRoundedIcon sx={{ fontSize: 50 }} />
           <div className=" 2xl:flex hidden text-darkgrey font-semibold">
             {userName}

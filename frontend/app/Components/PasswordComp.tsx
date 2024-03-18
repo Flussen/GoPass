@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 
-//Click to copy se buguea cuando se mantiene y a la vez hago scroll.(commented)
+//Click to copy se buguea cuando se mantiene y a la vez hago scroll.
 
 interface PassProps {
     userName: string;
