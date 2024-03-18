@@ -13,7 +13,7 @@ export function DoLogout(arg1:string):Promise<void>;
 
 export function DoRegister(arg1:string,arg2:string,arg3:string):Promise<boolean>;
 
-export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string):Promise<string>;
+export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string,arg7:string):Promise<string>;
 
 export function DoUpdateUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string):Promise<void>;
 
