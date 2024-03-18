@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faCopy, } from '@fortawesome/free-regular-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-
 import OptionsOverlay from "./OptionsOverlay";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons/faRotateRight";
 import Slider, {
@@ -21,6 +20,8 @@ interface GeneratorProps {
     showGenerator: boolean
     userName: string;
     setShowDashboard: (show: boolean) => void;
+    setShowProfile: (show: boolean) => void;
+
 }
 const PrettoSlider = styled(Slider)({
     color: "#15a7f9",
@@ -61,7 +62,7 @@ const PrettoSlider = styled(Slider)({
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowDashboard, setShowGenerator, showGenerator, userName }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setShowGenerator, showGenerator, userName }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -135,32 +136,11 @@ const Generator: React.FC<GeneratorProps> = ({ setShowDashboard, setShowGenerato
                 showGenerator={showGenerator}
                 userName={userName}
                 setShowDashboard={setShowDashboard}
-
-            >
+                setShowProfile={setShowProfile}            >
                 <></>
             </OptionsOverlay>
             <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[8.5%]">
-                <div id="HEADER" className="flex justify-between w-full border-2 border-border rounded-lg bg-blackbox h-[4.5rem] px-[0.85rem] text-xl">
-                    <div className='flex items-center   '>
-                        <SearchRoundedIcon sx={{ fontSize: 28 }} className='absolute ml-4 text-darkgrey ' />
-                        <input type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-11 bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
-                    </div>
-                    {/* <div className="flex items-center space-x-5">
-            <div className="flex justify-center items-center h-14 px-3 border-2 bordSer-lightgrey rounded-xl text-grey font-semibold space-x-2">
-              <div>
-                Filter
-              </div>
-              <FilterAltRoundedIcon />
-
-            </div>
-            <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
-              <div>
-                Sort
-              </div>
-              <FormatLineSpacingRoundedIcon sx={{ fontSize: 28 }} />
-            </div>
-          </div> */}
-                </div>
+            
                 <div className="flex-col justify-center w-full items-start">
                     <div className='flex justify-start mb-10'>
                         <div className='text-5xl font-bold text-back'>
@@ -231,7 +211,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowDashboard, setShowGenerato
                                             </div>
 
                                             <div>
-                                                70
+                                                50
                                             </div>
                                         </div>
 

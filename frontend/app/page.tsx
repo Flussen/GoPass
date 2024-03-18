@@ -9,7 +9,7 @@ import LoadingComp from './Components/Loading'
 import SignupResult from './Components/SignupResult';
 import { GetTokenVerification } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
-
+import ProfileSection from "./Components/ProfileSection"
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
@@ -21,7 +21,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [tokenVerificated, setTokenVerificated] = useState(false)
   const [token, setToken] = useState('')
-
+  const [showProfile, setShowProfile]=useState(false);
 
   async function GetToken() {
     
@@ -32,7 +32,7 @@ export default function Home() {
       setUserName(data.username)
       setToken(data.token)
       setUserKey(data.userKey)
-    
+      console.log(data)
       
       if (data.token !== null && data.username !== null) {
 
@@ -62,15 +62,22 @@ export default function Home() {
 
   if (isLoading) {
     return <LoadingComp />;
-  } else if (showDashboard ) {
+
+  } else if(showProfile) {
+    return(
+      <ProfileSection setShowProfile={setShowProfile}  setIsLoading={setIsLoading} userName={userName}/>
+    )
+  }else if(showDashboard ) {
     return (
-      <>
+      <div className='bg-blackbox h-screen'>
         {showGenerator ? (
-          <Generator setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
-        ) : (
-          <Dashboard setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
+          <Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
+        ) 
+        :
+        (
+          <Dashboard setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
         )}
-      </>
+      </div>
 
     )
 
