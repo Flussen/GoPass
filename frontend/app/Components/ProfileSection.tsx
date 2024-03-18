@@ -5,7 +5,7 @@ import PersonIcon from '../../Public/person.svg';
 import KeyIcon from '../../Public/key.svg';
 import Image from "next/image"
 import { GetUserInfo } from "@/wailsjs/wailsjs/go/app/App";
-import { DoChangeUserPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoChangeAccountPassword } from "@/wailsjs/wailsjs/go/app/App";
 
 
 interface ProfileProps {
@@ -36,7 +36,7 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
         setIsLoading(true)
         if (newPass == confirmPass && newPass !== '') {
             try {
-                const result = await DoChangeUserPassword(userName, actualPass, newPass)
+                const result = await DoChangeAccountPassword(userName, actualPass, newPass)
                 console.log(result)
             } catch {
                 alert('The actual pass isnt correct')

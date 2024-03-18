@@ -14,7 +14,7 @@
   "Info": {
     "companyName": "GoPass - Open Source",
     "productName": "GoPass",
-    "productVersion": "BETA 0.1 Rejewski",
+    "productVersion": "0.1.0",
     "copyright": "built under GPL-3.0 license",
     "comments": "Built using Wails (https://wails.io) & Golang ❤️"
   }
