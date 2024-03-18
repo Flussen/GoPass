@@ -5,6 +5,7 @@ import { faArrowRightToBracket, faCopy } from "@fortawesome/free-solid-svg-icons
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub  } from "@fortawesome/free-brands-svg-icons";
+import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
 
 
@@ -31,7 +32,8 @@ const SvgLogos : { [key: string]: any } = {
     "steam" : faSteam,
     "tiktok" : faTiktok,
     "github" : faGithub,
-
+    "discord" : faDiscord,
+    "default": faLock
 }
 
 
@@ -43,12 +45,13 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
     const [pass, setPass] = useState("");
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
+
     useEffect(() => {
         const findIcon = () => {
             const search = title.toLowerCase();
-            const matchingKey:any = Object.keys(SvgLogos).find(key => key.startsWith(search));
-            setItem(matchingKey)
-            setSvgItem(matchingKey ? SvgLogos[matchingKey] : '');
+            const matchingKey = Object.keys(SvgLogos).find(key => key.startsWith(search)) || 'default';
+            setItem(matchingKey);
+            setSvgItem(SvgLogos[matchingKey] ? SvgLogos[matchingKey] : 'default');
         };
         findIcon();
     }, [title]);

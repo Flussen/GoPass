@@ -10,6 +10,7 @@ import { Instance } from '@popperjs/core';
 import Box from '@mui/material/Box';
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
 
 
@@ -50,6 +51,7 @@ const SvgLogos: { [key: string]: any } = {
     "tiktok": faTiktok,
     "github": faGithub,
     "discord": faDiscord,
+    "default": faLock
 }
 
 
