@@ -137,10 +137,10 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, icon, userKey string) (string, error) {
+func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, icon, status, userKey string) (string, error) {
 	date := time.Now().Format(time.DateTime)
 	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service,
-		password, icon, userKey, date)
+		password, icon, status, userKey, date)
 	if err != nil {
 		return "", err
 	}
