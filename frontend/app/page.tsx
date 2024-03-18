@@ -64,13 +64,13 @@ export default function Home() {
     return <LoadingComp />;
   } else if (showDashboard ) {
     return (
-      <>
+      <div className='bg-blackbox h-screen'>
         {showGenerator ? (
           <Generator setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
         ) : (
           <Dashboard setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
         )}
-      </>
+      </div>
 
     )
 

@@ -53,7 +53,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
 
 
   return (
-    <div id="Dashboard" className='flex justify-between bg-black h-screen '>
+    <div id="Dashboard" className='flex justify-between bg-blackbox h-full '>
 
       <OptionsOverlay
         setShowGenerator={setShowGenerator}
@@ -63,12 +63,12 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
       >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-20 space-y-24 2xl:ml-[19%] ml-[8.5%]">
+      <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-20  2xl:ml-[19%] ml-[8.5%]">
         <div id="HEADER" className="flex justify-between w-full border-2 border-border rounded-lg bg-blackbox h-[4.5rem] px-[0.85rem] text-xl 
-        py-3">
+        py-3 mb-24">
           <div className='flex items-center   '>
             <Image src={SearchIcon} alt="search_icon" className='absolute ml-4  ' />
-            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-full bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
+            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-11 bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
           </div>
           {/* <div className="flex items-center space-x-5">
             <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
@@ -86,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
             </div>
           </div> */}
         </div>
-        <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5 text">
+        <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5 text mb-5">
           <div className="flex justify-between  items-center">
             <div className="text-5xl text-back font-bold">
               My <span className="bg-gradient bg-clip-text text-transparent">Password</span>
@@ -126,10 +126,11 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
 
 
 
-          <PasswordComp 
+          
+        </div>
+        <PasswordComp 
            isAddOverlayOpen={isAddOverlayOpen} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
 
-        </div>
       </div>
 
 

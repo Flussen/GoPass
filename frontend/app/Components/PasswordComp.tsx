@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 
+//Click to copy se buguea cuando se mantiene y a la vez hago scroll.(commented)
+
 interface PassProps {
     userName: string;
     userKey: string;
@@ -129,7 +131,7 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
         <>
             {
                 arePasswords ?
-                    <div className=" flex-col w-full space-y-5 overflow-y-auto max-h-[22rem] px-2">
+                    <div className=" flex-col w-full space-y-5 overflow-y-auto max-2xl:max-h-[80%] max-h-[40rem] px-2 mb-10">
                         {searchPasswords.map((password, index) => (
 
                             <div key={index} className="w-full ">
@@ -142,39 +144,50 @@ const PasswordComp: React.FC<PassProps> = ({ userName, userKey, isAddOverlayOpen
                                             <div className="font-bold bg-gradient bg-clip-text text-transparent inline-block">
                                                 {password.title}
                                             </div>
-                                            <div className="text-darkgrey text-lg">
+                                            <div className="text-darkgrey text-lg hover:text-grey">
                                                 {password.username}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center basis-2/6">
-                                        
-                                            <div ref={areaRef}
-                                                onMouseMove={handleMouseMove}>
-                                                <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer" />
-                                            </div>
+                                    <div className="flex items-center basis-2/6 ">
 
-                                       
+                                        <div ref={areaRef}
+                                            onMouseMove={handleMouseMove} className="group " >
+                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer   " />
+
+                                            
+                                            {/* <div className="hidden absolute group-hover:flex justify-center items-end mt-[-4rem]">
+
+                                                <div className=" bg-grey px-2 py-2 rounded-lg text-sm z-30">
+                                                    Click to Copy
+                                                </div>
+                                                <div className="absolute bg-grey h-7 w-7 rotate-45 " />
+
+                                            </div> */}
+
+                                        </div>
+
+
 
                                     </div>
 
 
                                     <div className="flex items-center  xl:basis-1/6">
-                                      
 
 
-                                            <div ref={areaRef}
-                                                onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 ${password.pwd.length > 25 ? '  text-purple' : password.pwd.length > 10 ? ' text-orange' : 'text-red '} `}>
-                                                {password.pwd.length > 25 ? <GppGoodRoundedIcon /> : password.pwd.length > 10 ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />
+
+                                        <div ref={areaRef}
+                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.pwd.length > 25 ? '  text-purple' : password.pwd.length > 10 ? ' text-orange' : 'text-red '} `}>
+                                            {password.pwd.length > 25 ? <GppGoodRoundedIcon /> : password.pwd.length > 10 ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />
 
 
-                                                }
+                                            }
 
-                                                <div className="hidden xl:flex">
-                                                    {password.pwd.length > 25 ? 'Strong' : password.pwd.length > 10 ? 'Medium' : 'Weak'}
-                                                </div>
+                                            <div className="hidden xl:flex">
+                                                {password.pwd.length > 25 ? 'Strong' : password.pwd.length > 10 ? 'Medium' : 'Weak'}
                                             </div>
-                                     
+                                        </div>
+
                                     </div>
                                 </div>
                                 <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>

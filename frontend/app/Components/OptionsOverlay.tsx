@@ -54,7 +54,7 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setSh
   return (
 
 
-    <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[20%] w-[100px]  bg-blackbox border-2 border-border rounded-lg  shadow-shadow ml-8 mt-8 mb-8 pt-[4.5rem]">
+    <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[20%] w-[100px]  bg-blackbox border-2 border-border rounded-lg  shadow-shadow ml-8 mt-8 mb-8 pt-[4.5rem] h-[92%] ">
       <div className="flex-col justify-center w-full  2xl:px-[15%]  px-[20px]  space-y-[3rem]">
 
 
