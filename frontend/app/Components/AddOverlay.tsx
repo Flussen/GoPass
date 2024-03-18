@@ -38,32 +38,32 @@ const SvgLogos : { [key: string]: any } = {
 
 
 const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userKey, userName }) => {
-    
     const [title, setTitle] = useState("");
     const [usermail, setUsermail] = useState("");
     const [pass, setPass] = useState("");
-    const [svgItem, setSvgItem] = useState<any>(<svg>...</svg>); // Usa cualquier tipo adecuado en lugar de any si es posible
-
+    const [svgItem, setSvgItem] = useState<any>();
+    const [item, setItem] = useState('');
     useEffect(() => {
         const findIcon = () => {
-            // Convierte el título a minúsculas para la búsqueda
             const search = title.toLowerCase();
-            // Encuentra la primera clave que comience con el texto ingresado
-            const matchingKey = Object.keys(SvgLogos).find(key => key.startsWith(search));
-            // Actualiza svgItem con el ícono encontrado o un svg predeterminado
-            setSvgItem(matchingKey ? SvgLogos[matchingKey] : <svg>...</svg>);
+            const matchingKey:any = Object.keys(SvgLogos).find(key => key.startsWith(search));
+            setItem(matchingKey)
+            setSvgItem(matchingKey ? SvgLogos[matchingKey] : '');
+            console.log(JSON.stringify(svgItem) + ' : manina');
         };
-
+        console.log('SVG: '+svgItem)
         findIcon();
     }, [title]);
 
     async function pullPasswords() {
         console.log('userKey en Add:'+userKey)
+        console.log('El SVG: '+item)
         try {
-            await DoSaveUserPassword(userName, usermail, title, pass, userKey); 
+            await DoSaveUserPassword(userName, usermail, title, pass, item, userKey); 
             setTitle('');
             setUsermail('');
             setPass('');
+            setItem('')
         } catch (error) {
             console.error('Error saving password: ' + error);
             console.log('Username:'+userName+' userKey: '+userKey)

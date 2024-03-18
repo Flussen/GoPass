@@ -64,10 +64,11 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-20 space-y-24 2xl:ml-[19%] ml-[8.5%]">
-        <div id="HEADER" className="flex justify-between w-full border-2 border-border rounded-lg bg-blackbox h-[4.5rem] px-[0.85rem] text-xl">
+        <div id="HEADER" className="flex justify-between w-full border-2 border-border rounded-lg bg-blackbox h-[4.5rem] px-[0.85rem] text-xl 
+        py-3">
           <div className='flex items-center   '>
             <Image src={SearchIcon} alt="search_icon" className='absolute ml-4  ' />
-            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-11 bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
+            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-full bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
           </div>
           {/* <div className="flex items-center space-x-5">
             <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
@@ -125,7 +126,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setShowDashboard, setShowGenerato
 
 
 
-          <PasswordComp isAddOverlayOpen={isAddOverlayOpen} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
+          <PasswordComp 
+           isAddOverlayOpen={isAddOverlayOpen} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
 
         </div>
       </div>
