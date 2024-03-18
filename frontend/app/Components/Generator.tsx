@@ -1,0 +1,291 @@
+"use client"
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faCopy, } from '@fortawesome/free-regular-svg-icons';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import OptionsOverlay from "./OptionsOverlay";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons/faRotateRight";
+import Slider, {
+    SliderThumb,
+    SliderValueLabelProps,
+} from "@mui/material/Slider";
+import { styled } from "@mui/material/styles";
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
+import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingRounded';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
+interface GeneratorProps {
+    setShowGenerator: (show: boolean) => void;
+    showGenerator: boolean
+    userName: string;
+    setShowDashboard: (show: boolean) => void;
+    setShowProfile: (show: boolean) => void;
+
+}
+const PrettoSlider = styled(Slider)({
+    color: "#15a7f9",
+    height: 8,
+    "& .MuiSlider-track": {
+        border: "none",
+    },
+    "& .MuiSlider-thumb": {
+        height: 24,
+        width: 24,
+        backgroundColor: "#15a7f9",
+        border: "2px solid currentColor",
+        "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+            boxShadow: "inherit",
+        },
+        "&::before": {
+            display: "none",
+        },
+    },
+    "& .MuiSlider-valueLabel": {
+        lineHeight: 0,
+        fontSize: 12,
+        background: "unset",
+        padding: 0,
+        margin: 5,
+        width: 28,
+        height: 28,
+        borderRadius: "20% 20% 20% 20%",
+        backgroundColor: "#15a7f9",
+        transformOrigin: "bottom left",
+        transform: "translate(50%, -100%)  scale(0)",
+        "&::before": { display: "none" },
+        "&.MuiSlider-valueLabelOpen": {
+            transform: "translate(0%, -120%)  scale(1)",
+        },
+        "& > *": {
+            transform: "",
+        },
+    },
+});
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setShowGenerator, showGenerator, userName }) => {
+    const [includeUppercase, setIncludeUppercase] = useState(true);
+    const [includeLowercase, setIncludeLowercase] = useState(true);
+    const [includeNumbers, setIncludeNumbers] = useState(true);
+    const [includeSymbols, setIncludeSymbols] = useState(true);
+    const [barColor1, setBarColor1] = useState('bg-black');
+    const [barColor2, setBarColor2] = useState('bg-black');
+    const [barColor3, setBarColor3] = useState('bg-black');
+    const [barColor4, setBarColor4] = useState('bg-black');
+
+
+    const [sliderValue, setSliderValue] = useState<number>(25);
+    const [password, setPassword] = useState<string>("");
+    const calculateBarWidth = (value: number) => {
+        setBarColor1(value > 1 ? 'bg-blue' : 'bg-darkgrey');
+        setBarColor2(value > 5 ? 'bg-blue' : 'bg-darkgrey');
+        setBarColor3(value > 10 ? 'bg-blue' : 'bg-darkgrey');
+        setBarColor4(value > 25 ? 'bg-blue' : 'bg-darkgrey');
+    };
+
+    const handleSliderChange = (event: Event, newValue: number | number[]) => {
+        setSliderValue(newValue as number);
+    };
+
+
+    const handleCheckboxChange = (stateSetter: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, currentValue: boolean) => {
+        // Contar cuántos checkboxes están actualmente seleccionados
+        const totalSelected = [includeUppercase, includeLowercase, includeNumbers, includeSymbols].filter(Boolean).length;
+
+        // Si el checkbox actual está seleccionado (y es el último seleccionado), evitar que se deseleccione
+        if (!currentValue || totalSelected > 1) {
+            stateSetter(!currentValue);
+        }
+
+    };
+
+
+    const generatePassword = (length: number): void => {
+        let charset = '';
+        if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+        if (includeNumbers) charset += '0123456789';
+        if (includeSymbols) charset += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+        let newPassword = '';
+        for (let i = 0, n = charset.length; i < length; ++i) {
+            newPassword += charset.charAt(Math.floor(Math.random() * n));
+        }
+        setPassword(newPassword);
+        calculateBarWidth(newPassword.length);
+    };
+    const copyToClipboard = () => {
+        if (password === '') {
+            return;
+        }
+        navigator.clipboard.writeText(password).then(() => {
+        }, (err) => {
+            console.error('Error al copiar la contraseña: ', err);
+        });
+    };
+
+    useEffect(() => {
+        generatePassword(sliderValue);
+    }, [includeUppercase, includeLowercase, includeNumbers, includeSymbols, sliderValue]);
+
+    return (
+
+        <div id="Generator" className='flex justify-between bg-black h-screen '>
+
+            <OptionsOverlay
+                setShowGenerator={setShowGenerator}
+                showGenerator={showGenerator}
+                userName={userName}
+                setShowDashboard={setShowDashboard}
+                setShowProfile={setShowProfile}            >
+                <></>
+            </OptionsOverlay>
+            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-16 space-y-24 2xl:ml-[20%] ml-[8.5%]">
+            
+                <div className="flex-col justify-center w-full items-start">
+                    <div className='flex justify-start mb-10'>
+                        <div className='text-5xl font-bold text-back'>
+                            Password <span className="bg-gradient bg-clip-text text-transparent">Generator</span>
+                        </div>
+
+                    </div>
+                    <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
+                        <div className="flex-col items-start justify-center bg-blackbox rounded-lg border-2 border-border xl:basis-4/5 basis-3/4 p-3">
+                            <div className="flex items-start w-full space-x-3 ">
+                                <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
+                                    <div className="flex justify-between items-center mb-3 px-4 border-border border-[2px] rounded-lg h-11 w-full">
+                                        <input type="text" readOnly value={password} className="select-all w-full text-back flex justify-center items-center bg-transparent  focus:outline-none  " />
+                                        <div
+                                            onClick={() => generatePassword(sliderValue)}
+                                            className='ml-4 text-grey cursor-pointer hover:text-blue'
+                                        >
+                                            <AutorenewRoundedIcon sx={{ fontSize: 28 }} />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-col items-center px-3">
+
+                                        <div className="flex justify-start items-center w-full space-x-2">
+                                            <div className={`${barColor1} h-2 basis-1/4 rounded-full`} />
+                                            <div className={`${barColor2} h-2 basis-1/4 rounded-full`} />
+                                            <div className={`${barColor3} h-2 basis-1/4 rounded-full`} />
+                                            <div className={`${barColor4} h-2 basis-1/4 rounded-full`} />
+                                        </div>
+                                        <div className="flex justify-between items-center text-grey  ">
+                                            <div>Weak</div>
+                                            <div>Strong</div>
+                                        </div>
+                                        {/* <div className="w-full">
+                                            <div className={`flex w-full text-frey ${sliderValue < 10 ? 'b' : sliderValue < 15 ? 'ml-[45%]' : sliderValue < 25 ? 'ml-[70%]' : 'ml-[95%]'}`}>
+                                                {sliderValue < 10 ? 'Weak' : sliderValue < 15 ? 'Medium' : sliderValue < 25 ? 'Strong' : 'Very Strong'
+
+                                                }
+                                            </div>
+                                        </div> */}
+
+
+                                    </div>
+                                    <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">
+                                        <div className="font-semibold text-2xl basis-1/4 text-back">
+                                            Password Length
+                                        </div>
+                                        <div className="flex space-x-4 items-center basis-3/4">
+                                            <div>
+                                                1
+                                            </div>
+
+
+                                            <div className="w-full flex items-center">
+
+
+                                                <PrettoSlider
+                                                    valueLabelDisplay="auto"
+                                                    aria-label="pretto slider"
+                                                    defaultValue={20}
+                                                    color="secondary"
+                                                    min={1}
+                                                    max={50}
+                                                    value={sliderValue}
+                                                    onChange={handleSliderChange}
+                                                />
+
+                                            </div>
+
+                                            <div>
+                                                50
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-gradient rounded-lg text-back text-xl font-semibold   cursor-pointer p-0.5 ">
+                                    <div className="flex items-center justify-center w-full rounded-md space-x-2 bg-blackbox h-10 hover:bg-transparent hover:text-blackbox ">
+                                        <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
+                                        <div>
+                                            Copy
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div className="flex justify-center mt-10 font-semibold ">
+
+                            </div>
+
+
+                        </div>
+                        <div className="flex items-center justify-center bg-blackbox border-2 border-border rounded-lg  lg:basis-1/5 ">
+                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-back max-xl:space-x-6 max-xl:py-10">
+                                <div className="flex items-center space-x-3 ">
+                                    <input checked={includeUppercase}
+
+                                        onChange={() => handleCheckboxChange(setIncludeUppercase, includeUppercase)} type="checkbox" className=" accent-blue focus:accent-blue scale-150 " />
+                                    <div>
+                                        Uppercase
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input checked={includeLowercase}
+                                        onChange={() => handleCheckboxChange(setIncludeLowercase, includeLowercase)} type="checkbox" className="accent-blue focus:accent-blue scale-150 " />
+                                    <div>
+                                        Lowercase
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input checked={includeNumbers}
+                                        onChange={() => handleCheckboxChange(setIncludeNumbers, includeNumbers)} type="checkbox" className="accent-blue focus:accent-blue scale-150" />
+                                    <div>
+                                        Numbers
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        checked={includeSymbols}
+                                        onChange={() => handleCheckboxChange(setIncludeSymbols, includeSymbols)}
+                                        type="checkbox"
+                                        className="accent-blue focus:accent-blue scale-150" />
+                                    <div>
+                                        Symbols
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+    )
+}
+
+
+export default Generator;

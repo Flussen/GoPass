@@ -1,3 +1,12 @@
+// Main app golang source by @Flussen - https://github.com/Flussen 🔧
+//
+// GoPass Manager project is under a GNU license to maintain the free code
+// and intellectual protection of its creators so that it remains available to everyone. 🤖
+// https://github.com/Flussen/GoPass?tab=GPL-3.0-1-ov-file
+
+// Please consider giving us a star on github if you liked our work
+// GoPass https://github.com/Flussen/GoPass ❤️
+
 package app
 
 import (
@@ -7,12 +16,11 @@ import (
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
-	eh "GoPass/backend/errorHandler"
-	"GoPass/backend/models" // Importing another custom package
+	eh "GoPass/backend/errorHandler" // Error handler
+	"GoPass/backend/models"          // Importing another custom package
 
-	"encoding/json" // Package for encoding and decoding JSON
+	"encoding/json"
 	"errors"
-	"math/rand"
 	"time"
 
 	"github.com/google/uuid"     // Package for generating unique UUIDs
@@ -20,11 +28,9 @@ import (
 	"golang.org/x/crypto/bcrypt" // Package for password hashing
 )
 
-/*
-App is an empty struct that will add the functions that will
-be added to main.go so that wails go compiles. This is the way to
-improve the abstraction of the program so that the program scales.
-*/
+// App is an empty struct that will add the functions that will
+// be added to main.go so that wails go compiles. This is the way to
+// improve the abstraction of the program so that the program scales.
 type App struct {
 	DB *bbolt.DB
 }
@@ -83,12 +89,11 @@ func (a *App) DoLogin(username, password string) (string, error) {
 
 	token := uuid.New().String()
 	expiry := time.Now().Add(730 * time.Hour)
-	userKey := storedUser.Password
+	userKey := storedUser.UserKey
 
-	err = controllers.StoreSessionToken(a.DB, username, token, expiry)
+	err = controllers.StoreSessionToken(a.DB, username, token, userKey, expiry)
 	if err != nil {
-		eh.NewGoPassErrorf("error storing session token: %v", err)
-		return "", errors.New("failed to log in")
+		return "", eh.NewGoPassErrorf("error storing session token: %v", err)
 	}
 
 	result, err := json.Marshal(map[string]string{"token": token, "userKey": userKey})
@@ -132,15 +137,40 @@ func (a *App) DoRegister(username, email, password string) (bool, error) {
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(username, service, password, userKey string) error {
-	return controllers.SavePassword(a.DB, username, userKey, service, password)
+func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, icon, userKey string) (string, error) {
+	date := time.Now().Format(time.DateTime)
+	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service,
+		password, icon, userKey, date)
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
 // DeletePassword deletes a password saved in the database by the given username and service.
 //
 //	controllers.DeletePass(DB, username, service) // is the controller for delete the password in the database
-func (a *App) DoDeleteUserPassword(username, service string) error {
-	return controllers.DeletePass(a.DB, username, service)
+func (a *App) DoDeleteUserPassword(username, id string) error {
+	return controllers.DeletePass(a.DB, username, id)
+}
+
+func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername, newPwd string) error {
+	newDate := time.Now().Format(time.DateTime)
+	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
+}
+
+// Change password for the user ACCOUNT!!
+func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
+	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+}
+
+func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error {
+	panic("not implemented")
+}
+
+// logout system to clean the token and expirytime variable in the database
+func (a *App) DoLogout(username string) error {
+	return components.Logout(a.DB, username)
 }
 
 /*
@@ -154,13 +184,33 @@ func (a *App) DoDeleteUserPassword(username, service string) error {
    ------------------------------------------------
 */
 
+func (a *App) GetUserInfo(username string) (string, error) {
+	model, err := controllers.GetUserInfo(a.DB, username)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+
+	byteModel, err := json.Marshal(model)
+	if err != nil {
+		eh.NewGoPassErrorf("ERROR: %v", err)
+	}
+	return string(byteModel), nil
+}
+
+func (a *App) GetUserPasswordById(username, id string) (string, error) {
+	json, err := controllers.UserPasswordByID(a.DB, username, id)
+	if err != nil {
+		return "", err
+	}
+	return string(json), nil
+}
+
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
-func (a *App) GetTokenVerification(token string) (bool, error) {
-
-	isValid, err := components.VerifySessionToken(a.DB, token)
+func (a *App) GetTokenVerification(user, token string) (bool, error) {
+	isValid, err := components.VerifySessionToken(a.DB, user, token)
 	if err != nil {
 		return false, err
 	}
@@ -171,16 +221,25 @@ func (a *App) GetTokenVerification(token string) (bool, error) {
 // Retrieves the passwords of the user with the given username
 //
 //	components.VerifySessionToken(DB, token) // is the controller for get the user passwords
-func (a *App) GetUserPasswords(username string) (map[string]string, error) {
-	return controllers.GetUserPasswords(a.DB, username)
+func (a *App) GetUserPasswords(username string) (string, error) {
+	pwds, err := controllers.GetUserPasswords(a.DB, username)
+	if err != nil {
+		return "", err
+	}
+	container := models.PasswordsContainer{Passwords: pwds}
+	jsonData, err := json.Marshal(container)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonData), nil
 }
 
 // Shows the password by the userKey decryption method
 //
 //	encryption.RevealPassword(encryptedPassword, userKey) // It is the encryption controller
-func (a *App) ShowPassword(username, service, userKey string) (string, error) {
+func (a *App) ShowPassword(username, id, userKey string) (string, error) {
 
-	var encryptedPassword string
+	var dataPassword models.Password
 
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
@@ -188,11 +247,15 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 			return eh.NewGoPassError(eh.ErrUserNotFound)
 		}
 
-		encryptedPasswordBytes := userBucket.Get([]byte(service))
+		encryptedPasswordBytes := userBucket.Get([]byte(id))
 		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s", service)
+			return eh.NewGoPassErrorf("password not found for %s", id)
 		}
-		encryptedPassword = string(encryptedPasswordBytes)
+		// encryptedPassword = string(encryptedPasswordBytes)
+		err := json.Unmarshal(encryptedPasswordBytes, &dataPassword)
+		if err != nil {
+			return eh.NewGoPassErrorf("error unmarshal in ShowPassword %v", err)
+		}
 		return nil
 	})
 
@@ -200,7 +263,7 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 		return "", err
 	}
 
-	decrypted, err := encryption.RevealPassword(encryptedPassword, userKey)
+	decrypted, err := encryption.RevealPassword(dataPassword.Pwd, userKey)
 	if err != nil {
 		return "", err
 	}
@@ -211,45 +274,34 @@ func (a *App) ShowPassword(username, service, userKey string) (string, error) {
 // ListUsers retrieves user information concurrently
 //
 //	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
-func (a *App) GetListUsers(userIDs []string, service string) ([]*models.User, error) {
-	return controllers.GetUsersConcurrently(a.DB, userIDs)
+func (a *App) GetListUsers() (string, error) {
+	return controllers.GetUsersConcurrently(a.DB)
 }
 
-// PasswordGenerator generates a random password with a specified
-// length and returns its strength level
-func (a *App) PasswordGenerator(lenght int) (string, error) {
-	var status string
+func (a *App) GetLastSession() (string, error) {
 
-	const (
-		weak    = "Weak"
-		medium  = "Medium"
-		high    = "Strong"
-		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:?><"
-	)
+	var sessionBytes []byte
 
-	if lenght >= 20 {
-		status = high
-	} else if lenght > 10 {
-		status = medium
-	} else {
-		status = weak
-	}
+	a.DB.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("LastSessionSaved"))
+		if b == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
 
-	password := make([]byte, lenght)
-	for i := range password {
-		password[i] = charset[rand.Intn(len(charset))]
-	}
+		sessionBytes = b.Get([]byte("lastsession"))
+		if sessionBytes == nil {
+			return eh.NewGoPassError("the last session is empty or was deleted, login again")
+		}
 
-	pwd, err := json.Marshal(map[string]string{"state": status, "password": string(password)})
-	if err != nil {
-		return "", eh.NewGoPassError("Error in backend for generate a new Password")
-	}
-	return string(pwd), nil
+		return nil
+	})
+
+	return string(sessionBytes), nil
 }
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.0.2 - ALPHA"
+	return "0.1 BETA - Rejewski"
 }
 
 /*
