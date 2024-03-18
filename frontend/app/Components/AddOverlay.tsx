@@ -104,19 +104,19 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
                                         Title
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between '>
-                                        <input type="password" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back mb-5' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
+                                        <input autoComplete="nope" type="password" className=' rounded-lg bg-black border-2 border-border  pl-4 py-2 w-[30rem] outline-none placeholder:text-darkgrey text-back mb-5' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
                                     
                                     <div className="flex justify-center ">
