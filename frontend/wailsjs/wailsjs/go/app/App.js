@@ -42,10 +42,6 @@ export function GetListUsers() {
   return window['go']['app']['App']['GetListUsers']();
 }
 
-export function GetTokenVerification(arg1, arg2) {
-  return window['go']['app']['App']['GetTokenVerification'](arg1, arg2);
-}
-
 export function GetUserInfo(arg1) {
   return window['go']['app']['App']['GetUserInfo'](arg1);
 }
@@ -68,4 +64,8 @@ export function ShowPassword(arg1, arg2, arg3) {
 
 export function TestGreet(arg1) {
   return window['go']['app']['App']['TestGreet'](arg1);
+}
+
+export function VerifyToken(arg1) {
+  return window['go']['app']['App']['VerifyToken'](arg1);
 }

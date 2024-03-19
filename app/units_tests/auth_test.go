@@ -295,12 +295,6 @@ func Test_Logout(t *testing.T) {
 					assert.NotEmpty(session.UserKey)
 					assert.NotEmpty(session.Username)
 
-					var user models.User
-					userData, _ := app.GetUserInfo(userTest)
-					json.Unmarshal([]byte(userData), &user)
-
-					assert.NotEmpty(user.TokenExpiry)
-					assert.NotEmpty(user.SessionToken)
 				}
 			} else {
 				assert.Nil(err, "should to be a nil result")

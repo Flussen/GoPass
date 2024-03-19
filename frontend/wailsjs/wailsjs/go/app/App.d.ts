@@ -21,8 +21,6 @@ export function GetLastSession():Promise<string>;
 
 export function GetListUsers():Promise<string>;
 
-export function GetTokenVerification(arg1:string,arg2:string):Promise<boolean>;
-
 export function GetUserInfo(arg1:string):Promise<string>;
 
 export function GetUserPasswordById(arg1:string,arg2:string):Promise<string>;
@@ -34,3 +32,5 @@ export function GetVersion():Promise<string>;
 export function ShowPassword(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function TestGreet(arg1:string):Promise<string>;
+
+export function VerifyToken(arg1:string):Promise<boolean>;

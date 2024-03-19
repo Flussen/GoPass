@@ -18,6 +18,7 @@ import (
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler" // Error handler
 	"GoPass/backend/models"          // Importing another custom package
+	"GoPass/backend/sessiontoken"
 
 	"encoding/json"
 	"errors"
@@ -87,11 +88,13 @@ func (a *App) DoLogin(username, password string) (string, error) {
 		return "", errors.New(eh.ErrInvalidCredentils)
 	}
 
-	token := uuid.New().String()
-	expiry := time.Now().Add(730 * time.Hour)
+	token, err := sessiontoken.CreateNewToken(storedUser.ID, storedUser.Username)
+	if err != nil {
+		return "", err
+	}
 	userKey := storedUser.UserKey
 
-	err = controllers.StoreSessionToken(a.DB, username, token, userKey, expiry)
+	err = sessiontoken.SaveSessionToken(a.DB, username, token, userKey)
 	if err != nil {
 		return "", eh.NewGoPassErrorf("error storing session token: %v", err)
 	}
@@ -170,7 +173,7 @@ func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error 
 
 // logout system to clean the token and expirytime variable in the database
 func (a *App) DoLogout(username string) error {
-	return components.Logout(a.DB, username)
+	return sessiontoken.CleanSessionToken(a.DB)
 }
 
 /*
@@ -209,13 +212,15 @@ func (a *App) GetUserPasswordById(username, id string) (string, error) {
 // true if the session is valid and false if the session invalid
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
-func (a *App) GetTokenVerification(user, token string) (bool, error) {
-	isValid, err := components.VerifySessionToken(a.DB, user, token)
+func (a *App) VerifyToken(token string) (bool, error) {
+	tkn, err := sessiontoken.VerifyToken(token)
 	if err != nil {
 		return false, err
 	}
-
-	return isValid, nil
+	if !tkn.Valid {
+		return false, eh.NewGoPassError("token is not valid")
+	}
+	return tkn.Valid, nil
 }
 
 // Retrieves the passwords of the user with the given username
