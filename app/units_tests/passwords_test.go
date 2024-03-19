@@ -120,7 +120,9 @@ func Test_save_user_password(t *testing.T) {
 
 	for _, tt := range tests {
 		ttest := t.Run(tt.name, func(t *testing.T) {
-			id, err := app.DoSaveUserPassword(tt.tuser, tt.tusernameToSave, tt.tuser, tt.tpassword, "IconDefault", tt.tuserKey)
+			id, err := app.DoSaveUserPassword(tt.tuser, tt.tusernameToSave, tt.tuser,
+				tt.tpassword, "IconDefault", "default-status", tt.tuserKey)
+
 			if tt.expectedErr {
 				assert.Empty(id, "expect empty for the id")
 				assert.NotNil(err, "expect NOT nil for err")
@@ -186,7 +188,7 @@ func Test_edit_user_password(t *testing.T) {
 		t.Fatalf("json.Unmarshal failed: %v", err)
 	}
 
-	id, err := app.DoSaveUserPassword(userTest, "test", "google", "password", "IconDefault", userdata.UserKey)
+	id, err := app.DoSaveUserPassword(userTest, "test", "google", "password", "IconDefault", "Default-status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("DoSaveUserPassword failed: %v", err)
 	}
@@ -341,19 +343,19 @@ func Test_delete_password(t *testing.T) {
 	if err != nil {
 		t.Fatalf("json.Unmarshal failed: %v", err)
 	}
-	id1, err := app.DoSaveUserPassword(userTest, "test1", "google", "password", "IconDefault", userdata.UserKey)
+	id1, err := app.DoSaveUserPassword(userTest, "test1", "google", "password", "IconDefault", "Default status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("DoSaveUserPassword failed: %v", err)
 	}
-	id2, err := app.DoSaveUserPassword(userTest, "test2", "google2", "password2", "IconDefault", userdata.UserKey)
+	id2, err := app.DoSaveUserPassword(userTest, "test2", "google2", "password2", "IconDefault", "Default status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("DoSaveUserPassword failed: %v", err)
 	}
-	id3, err := app.DoSaveUserPassword(userTest, "test3", "google3", "password3", "IconDefault", userdata.UserKey)
+	id3, err := app.DoSaveUserPassword(userTest, "test3", "google3", "password3", "IconDefault", "Default status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("DoSaveUserPassword failed: %v", err)
 	}
-	id4, err := app.DoSaveUserPassword(userTest, "test4", "google4", "password4", "IconDefault", userdata.UserKey)
+	id4, err := app.DoSaveUserPassword(userTest, "test4", "google4", "password4", "IconDefault", "Default status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("DoSaveUserPassword failed: %v", err)
 	}

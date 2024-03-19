@@ -36,11 +36,11 @@ func TestGetPasswordByID(t *testing.T) {
 		t.Fatalf("json.Unmarshal failed: %v", err)
 	}
 
-	id1, err := app.DoSaveUserPassword(user, "User54", "Google", "passforGoogle", "", userdata.UserKey)
+	id1, err := app.DoSaveUserPassword(user, "User54", "Google", "passforGoogle", "default", "default-status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("Error: %v", err)
 	}
-	id2, err := app.DoSaveUserPassword(user, "Pedrito", "Youtube", "passForYoutube", "", userdata.UserKey)
+	id2, err := app.DoSaveUserPassword(user, "Pedrito", "Youtube", "passForYoutube", "default", "default-status", userdata.UserKey)
 	if err != nil {
 		t.Fatalf("Error: %v", err)
 	}
