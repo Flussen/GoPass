@@ -24,7 +24,7 @@ func Test_token_verification(t *testing.T) {
 	)
 
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
@@ -140,4 +140,8 @@ func Test_token_verification(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_get_last_session_saved(t *testing.T) {
+	//TO DO
 }

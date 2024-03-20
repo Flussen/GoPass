@@ -18,8 +18,8 @@ export function DoLogin(arg1, arg2) {
   return window['go']['app']['App']['DoLogin'](arg1, arg2);
 }
 
-export function DoLogout(arg1) {
-  return window['go']['app']['App']['DoLogout'](arg1);
+export function DoLogout() {
+  return window['go']['app']['App']['DoLogout']();
 }
 
 export function DoRegister(arg1, arg2, arg3) {

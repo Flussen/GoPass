@@ -32,6 +32,7 @@ func SaveSessionToken(db *bbolt.DB, username, token, userKey string) error {
 }
 
 func CleanSessionToken(db *bbolt.DB) error {
+
 	err := db.Update(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("LastSessionSaved"))
 		if b == nil {

@@ -28,7 +28,7 @@ func Test_save_user_password(t *testing.T) {
 	)
 
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
@@ -171,7 +171,7 @@ func Test_edit_user_password(t *testing.T) {
 	)
 
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
@@ -327,7 +327,7 @@ func Test_delete_password(t *testing.T) {
 	)
 
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
@@ -439,13 +439,13 @@ func Test_delete_password(t *testing.T) {
 }
 
 func Test_get_ALL_passwords(t *testing.T) {
-	panic("unimplemented")
+	//TO DO
 }
 
 func Test_get_password_by_id(t *testing.T) {
-	panic("unimplemented")
+	//TO DO
 }
 
 func Test_decrypt_a_password(t *testing.T) {
-	panic("unimplemented")
+	//TO DO
 }

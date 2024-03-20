@@ -12,7 +12,7 @@ package app
 import (
 	// Package imports
 
-	"GoPass/backend/components"
+	"GoPass/backend/auth"
 	"GoPass/backend/controllers"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
@@ -21,12 +21,11 @@ import (
 	"GoPass/backend/sessiontoken"
 
 	"encoding/json"
-	"errors"
 	"time"
 
-	"github.com/google/uuid"     // Package for generating unique UUIDs
-	"go.etcd.io/bbolt"           // Package for handling Bolt databases
-	"golang.org/x/crypto/bcrypt" // Package for password hashing
+	// Package for generating unique UUIDs
+	"go.etcd.io/bbolt" // Package for handling Bolt databases
+	// Package for password hashing
 )
 
 // App is an empty struct that will add the functions that will
@@ -63,78 +62,17 @@ func NewAppWithDB(db *bbolt.DB) *App {
 // it will also parse the data, decrypt the userKey stored in the database
 // and generate a login token. (Expiry in 30 days)
 func (a *App) DoLogin(username, password string) (string, error) {
-	var storedUser models.User
-
-	err := a.DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("Users"))
-		if b == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		userBytes := b.Get([]byte(username))
-		if userBytes == nil {
-			return errors.New(eh.ErrUserNotFound)
-		}
-
-		return json.Unmarshal(userBytes, &storedUser)
-	})
-	if err != nil {
-		eh.NewGoPassErrorf("error searching for user: %v", err)
-		return "", errors.New(eh.ErrInvalidCredentils)
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
-	if err != nil {
-		return "", errors.New(eh.ErrInvalidCredentils)
-	}
-
-	token, err := sessiontoken.CreateNewToken(storedUser.ID, storedUser.Username)
-	if err != nil {
-		return "", err
-	}
-	userKey := storedUser.UserKey
-
-	err = sessiontoken.SaveSessionToken(a.DB, username, token, userKey)
-	if err != nil {
-		return "", eh.NewGoPassErrorf("error storing session token: %v", err)
-	}
-
-	result, err := json.Marshal(map[string]string{"token": token, "userKey": userKey})
+	bytes, err := auth.Login(a.DB, username, password)
 	if err != nil {
 		return "", err
 	}
 
-	return string(result), nil
+	return string(bytes), nil
 }
 
 // Register registers a new user with the given username, email, and password
-func (a *App) DoRegister(username, email, password string) (bool, error) {
-
-	err := components.RegistryChecker(a.DB, username, email, password)
-	if err != nil {
-		return false, err
-	}
-
-	hashedPassword, UserKey, err := components.RegistrySecurer(password)
-	if err != nil {
-		return false, err
-	}
-
-	newUser := models.User{
-		ID:        uuid.New().String(),
-		Username:  username,
-		Email:     email,
-		Password:  string(hashedPassword),
-		UserKey:   UserKey,
-		CreatedAt: time.Now().Format(time.RFC3339),
-	}
-
-	if err := controllers.CreateUser(a.DB, newUser); err != nil {
-		// eh.NewGoPassErrorf("failed to create user: %s", username)
-		return false, err
-	}
-
-	return true, nil
+func (a *App) DoRegister(username, email, password string) error {
+	return auth.Register(a.DB, username, email, password)
 }
 
 // Saves a password for the given username and service
@@ -172,7 +110,7 @@ func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error 
 }
 
 // logout system to clean the token and expirytime variable in the database
-func (a *App) DoLogout(username string) error {
+func (a *App) DoLogout() error {
 	return sessiontoken.CleanSessionToken(a.DB)
 }
 
