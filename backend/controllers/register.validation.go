@@ -1,7 +1,6 @@
-package components
+package controllers
 
 import (
-	"GoPass/backend/controllers"
 	eh "GoPass/backend/errorHandler"
 	userkeyhandler "GoPass/backend/userKeyHandler"
 	"errors"
@@ -28,7 +27,7 @@ func RegistryChecker(DB *bbolt.DB, username, email, password string) error {
 		return eh.NewGoPassError("email is not valid")
 	}
 
-	exists, err := controllers.CheckUserExists(DB, username, email)
+	exists, err := CheckUserExists(DB, username, email)
 	if err != nil {
 		log.Printf("error checking for user existence: %v", err)
 		return err

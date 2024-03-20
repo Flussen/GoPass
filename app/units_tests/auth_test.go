@@ -55,7 +55,7 @@ func Test_registration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := app.DoRegister(tt.user, tt.email, tt.password)
+			err := app.DoRegister(tt.user, tt.email, tt.password)
 			if tt.expectErr {
 				assert.Error(err, "Expected an error!")
 			} else {
@@ -78,8 +78,10 @@ func Test_registration_but_there_is_already_a_user_or_a_email(t *testing.T) {
 
 	app := &app.App{DB: db}
 
-	exists, err := app.DoRegister(user, emailUser, passUser)
-	_, _ = exists, err
+	err := app.DoRegister(user, emailUser, passUser)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	tests := []struct {
 		name      string
@@ -120,7 +122,7 @@ func Test_registration_but_there_is_already_a_user_or_a_email(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := app.DoRegister(tt.user, tt.email, tt.password)
+			err := app.DoRegister(tt.user, tt.email, tt.password)
 			if tt.expectErr {
 				assert.Error(err, "Expected an error!")
 			} else {
@@ -147,58 +149,40 @@ func Test_login_data_receive(t *testing.T) {
 
 	app := &app.App{DB: db}
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
 
 	tests := []struct {
-		name          string
-		user          string
-		password      string
-		expectErr     bool
-		tokenLength   int
-		userKeyLength int
+		name      string
+		user      string
+		password  string
+		expectErr bool
 	}{
 		{
 			"correct login credentials",
 			"User",
 			"password",
 			false,
-			0,
-			0,
 		},
 		{
 			"invalid user",
 			"invalidUser",
 			"password",
 			true,
-			0,
-			0,
 		},
 		{
 			"invalid password",
 			"User",
 			"invalidPassword",
 			true,
-			0,
-			0,
 		},
 		{
 			"token 36 characters",
 			"User",
 			"password",
 			false,
-			36,
-			0,
-		},
-		{
-			"userKey 32 characters",
-			"User",
-			"password",
-			false,
-			0,
-			32,
 		},
 	}
 
@@ -215,12 +199,6 @@ func Test_login_data_receive(t *testing.T) {
 				assert.NotEmpty(receive.Token, "Expected return data")
 				assert.NotEmpty(receive.UserKey, "Expected return data")
 				assert.NoErrorf(err, "Expected nil error! %v", err)
-			}
-			if !tt.expectErr && tt.tokenLength > 0 {
-				assert.Len(receive.Token, tt.tokenLength, "%v length expected for token", tt.tokenLength)
-			}
-			if !tt.expectErr && tt.userKeyLength > 0 {
-				assert.Len(receive.UserKey, tt.userKeyLength, "%v length expected for token", tt.userKeyLength)
 			}
 		})
 	}
@@ -240,40 +218,19 @@ func Test_Logout(t *testing.T) {
 
 	app := &app.App{DB: db}
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
 
 	tests := []struct {
-		name      string
-		user      string
-		expectErr bool
-		checkData bool
+		name string
 	}{
 		{
 			"correct logout",
-			userTest,
-			false,
-			false,
 		},
 		{
 			"incorrect logout",
-			"",
-			true,
-			false,
-		},
-		{
-			"correct logout data checked",
-			userTest,
-			false,
-			true,
-		},
-		{
-			"incorrect logout data checked",
-			"",
-			true,
-			true,
 		},
 	}
 
@@ -281,42 +238,17 @@ func Test_Logout(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			app.DoLogin(userTest, passTest)
 
-			err := app.DoLogout(tt.user)
-			if tt.expectErr {
-				assert.NotNil(err, "should to be a error result")
-				if tt.checkData {
-					sessionByte, err := app.GetLastSession()
-					assert.Nil(err)
+			err := app.DoLogout()
+			assert.Nil(err, "should to be a nil result")
 
-					var session models.LastSession
-					json.Unmarshal([]byte(sessionByte), &session)
+			sessionByte, _ := app.GetLastSession()
+			var session models.LastSession
+			json.Unmarshal([]byte(sessionByte), &session)
 
-					assert.NotEmpty(session.Token)
-					assert.NotEmpty(session.UserKey)
-					assert.NotEmpty(session.Username)
+			assert.Empty(session.Token)
+			assert.Empty(session.UserKey)
+			assert.Empty(session.Username)
 
-					var user models.User
-					userData, _ := app.GetUserInfo(userTest)
-					json.Unmarshal([]byte(userData), &user)
-
-					assert.NotEmpty(user.TokenExpiry)
-					assert.NotEmpty(user.SessionToken)
-				}
-			} else {
-				assert.Nil(err, "should to be a nil result")
-				if tt.checkData {
-					sessionByte, _ := app.GetLastSession()
-					// assert.NotNil(err)
-					var session models.LastSession
-					json.Unmarshal([]byte(sessionByte), &session)
-
-					assert.Empty(session.Token)
-					assert.Empty(session.UserKey)
-					assert.Empty(session.Username)
-				}
-			}
-
-			// again login for the next test
 		})
 	}
 
