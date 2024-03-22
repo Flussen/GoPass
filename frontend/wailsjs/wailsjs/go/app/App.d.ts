@@ -9,9 +9,9 @@ export function DoDeleteUserPassword(arg1:string,arg2:string):Promise<void>;
 
 export function DoLogin(arg1:string,arg2:string):Promise<string>;
 
-export function DoLogout(arg1:string):Promise<void>;
+export function DoLogout():Promise<void>;
 
-export function DoRegister(arg1:string,arg2:string,arg3:string):Promise<boolean>;
+export function DoRegister(arg1:string,arg2:string,arg3:string):Promise<void>;
 
 export function DoSaveUserPassword(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string,arg7:string):Promise<string>;
 
@@ -20,8 +20,6 @@ export function DoUpdateUserPassword(arg1:string,arg2:string,arg3:string,arg4:st
 export function GetLastSession():Promise<string>;
 
 export function GetListUsers():Promise<string>;
-
-export function GetTokenVerification(arg1:string,arg2:string):Promise<boolean>;
 
 export function GetUserInfo(arg1:string):Promise<string>;
 
@@ -34,3 +32,5 @@ export function GetVersion():Promise<string>;
 export function ShowPassword(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function TestGreet(arg1:string):Promise<string>;
+
+export function VerifyToken(arg1:string):Promise<boolean>;

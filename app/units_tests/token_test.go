@@ -2,12 +2,10 @@ package units_tests
 
 import (
 	"GoPass/app"
-	"GoPass/backend/controllers"
 	"GoPass/backend/models"
+	"GoPass/backend/sessiontoken"
 	"encoding/json"
-	"fmt"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -20,13 +18,13 @@ func Test_token_verification(t *testing.T) {
 	app := &app.App{DB: db}
 
 	const (
-		userTest  = "User"
-		emailTest = "email@hotmail.com"
-		passTest  = "password"
+		userTest  string = "User"
+		emailTest string = "email@hotmail.com"
+		passTest  string = "password"
 	)
 
 	// Register process
-	_, err := app.DoRegister(userTest, emailTest, passTest)
+	err := app.DoRegister(userTest, emailTest, passTest)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
@@ -43,84 +41,107 @@ func Test_token_verification(t *testing.T) {
 		t.Fatalf("json.Unmarshal failed: %v", err)
 	}
 
+	tokenexpired, err := sessiontoken.CreateNewTokenExpired("idrandom", userTest)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	tests := []struct {
 		name        string
-		tuser       string
 		ttoken      string
 		expectErr   bool
-		invalidDate bool
 		expectValid bool
+		checkData   bool
 	}{
 		{
 			"correct token",
-			userTest,
 			userdata.Token,
 			false,
-			false,
 			true,
+			false,
 		},
 		{
 			"incorrect token",
-			userTest,
-			"a1bd-123B-asd1-hggf-b443-sdfg",
+			`eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
+			eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTcxMDk1Mjk1MywiZXhwIjoxNzEwOTU2NTUzfQ.
+			wJIPnRRooR9i690fDda3sLu6WueiMiWjOy-LCbsKZJo`,
 			true,
 			false,
 			false,
 		},
 		{
-			"invalid date",
-			userTest,
-			userdata.Token,
-			false,
+			"data payload changed",
+			`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+			eyJleHAiOjE3MTM1NDQwNTksImlkIjoiY2hhbmdlZCIsInVzZXJuYW1lIjoiVXNlciJ9.
+			PTY_dc6JKjBx81FbRVvAE_M6xEtWQ8MSDs5VfAuI0GQ`,
 			true,
+			false,
 			false,
 		},
 		{
-			"expect err for invalid user",
-			"FakeUser",
-			userdata.Token,
+			"incorrect HEADER",
+			`eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.
+			eyJleHAiOjE3MTM1NDQwNTksImlkIjoiYTA0NWYwNTQtNTg3ZS00NDY4LWE0OTAtNGM3MDNhMDgzYmUyIiwidXNlcm5hbWUiOiJVc2VyIn0.
+			j_N5irjrqT9E1-0Y8l94H0S03Y-n1Y46OAJeZ-qoKedtTmxI8sLa4OXQThmtrAFEs0d87FVx0A6EB_Yi5nONKA`,
 			true,
 			false,
 			false,
+		},
+		{
+			"expired token",
+			tokenexpired,
+			true,
+			false,
+			false,
+		},
+		{
+			"correct token and data is correct",
+			userdata.Token,
+			false,
+			true,
+			true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.invalidDate {
-				newTime := time.Date(2024, time.January, 1, 21, 0, 0, 0, time.UTC).Format(time.RFC3339)
+			ok, err := app.VerifyToken(tt.ttoken)
 
-				data, err := app.GetUserInfo(tt.tuser)
+			if tt.expectErr {
+				assert.NotNil(err)
+				assert.False(ok)
+			} else {
+				assert.Nil(err)
+			}
+			if tt.expectValid {
+				assert.True(ok)
+			} else {
+				assert.False(ok)
+			}
+
+			if err == nil && tt.checkData && ok {
+				bytes, err := sessiontoken.ReturnTokenContent(tt.ttoken)
 				if err != nil {
 					t.Fatal(err)
 				}
 
-				var dataUser models.User
-				if err := json.Unmarshal([]byte(data), &dataUser); err != nil {
-					t.Fatal(err)
+				type dataReceived struct {
+					ID       string
+					Username string
+					Exp      int
 				}
 
-				dataUser.TokenExpiry = newTime
-				if err = controllers.UpdateUser(db, tt.tuser, dataUser); err != nil {
-					t.Fatalf("UpdateUser failed: %v", err)
-				}
-			}
+				var datareceived dataReceived
+				json.Unmarshal(bytes, &datareceived)
 
-			validation, err := app.GetTokenVerification(tt.tuser, tt.ttoken)
-
-			if tt.expectValid {
-				assert.True(validation)
-			} else {
-				assert.False(validation)
-			}
-
-			if tt.expectErr {
-				assert.NotNil(err)
-				fmt.Printf("ERROR: %v\n", err)
-				assert.False(validation)
-			} else {
-				assert.Nil(err)
+				assert.Equal(userTest, datareceived.Username, "the result must be equal to the registered username")
+				assert.IsType("", datareceived.ID, "the result must be a string")
+				assert.IsType(0, datareceived.Exp, "the result must be a number (int)")
 			}
 		})
 	}
+}
+
+func Test_get_last_session_saved(t *testing.T) {
+	//TO DO
 }
