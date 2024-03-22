@@ -36,10 +36,9 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setSh
   async function Logout(){
     try{
 
-      const result = await DoLogout(userName);
+      await DoLogout();
       setShowDashboard(false);
-      console.log(userName)
-      console.log('Logout'+result)
+      
     }catch{
       alert('error al logout')
     }

@@ -45,6 +45,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
     const [pass, setPass] = useState("");
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
+    const [status, setStatus] = useState('');
 
     useEffect(() => {
         const findIcon = () => {
@@ -56,14 +57,26 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen,onClose, children, userK
         findIcon();
     }, [title]);
 
-    async function pullPasswords() {
-        try {
+    useEffect(()=>{
+        if(pass.length>25){
+            setStatus('Strong')
+        }else if(pass.length>10){
+            setStatus('Medium')
+        }else{
+            setStatus('Weak')
+        }
+    }, [pass])
 
-            await DoSaveUserPassword(userName, usermail, title, pass, item, userKey); 
+    async function pullPasswords() {
+        
+       
+        try {
+            await DoSaveUserPassword(userName, usermail, title, pass, item, status, userKey); 
             setTitle('');
             setUsermail('');
             setPass('');
             setItem('')
+            setStatus('');
             setArePasswords(true)
         } catch (error) {
             console.error('Error saving password: ' + error);

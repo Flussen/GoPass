@@ -33,8 +33,8 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
     try {
       setIsLoading(true);
 
-      const response = await DoRegister(name, email, password);
-      if (response) {
+      await DoRegister(name, email, password);
+      
         console.log('despues: ' + isSignupResultOpen)
 
         setIsLoading(false);
@@ -42,9 +42,6 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
 
 
 
-      } else {
-        alert('Error al registrar usuario ' + response);
-      }
     } catch (error) {
       console.error('Error fetching version:', error);
     } finally {

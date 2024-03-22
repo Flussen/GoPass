@@ -7,7 +7,7 @@ import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
 import SignupResult from './Components/SignupResult';
-import { GetTokenVerification } from '@/wailsjs/wailsjs/go/app/App';
+import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"
 
@@ -36,7 +36,7 @@ export default function Home() {
       
       if (data.token !== null && data.username !== null) {
 
-        const resultado = await GetTokenVerification(data.username, data.token);
+        const resultado = await VerifyToken(data.token);
         if(resultado){
           setShowDashboard(true)
         }

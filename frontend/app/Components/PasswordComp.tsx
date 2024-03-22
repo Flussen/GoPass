@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
 import { GetUserPasswords } from "@/wailsjs/wailsjs/go/app/App";
-import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
 import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
 import EditOverlay from './EditOverlay';
@@ -33,6 +32,7 @@ interface PasswordsProps {
     pwd: string;
     username: string;
     icon: string;
+    status: string;
     created_date: string;
 }
 
@@ -57,12 +57,13 @@ const SvgLogos: { [key: string]: any } = {
 
 const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, isAddOverlayOpen, search, setArePasswords, arePasswords, setIsAddOverlayOpen }) => {
     const [passwords, setPasswords] = useState<PasswordsProps[]>([]);
-    const [decrypted, setDecrypted] = useState('');
     const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
     const [openEditOverlayId, setOpenEditOverlayId] = useState<string | null>(null);
     const [icon, setIcon] = useState('');
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
+    const [id, setId] = useState('');
+
     const getFontAwesomeIcon = (iconName: string) => {
         const search = iconName.toLowerCase();
         const matchingKey: any = Object.keys(SvgLogos).find(key => key.startsWith(search));
@@ -90,30 +91,30 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
             popperRef.current.update();
         }
     };
+   
 
-
-
+   
     async function getPasswords() {
         try {
             const response = await GetUserPasswords(userName);
             console.log('Get passwords'+response)
             const data = JSON.parse(response);
+            setArePasswords(true)
             if (data && data.passwords) {
-                const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
-                    const decryptedPwd = await ShowPassword(userName, password.id, userKey);
-                    return { ...password, pwd: decryptedPwd };
-                }));
-                setArePasswords(true)
+                
+
+                
                 console.log('Cargado dentro del if')
-                setPasswords(decryptedPasswords);
+                
 
             } else {
                 console.error("Passwords not found in response:", data);
-                setArePasswords(false)
+                
             }
 
         } catch (error) {
             console.error("Error fetching passwords:", error, userName);
+            setArePasswords(false)
         }
     }
     const copyToClipboard = async (pwd: string) => {
@@ -129,7 +130,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     const searchPasswords = passwords.filter((password) => password.title.toLowerCase().includes(search.toLowerCase()));
 
-
+    
     return (
         <>
             
@@ -137,7 +138,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                         {searchPasswords.map((password, index) => (
 
                             <div key={index} className="w-full ">
-                                <div onChange={() => { setIcon(password.icon) }} onClick={() => setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id)} className="flex w-full h-24 bg-blackbox border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
+                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id)}} className="flex w-full h-24 bg-blackbox border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
                                     <div className="flex items-center basis-3/6 space-x-5">
                                         <div className="rounded-lg bg-black border-2 border-border text-white w-[4.5rem] h-full flex items-center justify-center">
                                             <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-back text-2xl" />
@@ -155,41 +156,24 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
                                         <div ref={areaRef}
                                             onMouseMove={handleMouseMove} className="group " >
-                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer   " />
-
-                                            
+                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer   " />                                
                                             {/* <div className="hidden absolute group-hover:flex justify-center items-end mt-[-4rem]">
 
                                                 <div className=" bg-grey px-2 py-2 rounded-lg text-sm z-30">
                                                     Click to Copy
                                                 </div>
                                                 <div className="absolute bg-grey h-7 w-7 rotate-45 " />
-
                                             </div> */}
-
                                         </div>
-
-
-
                                     </div>
-
-
                                     <div className="flex items-center  xl:basis-1/6">
-
-
-
                                         <div ref={areaRef}
-                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.pwd.length > 25 ? '  text-purple' : password.pwd.length > 10 ? ' text-orange' : 'text-red '} `}>
-                                            {password.pwd.length > 25 ? <GppGoodRoundedIcon /> : password.pwd.length > 10 ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />
-
-
-                                            }
-
+                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-purple' : password.status == 'Medium' ? ' text-orange' : 'text-red '} `}>
+                                            {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium'  ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
                                             <div className="hidden xl:flex">
-                                                {password.pwd.length > 25 ? 'Strong' : password.pwd.length > 10 ? 'Medium' : 'Weak'}
+                                                {password.status == 'Strong' ? 'Strong' : password.status == 'Strong'  ? 'Medium' : 'Weak'}
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>
