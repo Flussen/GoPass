@@ -151,14 +151,16 @@ func (a *App) GetUserPasswordById(username, id string) (string, error) {
 //
 //	components.VerifySessionToken(DB, token) // is the verificator
 func (a *App) VerifyToken(token string) (bool, error) {
-	tkn, err := sessiontoken.VerifyToken(token)
+	valid, err := sessiontoken.VerifyToken(token)
 	if err != nil {
 		return false, err
 	}
-	if !tkn.Valid {
-		return false, eh.NewGoPassError("token is not valid")
+
+	if !valid {
+		sessiontoken.CleanSessionToken(a.DB)
 	}
-	return tkn.Valid, nil
+
+	return valid, nil
 }
 
 // Retrieves the passwords of the user with the given username
