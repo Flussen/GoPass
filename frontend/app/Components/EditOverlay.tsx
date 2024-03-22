@@ -6,6 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { useState } from "react";
 import { DoUpdateUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 import { DoDeleteUserPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
 
 
 interface OverlayProfileProps {
@@ -24,6 +25,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     const [email, setEmail] = useState(username);
     const [pass, setPass] = useState(password);
     const [titlee, setTitlee] = useState(title);
+    const [decrypted, setDecrypted] = useState('');
 
 
     const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -42,6 +44,15 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
 
         }
     }
+    async function getDecryptedPass() {
+        try {
+            const decrypted = await ShowPassword(userNames, id, userKey)
+            setDecrypted(decrypted)
+        } catch {
+
+        }
+    }
+
 
 
     async function UpdatePasswords() {
@@ -63,6 +74,11 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
         await UpdatePasswords(); // Llama a la función pullLogin
         onClose();
     };
+    const handlePasword = async (event: React.FormEvent) => {
+        event.preventDefault(); // Previene la recarga de la página
+        await getDecryptedPass(); // Llama a la función pullLogin
+
+    };
     return (
         <>
 
@@ -80,8 +96,11 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
                                     <div className='flex justify-between '>
                                         <input type="text" className='border-2 border-border bg-transparent text-back  rounded-lg mt-3  pl-4 py-2 w-[30rem] outline-none' value={email} onChange={emailchange} />
                                     </div>
-                                    <div className='flex justify-between '>
-                                        <input type="password" className='border-2 border-border bg-transparent text-back  rounded-lg mt-3  pl-4 py-2 w-[30rem] outline-none' value={pass} onChange={passchange} />
+
+                                    <div className='flex justify-between items-center mt-3'>
+
+                                        <input type="password" className='border-2 border-border bg-transparent text-back  rounded-lg  pl-4 py-2 w-[25rem] outline-none' value={pass} onChange={passchange} />
+                                        <button className="bg-purple text-black w-[4rem] py-2 rounded-lg "> Copy</button>
                                     </div>
                                     <div className="flex justify-center space-x-10">
                                         <button onClick={hanldeDelete} className="flex justify-center text-back items-center w-40 h-10 border-red border-[2px] rounded-lg cursor-pointer hover:bg-red hover:text-blackbox  font-semibold">
