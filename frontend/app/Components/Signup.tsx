@@ -11,6 +11,8 @@ import Mener from "../../Public/men.svg"
 import SignupResult from './SignupResult';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import Candau from "../../Public/lock-dynamic-gradient.svg"
+import LoadingComp from './Loading';
+
 
 interface SignupProps {
   setShowSignup: (value: boolean) => void;
@@ -27,9 +29,11 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loadingIsOpen, setLoadingIsOpen] = useState(false);
+
 
   async function pullRegister() {
-
+setLoadingIsOpen(true)
     try {
       setIsLoading(true);
 
@@ -45,7 +49,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
     } catch (error) {
       console.error('Error fetching version:', error);
     } finally {
-      setIsLoading(false)
+      setLoadingIsOpen(false)
 
     }
   }

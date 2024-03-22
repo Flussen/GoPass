@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
-
+import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
 
 
 //Click to copy se buguea cuando se mantiene y a la vez hago scroll.
@@ -93,6 +93,13 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
     };
    
 
+    async function getPass(){
+        try{
+            const decryptedPass = await ShowPassword(userName, id, userKey)
+        }catch{
+
+        }
+    }
    
     async function getPasswords() {
         try {
@@ -102,9 +109,16 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
             setArePasswords(true)
             if (data && data.passwords) {
                 
+                const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
+                    const decryptedPwd = await ShowPassword(userName, password.id, userKey);
+                    return { ...password, pwd: decryptedPwd };
+                }));
+                setArePasswords(true)
 
-                
+
+
                 console.log('Cargado dentro del if')
+                setPasswords(decryptedPasswords);
                 
 
             } else {
@@ -138,7 +152,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                         {searchPasswords.map((password, index) => (
 
                             <div key={index} className="w-full ">
-                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id)}} className="flex w-full h-24 bg-blackbox border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
+                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-blackbox border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
                                     <div className="flex items-center basis-3/6 space-x-5">
                                         <div className="rounded-lg bg-black border-2 border-border text-white w-[4.5rem] h-full flex items-center justify-center">
                                             <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-back text-2xl" />

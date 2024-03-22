@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { use } from 'react';
 import { useState } from 'react';
 import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
@@ -8,6 +8,7 @@ import KeyIcon from '../../Public/key.svg';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg"
 import Shield from "../../Public/sheild-dynamic-gradient.svg"
+import LoadingComp from "./Loading"
 
 interface LoginProps {
   setShowSignup: (value: boolean) => void;
@@ -34,22 +35,27 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
-  async function pullLogin() {
-    setIsLoading(true);
+ const [loadingIsOpen, setLoadingIsOpen] = useState(false);
 
+  async function pullLogin() {
+    
+setLoadingIsOpen(true)
     try {
       const response = await DoLogin(name, password);
+      console.log(response)
       const result = JSON.parse(response) as LoginState;
+      console.log(result)
       if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
         setUserKey(result.userKey);
         setShowDashboard(true);
         console.log('Token Saved:' + result.token)
-        
+
       }
     } catch (error) {
-
-    } finally {
-      setIsLoading(false);
+      console.log(error)
+      setPasswordIncorrect(true)
+    } finally{
+      setLoadingIsOpen(false)
     }
   }
 
@@ -94,7 +100,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
                 <input autoComplete="nope" type="password" className='flex rounded-lg border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
 
               </div>
-              <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect?'mb-2':'mb-4'} `} >
+              <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect ? 'mb-2' : 'mb-4'} `} >
                 <div className=' flex  w-full rounded-lg p-0.5 bg-gradient bn5 '>
                   <button className='flex items-center justify-center w-full h-14 bg-black rounded-lg group'>
                     <span className='bg-gradient bg-clip-text text-transparent group-hover:text-back'>
@@ -107,9 +113,9 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
 
               </div>
               {
-                passwordIncorrect?              <span className='text-red text-sm mb-1  '>Incorrect Credentials</span>
-:
-<></>
+                passwordIncorrect ? <span className='text-red text-sm mb-1  '>Incorrect Credentials</span>
+                  :
+                  <></>
               }
 
               <div className='text-back font-medium'>
@@ -118,6 +124,9 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
               <h3 className='flex justify-center items-center opacity-50 text-xs select-none text-grey'>{version}</h3>
             </div>
           </form>
+{loadingIsOpen?
+          <LoadingComp/>:
+          <></>}
         </div>
 
       </div>
