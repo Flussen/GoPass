@@ -37,19 +37,10 @@ func ChangeUserPassword(db *bbolt.DB, username, originalPwd, newPwd string) erro
 	}
 
 	// Create a new user model with the updated password.
-	userUpdated := models.User{
-		ID:           userInfo.ID,
-		Username:     userInfo.Username,
-		Email:        userInfo.Email,
-		Password:     string(hashedPassword),
-		UserKey:      userInfo.UserKey,
-		CreatedAt:    userInfo.CreatedAt,
-		SessionToken: userInfo.SessionToken,
-		TokenExpiry:  userInfo.TokenExpiry,
-	}
+	userInfo.Password = string(hashedPassword)
 
 	// Update user information in the database.
-	err = UpdateUser(db, username, userUpdated)
+	err = UpdateUser(db, username, *userInfo)
 	if err != nil {
 		return eh.NewGoPassError("Update user method failed!")
 	}

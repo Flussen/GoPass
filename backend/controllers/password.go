@@ -14,7 +14,7 @@ import (
 func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, status, userKey, creationDate string) (string, error) {
 
 	if user == "" || usernameToSave == "" || service == "" ||
-		password == "" || userKey == "" || icon == "" {
+		password == "" || userKey == "" || icon == "" || status == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
