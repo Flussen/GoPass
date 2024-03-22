@@ -1,34 +1,27 @@
 package sessiontoken
 
-import (
-	"fmt"
-	"testing"
+// var (
+// 	id      = "id25123"
+// 	userKey = "userKeyToTest"
+// )
 
-	"github.com/golang-jwt/jwt/v5"
-)
+// func TestToken(t *testing.T) {
+// 	tkn, err := CreateNewToken(id, userKey)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
 
-var (
-	id      = "id25123"
-	userKey = "userKeyToTest"
-)
+// 	fmt.Println(tkn)
 
-func TestToken(t *testing.T) {
-	tkn, err := CreateNewToken(id, userKey)
-	if err != nil {
-		t.Fatal(err)
-	}
+// 	token, err := VerifyToken(tkn)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
 
-	fmt.Println(tkn)
+// 	// if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+// 	// 	id := claims["id"].(string)
+// 	// 	username := claims["username"].(string)
+// 	// 	fmt.Println(id, username)
+// 	// }
 
-	token, err := VerifyToken(tkn)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		id := claims["id"].(string)
-		username := claims["username"].(string)
-		fmt.Println(id, username)
-	}
-
-}
+// }

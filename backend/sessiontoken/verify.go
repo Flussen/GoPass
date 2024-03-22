@@ -3,7 +3,6 @@ package sessiontoken
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -22,18 +21,11 @@ func VerifyToken(tokenString string) (bool, error) {
 		return []byte(key), nil
 	})
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if exp, ok := claims["exp"].(float64); ok {
-			now := time.Now().Unix()
-			if int64(exp) < now {
-				token.Valid = false
-				return token.Valid, nil
-			}
-		}
-		return token.Valid, nil
-	} else {
+	if err != nil {
 		return false, err
 	}
+
+	return token.Valid, nil
 }
 
 func ReturnTokenContent(tokenString string) ([]byte, error) {

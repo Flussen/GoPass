@@ -155,10 +155,11 @@ func (a *App) VerifyToken(token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if !valid {
 
-		return false, eh.NewGoPassError("token is not valid")
+	if !valid {
+		sessiontoken.CleanSessionToken(a.DB)
 	}
+
 	return valid, nil
 }
 
