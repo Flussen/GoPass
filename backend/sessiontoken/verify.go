@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func VerifyToken(tokenString string) (*jwt.Token, error) {
+func VerifyToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signature method: %v", token.Header["alg"])
@@ -26,12 +26,13 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 		if exp, ok := claims["exp"].(float64); ok {
 			now := time.Now().Unix()
 			if int64(exp) < now {
-				return nil, fmt.Errorf("expired token, please log in again")
+				token.Valid = false
+				return token.Valid, nil
 			}
 		}
-		return token, nil
+		return token.Valid, nil
 	} else {
-		return nil, err
+		return false, err
 	}
 }
 
