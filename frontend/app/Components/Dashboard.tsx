@@ -24,6 +24,7 @@ import { GetUserPasswords } from "@/wailsjs/wailsjs/go/app/App";
 import SearchIcon from "../../Public/search.svg"
 import Image from "next/image"
 import AddIcon from "../../Public/add.svg"
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
 interface DashboardProps {
   setShowGenerator: (show: boolean) => void;
@@ -54,7 +55,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
 
 
   return (
-    <div id="Dashboard" className='flex justify-between bg-blackbox h-full '>
+    <div id="Dashboard" className='flex justify-between bg-black h-full '>
 
       <OptionsOverlay
         setShowGenerator={setShowGenerator}
@@ -65,36 +66,28 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-20  2xl:ml-[19%] ml-[8.5%]">
-        <div id="HEADER" className="flex justify-between w-full border-2 border-border rounded-lg bg-blackbox h-[4.5rem] px-[0.85rem] text-xl 
+        <div id="HEADER" className="flex justify-between w-full rounded-lg text-xl 
         py-3 mb-24">
           <div className='flex items-center   '>
-            <Image src={SearchIcon} alt="search_icon" className='absolute ml-4  ' />
-            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-back border-border border-[2px] pl-12 lg:w-[40rem] w-[31.3rem] h-11 bg-transparent font-semibold focus:outline-none placeholder-darkgrey' placeholder='Buscar' />
+            <SearchRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-4 text-green" />
+            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-lg text-white  pl-14 lg:w-[40rem] w-[31.3rem] h-12 bg-darkgray font-medium focus:outline-none placeholder-gray' placeholder='Buscar' />
           </div>
-          {/* <div className="flex items-center space-x-5">
-            <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
-              <div>
-                Filter
-              </div>
-              <FilterAltRoundedIcon />
-
+          <div className="flex items-center space-x-5">
+            
+            <div className="flex justify-center items-center h-12 px-3 bg-darkgray rounded-lg text-green font-semibold space-x-2">
+              
+              <MenuRoundedIcon sx={{ fontSize: 28 }} />
             </div>
-            <div className="flex justify-center items-center h-14 px-3 border-2 border-lightgrey rounded-xl text-grey font-semibold space-x-2">
-              <div>
-                Sort
-              </div>
-              <FormatLineSpacingRoundedIcon sx={{ fontSize: 28 }} />
-            </div>
-          </div> */}
+          </div>
         </div>
         <div id="MyPasswords" className="flex flex-col justify-center w-full px-3 font-semibold space-y-5 text mb-5">
           <div className="flex justify-between  items-center">
-            <div className="text-5xl text-back font-bold">
-              My <span className="bg-gradient bg-clip-text text-transparent">Password</span>
+            <div className="text-5xl text-green font-bold">
+              My <span className="  text-white">Password</span>
             </div>
-            <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center bg-gradient p-0.5 rounded-lg cursor-pointer bn5  text-xl ">
-              <div className={`flex justify-center items-center   w-full h-10 px-6 rounded-md bg-black space-x-1  `}>
-                <Image src={AddIcon} alt="add_icon" />
+            <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-green hover:bg-darkgreen rounded-lg cursor-pointer  text-xl ">
+              <div className={`flex justify-center items-center   w-full  px-5 rounded-md space-x-1  `}>
+                <AddRoundedIcon sx={{ fontSize: 28 }} />
                 <div >
                   New
                 </div>
@@ -109,7 +102,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
 
           {
             arePasswords ?
-              <div className="flex w-full pl-5 text-darkgrey">
+              <div className="flex w-full pl-5 text-darkgray">
 
                 <div className="basis-3/6">
                   Name
@@ -135,12 +128,12 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
           isAddOverlayOpen={isAddOverlayOpen} showDashboard={showDashboard} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
 
           :
-          <div className="text-back w-full flex-col flex justify-center items-center space-y-7 ">
+          <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
           <div className="text-2xl">
               Add your first password!
           </div>
-          <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="bg-gradient p-0.5 rounded-lg bn5 group">
-              <button className="bg-black py-2 px-7 rounded-md group-hover:bg-transparent group-hover:text-black">
+          <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-green rounded-lg h-12 group hover:bg-darkgreen">
+              <button className=" px-7 text-black rounded-md font-medium ">
                   Add Password
               </button>
           </div>

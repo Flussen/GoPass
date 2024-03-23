@@ -9,7 +9,9 @@ import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg"
 import Shield from "../../Public/sheild-dynamic-gradient.svg"
 import LoadingComp from "./Loading"
-
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import World from "../../Public/world.svg"
 interface LoginProps {
   setShowSignup: (value: boolean) => void;
   version: string;
@@ -35,11 +37,14 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
- const [loadingIsOpen, setLoadingIsOpen] = useState(false);
+  const [loadingIsOpen, setLoadingIsOpen] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   async function pullLogin() {
-    
-setLoadingIsOpen(true)
+
+    setLoadingIsOpen(true)
     try {
       const response = await DoLogin(name, password);
       console.log(response)
@@ -49,12 +54,12 @@ setLoadingIsOpen(true)
         setUserKey(result.userKey);
         setShowDashboard(true);
         console.log('Token Saved:' + result.token)
-
+        setUserName(name)
       }
     } catch (error) {
       console.log(error)
       setPasswordIncorrect(true)
-    } finally{
+    } finally {
       setLoadingIsOpen(false)
     }
   }
@@ -71,62 +76,84 @@ setLoadingIsOpen(true)
       {/* Header */}
       <div className='flex justify-between items-center px-[5%] pt-[3%]'>
 
-        <div className=' font-bold text-5xl'>
-          <span className='bg-gradient bg-clip-text text-transparent'>Go</span> <span className='text-back'>Pass</span>
+        <div className=' font-bold text-4xl'>
+          <span className='bg-green bg-clip-text text-transparent'>Go</span> <span className='text-white'>Pass</span>
         </div>
-        <div className='border-2 border-border p-2 flex justify-center items-center rounded-lg '>
-          <MenuRoundedIcon className='text-darkgrey' sx={{ fontSize: 40 }} />
+        <div className='bg-darkgray p-2 flex justify-center items-center rounded-lg h-12 w-12'>
+          <MenuRoundedIcon className='text-green' sx={{ fontSize: 24 }} />
         </div>
       </div>
       {/* Login Box */}
-      <div className=' flex justify-center items-center  mt-10'>
-        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] rounded-lg border-2 border-border bg-blackbox  max-xl:py-20  '>
-          <div className='hidden xl:flex justify-center items-center xl:opacity-100'>
+      <div className=' flex justify-center items-center h-[83%] pb-[3%]  mt-10'>
+        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] h-full rounded-lg bg-darkgray  max-xl:py-20  '>
+          <div className='hidden xl:flex bg-green justify-center items-center rounded-lg xl:opacity-100'>
 
-            <Image src={Shield} alt='Women' className='absolute2xl:scale-100 scale-80 moveCircle' />
+
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className='flex flex-col justify-center items-center h-full font-semibold text-xl '>
-              <div className='text-5xl font-bold mb-12 text-back '>
-                <span className='bg-gradient bg-clip-text text-transparent'>Welcome</span>  Back!
-              </div>
-              <div className='flex items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
-                <Image src={PersonIcon} alt='persona' className='absolute ml-4' />
-                <input autoComplete="nope" type="text" className='flex rounded-lg border-border border-[2px] pl-12  text-back xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgrey' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className='flex items-center w-full 2xl:px-40 xl:px-24 mb-4  '>
-                <Image src={KeyIcon} alt='key' className='absolute ml-4' />
-                <input autoComplete="nope" type="password" className='flex rounded-lg border-border text-back border-[2px] pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgrey' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
 
-              </div>
-              <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect ? 'mb-2' : 'mb-4'} `} >
-                <div className=' flex  w-full rounded-lg p-0.5 bg-gradient bn5 '>
-                  <button className='flex items-center justify-center w-full h-14 bg-black rounded-lg group'>
-                    <span className='bg-gradient bg-clip-text text-transparent group-hover:text-back'>
-                      Login
-                    </span>
-                  </button>
+          <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg z-[50] '>
+            <div
+              onClick={() => { setShowSignup(true), toggleSwitch }}
+              className={`w-56  flex items-center rounded-full  cursor-pointer bg-black border-2 border-green mb-5 font-medium`}
+            >
 
-
-                </div>
-
-              </div>
-              {
-                passwordIncorrect ? <span className='text-red text-sm mb-1  '>Incorrect Credentials</span>
-                  :
-                  <></>
-              }
-
-              <div className='text-back font-medium'>
-                I dont have an account. <span className='font-semibold cursor-pointer bg-gradient bg-clip-text text-transparent' onClick={() => setShowSignup(true)}> Register</span>
-              </div>
-              <h3 className='flex justify-center items-center opacity-50 text-xs select-none text-grey'>{version}</h3>
+              <div
+                className={`flex justify-center bg-green w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base   ${isEnabled ? 'translate-x-28' : 'translate-x-0'
+                  }`}
+              > {isEnabled ? 'Sign Up' : 'Login'}</div>
+              <div
+                className={`flex justify-center  w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base text-white  ${!isEnabled ? 'translate-x-0' : '-translate-x-28'
+                  }`}
+              > {!isEnabled ? 'Sign Up' : 'Login'}</div>
             </div>
-          </form>
-{loadingIsOpen?
-          <LoadingComp/>:
-          <></>}
+            <div className='text-5xl font-bold mb-12 text-white '>
+              <span className='bg-green bg-clip-text text-transparent'>Welcome</span>  Back!
+            </div>
+
+            <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
+
+              <div className='flex items-center w-full   '>
+                <PersonRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+
+            </div>
+
+            <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4  '>
+
+              <div className='flex items-center w-full '>
+                <KeyRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg  text-white b pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
+
+
+            </div>
+            <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect ? 'mb-2' : 'mb-4'} `} >
+              <div className=' flex  w-full rounded-lg p-0.5 '>
+                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green rounded-lg group hover:bg-darkgreen'>
+                  Login
+                </button>
+
+
+              </div>
+
+            </div>
+            {
+              passwordIncorrect ? <span className='text-red text-sm mb-1  '>Incorrect Credentials</span>
+                :
+                <></>
+            }
+
+
+            <h3 className='flex justify-center items-center opacity-50 text-xs select-none text-gray'>{version}</h3>
+
+          </div>
+
+
+          {loadingIsOpen ?
+            <LoadingComp /> :
+            <></>}
         </div>
 
       </div>

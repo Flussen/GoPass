@@ -23,10 +23,13 @@ export default function Home() {
   const [token, setToken] = useState('')
   const [showProfile, setShowProfile]=useState(false);
 
+
+
+  
   async function GetToken() {
     
     try {
-      
+      setVersion(await GetVersion())
       const result = await GetLastSession();
       const data = JSON.parse(result);
       setUserName(data.username)

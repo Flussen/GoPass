@@ -152,37 +152,37 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                         {searchPasswords.map((password, index) => (
 
                             <div key={index} className="w-full ">
-                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-blackbox border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
+                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-darkgray border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
                                     <div className="flex items-center basis-3/6 space-x-5">
-                                        <div className="rounded-lg bg-black border-2 border-border text-white w-[4.5rem] h-full flex items-center justify-center">
-                                            <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-back text-2xl" />
+                                        <div className="rounded-lg bg-black  text-white w-[4.5rem] h-full flex items-center justify-center">
+                                            <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-white text-2xl" />
                                         </div>
                                         <div className="flex-col text-md">
-                                            <div className="font-bold bg-gradient bg-clip-text text-transparent inline-block">
+                                            <div className="font-bold text-green">
                                                 {password.title}
                                             </div>
-                                            <div className="text-darkgrey text-lg hover:text-grey">
+                                            <div className="text-gray text-lg font-medium hover:text-whitegray">
                                                 {password.username}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center basis-2/6 ">
+                                    <div className="flex items-center  basis-2/6 ">
 
                                         <div ref={areaRef}
                                             onMouseMove={handleMouseMove} className="group " >
-                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={password.pwd.length > 15 ? `${password.pwd.substring(0, 15)}` : password.pwd} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer   " />                                
-                                            {/* <div className="hidden absolute group-hover:flex justify-center items-end mt-[-4rem]">
+                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer  inline-block  " />                                
+                                                <div className="hidden absolute group-hover:flex justify-center items-end mt-[-3.5rem]">
 
-                                                <div className=" bg-grey px-2 py-2 rounded-lg text-sm z-30">
-                                                    Click to Copy
+                                                    <div className=" bg-gray px-2 py-1 rounded-lg text-sm z-30">
+                                                        Click to Copy
+                                                    </div>
+                                                    <div className="absolute bg-gray h-5 w-5 rotate-45 " />
                                                 </div>
-                                                <div className="absolute bg-grey h-7 w-7 rotate-45 " />
-                                            </div> */}
                                         </div>
                                     </div>
                                     <div className="flex items-center  xl:basis-1/6">
                                         <div ref={areaRef}
-                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-purple' : password.status == 'Medium' ? ' text-orange' : 'text-red '} `}>
+                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-green' : password.status == 'Medium' ? ' text-green' : 'text-red '} `}>
                                             {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium'  ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
                                             <div className="hidden xl:flex">
                                                 {password.status == 'Strong' ? 'Strong' : password.status == 'Strong'  ? 'Medium' : 'Weak'}
