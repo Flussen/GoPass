@@ -28,19 +28,14 @@ const config: Config = {
         'gradient':'linear-gradient(140deg, rgba(255,153,0,1) 0%, rgba(59,0,255,1) 100%)',
       },
       colors: {
-        'blue': '#00A3FF',
-        'red': '#EA4335',
-        'back': '#DEEFFF',
-        'bkblue':'#00172E',
-        'grey':'#90A8B9',
-        'lightgrey':'#D9E0E7',
-        'box':'rgb(248, 252, 255,0.45)',
-        'bgblue':'#CAE6FF',
-        'purple':'#3B00FF',
-        'orange':'#FF9900',
-        'darkgrey':'#232323',
-        'border':'#1c1c1c',
-        'blackbox':'#090909',
+        
+        'back': '#121111',
+        'darkgray': '#282727',
+        'whitegray':'#979797',
+        'gray':'#5A5757',
+        'white':'#FFFFFF',
+        'green':'#ADFF00',
+'darkgreen': '#8BCD00'
 
       },
       borderRadius: {
