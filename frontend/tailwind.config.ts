@@ -35,7 +35,8 @@ const config: Config = {
         'gray':'#5A5757',
         'white':'#FFFFFF',
         'green':'#ADFF00',
-'darkgreen': '#8BCD00'
+        'darkgreen': '#8BCD00',
+        'red':'#FF0000'
 
       },
       borderRadius: {
