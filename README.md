@@ -18,9 +18,9 @@ Check these dependencies one by one to make sure you have everything, remember t
 
 ### Installation for Users
 
-To get started with GoPass, simply download the `.exe` file available in the releases section of our GitHub repository. Once downloaded, run the file to install GoPass on your system.
+To get started with GoPass, simply download the Installer file available in the releases section of our GitHub repository. Once downloaded, run the file to install GoPass on your system. Please select your arquitecture AMDx86_x64 OR ARMx86_x64 only valid for Windows desktops
 
-1. Download the `.exe` file.
+1. Check the [Release](https://github.com/Flussen/GoPass/releases)
 2. Run the downloaded file.
 3. Follow the on-screen instructions to complete the installation.
 
