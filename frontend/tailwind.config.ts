@@ -25,22 +25,18 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient':'linear-gradient(140deg, rgba(255,153,0,1) 0%, rgba(59,0,255,1) 100%)',
+        'gradient':'linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(13,20,23,1) 100%)',
       },
       colors: {
-        'blue': '#00A3FF',
-        'red': '#EA4335',
-        'back': '#DEEFFF',
-        'bkblue':'#00172E',
-        'grey':'#90A8B9',
-        'lightgrey':'#D9E0E7',
-        'box':'rgb(248, 252, 255,0.45)',
-        'bgblue':'#CAE6FF',
-        'purple':'#3B00FF',
-        'orange':'#FF9900',
-        'darkgrey':'#232323',
-        'border':'#1c1c1c',
-        'blackbox':'#090909',
+        
+        'blaack': '#DEEFFF',
+        'darkgray': '#F8FCFF',
+        'whitegray':'#90A8B9',
+        'gray':'#CAE6FF',
+        'white':'#00172E',
+        'green':'#00A3FF',
+        'darkgreen': '#0091E2',
+        'red':'#FF0000'
 
       },
       borderRadius: {

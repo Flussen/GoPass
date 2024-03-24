@@ -7,7 +7,7 @@ import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
 import SignupResult from './Components/SignupResult';
-import { GetTokenVerification } from '@/wailsjs/wailsjs/go/app/App';
+import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"
 
@@ -23,10 +23,13 @@ export default function Home() {
   const [token, setToken] = useState('')
   const [showProfile, setShowProfile]=useState(false);
 
+
+
+  
   async function GetToken() {
     
     try {
-      
+      setVersion(await GetVersion())
       const result = await GetLastSession();
       const data = JSON.parse(result);
       setUserName(data.username)
@@ -36,7 +39,7 @@ export default function Home() {
       
       if (data.token !== null && data.username !== null) {
 
-        const resultado = await GetTokenVerification(data.username, data.token);
+        const resultado = await VerifyToken(data.token);
         if(resultado){
           setShowDashboard(true)
         }
@@ -69,7 +72,7 @@ export default function Home() {
     )
   }else if(showDashboard ) {
     return (
-      <div className='bg-blackbox h-screen'>
+      <div className='h-screen'>
         {showGenerator ? (
           <Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
         ) 
@@ -90,7 +93,7 @@ export default function Home() {
       isLoading?
       <LoadingComp/>
       :
-<div className='bg-black h-screen'>
+<div className=' h-screen'>
       {showSignup ? (
         <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
       ) : (
