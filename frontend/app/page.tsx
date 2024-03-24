@@ -72,7 +72,7 @@ export default function Home() {
     )
   }else if(showDashboard ) {
     return (
-      <div className='bg-blackbox h-screen'>
+      <div className='h-screen'>
         {showGenerator ? (
           <Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
         ) 
@@ -93,7 +93,7 @@ export default function Home() {
       isLoading?
       <LoadingComp/>
       :
-<div className='bg-black h-screen'>
+<div className=' h-screen'>
       {showSignup ? (
         <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
       ) : (

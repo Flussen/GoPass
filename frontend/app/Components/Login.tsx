@@ -72,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
 
   };
   return (
-    <div id='login' className='bg-black h-screen'>
+    <div id='login' className=' h-screen'>
       {/* Header */}
       <div className='flex justify-between items-center px-[5%] pt-[3%]'>
 
@@ -92,10 +92,10 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
           </div>
 
 
-          <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg z-[50] '>
+          <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg  '>
             <div
               onClick={() => { setShowSignup(true), toggleSwitch }}
-              className={`w-56  flex items-center rounded-full  cursor-pointer bg-black border-2 border-green mb-5 font-medium`}
+              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-green mb-5 font-medium`}
             >
 
               <div
@@ -114,8 +114,8 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
 
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <PersonRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
 
             </div>
@@ -123,15 +123,15 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4  '>
 
               <div className='flex items-center w-full '>
-                <KeyRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="password" className='flex rounded-lg  text-white b pl-12 w-full h-14 py-2 focus:outline-none bg-black placeholder:text-darkgray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <KeyRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg  text-white b pl-12 w-full h-14 py-2 focus:outline-none bg-blaack placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
 
 
             </div>
             <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect ? 'mb-2' : 'mb-4'} `} >
               <div className=' flex  w-full rounded-lg p-0.5 '>
-                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green rounded-lg group hover:bg-darkgreen'>
+                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green text-blaack rounded-lg group hover:bg-darkgreen'>
                   Login
                 </button>
 
@@ -146,7 +146,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
             }
 
 
-            <h3 className='flex justify-center items-center opacity-50 text-xs select-none text-gray'>{version}</h3>
+            <h3 className='flex justify-center items-center  text-xs select-none text-whitegray'>{version}</h3>
 
           </div>
 

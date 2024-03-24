@@ -55,7 +55,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
 
 
   return (
-    <div id="Dashboard" className='flex justify-between bg-black h-full '>
+    <div id="Dashboard" className='flex justify-between h-full '>
 
       <OptionsOverlay
         setShowGenerator={setShowGenerator}
@@ -86,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
               My <span className="  text-white">Password</span>
             </div>
             <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-green hover:bg-darkgreen rounded-lg cursor-pointer  text-xl ">
-              <div className={`flex justify-center items-center   w-full  px-5 rounded-md space-x-1  `}>
+              <div className={`flex justify-center items-center   w-full  px-5 rounded-md space-x-1 text-darkgray `}>
                 <AddRoundedIcon sx={{ fontSize: 28 }} />
                 <div >
                   New
@@ -102,7 +102,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard,setShowProfile, set
 
           {
             arePasswords ?
-              <div className="flex w-full pl-5 text-darkgray">
+              <div className="flex w-full pl-5 text-whitegray">
 
                 <div className="basis-3/6">
                   Name

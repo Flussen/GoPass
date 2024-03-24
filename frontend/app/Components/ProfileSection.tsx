@@ -60,10 +60,10 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
         await UpdatePassword();
     }
     return (
-        <div className="flex justify-between bg-black h-full">
+        <div className="flex justify-between h-full">
             <SettingOverlay setShowProfile={setShowProfile} />
 
-            <div className="flex  items-start  w-[100%] px-16 py-8  2xl:ml-[19%] ml-[8.5%] bg-black h-screen">
+            <div className="flex  items-start  w-[100%] px-16 py-8  2xl:ml-[19%] ml-[8.5%]  h-screen">
 
                 <div className="w-full  rounded-lg bg-darkgray flex flex-col justify-start items-center h-full ">
 
@@ -74,16 +74,16 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
 
                         <div className='flex items-center w-[30rem]   '>
                             <PersonIcon className='absolute ml-4 text-green' />
-                            <input type="text" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-black placeholder:text-darkgrey cursor-default' placeholder='Username' value={userName} readOnly />
+                            <input type="text" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-blaack placeholder:text-darkgrey cursor-default' placeholder='Username' value={userName} readOnly />
 
                         </div>
                         <div className='flex items-center w-[30rem]    '>
                             <EmailRoundedIcon className='absolute ml-4 text-green' />
-                            <input type="text" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-black placeholder:text-darkgrey cursor-default' placeholder='Email' value={email} readOnly />
+                            <input type="text" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-blaack placeholder:text-darkgrey cursor-default' placeholder='Email' value={email} readOnly />
 
                         </div>
 
-                        <div onClick={() => setNewPasswordOpen(!newPasswordOpen)} className='flex bg-green justify-center items-center w-[30rem]  h-12 rounded-lg hover:bg-darkgreen '>
+                        <div onClick={() => setNewPasswordOpen(!newPasswordOpen)} className='flex bg-green justify-center items-center w-[30rem] text-blaack h-12 rounded-lg hover:bg-darkgreen '>
                             <button className="w-full  font-semibold rounded-lg">
                                 Change Password
                             </button>
@@ -96,21 +96,21 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
                                     <form onSubmit={handleSubmit} className="z-30">
                                         <div className="flex-col justify-center bg-darkgray p-5 rounded-lg  space-y-5 z-30">
                                             <div className='flex items-center w-[30rem]    '>
-                                                <KeyIcon className='absolute ml-4 text-darkgray' />
-                                                <input type="password" className='flex rounded-lg  text-white pl-12 w-full h-12 py-2 focus:outline-none bg-black placeholder:text-darkgrey cursor-default' placeholder='Actual Password' onChange={(e) => setActualPass(e.target.value)} />
+                                                <KeyIcon className='absolute ml-4 text-green' />
+                                                <input type="password" className='flex rounded-lg  text-white pl-12 w-full h-12 py-2 focus:outline-none bg-blaack placeholder:text-darkgrey cursor-default' placeholder='Actual Password' onChange={(e) => setActualPass(e.target.value)} />
 
                                             </div>
                                             <div className='flex items-center w-[30rem]    '>
-                                                <KeyIcon className='absolute ml-4 text-darkgray' />
-                                                <input type="password" className='flex rounded-lg  text-white pl-12 w-full h-12 py-2 focus:outline-none bg-black placeholder:text-darkgrey cursor-default' placeholder='New Password' onChange={(e) => setNewPass(e.target.value)} />
+                                                <KeyIcon className='absolute ml-4 text-green' />
+                                                <input type="password" className='flex rounded-lg  text-white pl-12 w-full h-12 py-2 focus:outline-none bg-blaack placeholder:text-darkgrey cursor-default' placeholder='New Password' onChange={(e) => setNewPass(e.target.value)} />
 
                                             </div>
                                             <div className='flex items-center w-[30rem]    '>
-                                                <KeyIcon className='absolute ml-4 text-darkgray' />
-                                                <input type="password" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-black placeholder:text-darkgrey cursor-default' placeholder='Confirm Password' onChange={(e) => setConfirmPass(e.target.value)} />
+                                                <KeyIcon className='absolute ml-4 text-green' />
+                                                <input type="password" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-blaack placeholder:text-darkgrey cursor-default' placeholder='Confirm Password' onChange={(e) => setConfirmPass(e.target.value)} />
 
                                             </div>
-                                            <div className='flex bg-green justify-center items-center w-[30rem]  rounded-lg hover:bg-darkgreen  '>
+                                            <div className='flex bg-green justify-center items-center w-[30rem] text-blaack  rounded-lg hover:bg-darkgreen  '>
                                                 <button className=" w-full h-12 rounded-lg font-semibold">
                                                     Update Password
                                                 </button>

@@ -152,9 +152,9 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                         {searchPasswords.map((password, index) => (
 
                             <div key={index} className="w-full ">
-                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-darkgray border-2 border-border p-3 rounded-lg text-xl cursor-pointer">
+                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-darkgray  p-3 rounded-lg text-xl cursor-pointer">
                                     <div className="flex items-center basis-3/6 space-x-5">
-                                        <div className="rounded-lg bg-black  text-white w-[4.5rem] h-full flex items-center justify-center">
+                                        <div className="rounded-lg bg-[#DEEFFF] shadow-shadow text-white w-[4.5rem] h-full flex items-center justify-center">
                                             <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-white text-2xl" />
                                         </div>
                                         <div className="flex-col text-md">

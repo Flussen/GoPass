@@ -107,30 +107,30 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
                                         Title
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-darkgray" />
-                                        <input type="text" className='rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-darkgray text-white' value={titlee} onChange={titlechange} />
+                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <input type="text" className='rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' value={titlee} onChange={titlechange} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
 
                                     <div className='flex justify-between items-center mb-2  '>
-                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-darkgray" />
-                                        <input type="text" className='rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-darkgray text-white' value={email} onChange={emailchange} />
+                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <input type="text" className='rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' value={email} onChange={emailchange} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between items-center mb-5'>
-                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-darkgray" />
-                                        <input type="password" className='rounded-lg bg-black   pl-10 h-12 w-[25rem] outline-none placeholder:text-darkgray text-white ' value={pass} onChange={passchange} />
-                                        <button onClick={() => copyToClipboard(pass)} className="bg-green text-black w-[4rem] py-2 rounded-lg hover:bg-darkgreen font-semibold"> Copy</button>
+                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <input type="password" className='rounded-lg bg-blaack   pl-10 h-12 w-[25rem] outline-none placeholder:text-whitegray text-white ' value={pass} onChange={passchange} />
+                                        <button onClick={() => copyToClipboard(pass)} className="bg-green text-blaack w-[4rem] py-2 rounded-lg hover:bg-darkgreen font-semibold"> Copy</button>
                                     </div>
                                     <div className="flex justify-center space-x-10">
                                         <button onClick={hanldeDelete} className="flex justify-center text-back items-center w-40 h-12 bg-gray rounded-lg cursor-pointer hover:bg-whitegray hover:text-black  font-semibold">
                                             Delete
                                         </button>
-                                        <button onClick={handleSubmit} className="flex justify-center text-back items-center w-40 h-12  rounded-lg cursor-pointer bg-green hover:bg-darkgreen hover:text-blackbox font-semibold">
+                                        <button onClick={handleSubmit} className="flex justify-center text-blaack items-center w-40 h-12  rounded-lg cursor-pointer bg-green hover:bg-darkgreen hover:text-blackbox font-semibold">
                                             Update
                                         </button>
                                     </div>
