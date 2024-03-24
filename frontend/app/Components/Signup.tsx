@@ -31,31 +31,35 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loadingIsOpen, setLoadingIsOpen] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
-
+  const [passwordIncorrect, setPasswordIncorrect]= useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   async function pullRegister() {
-    setLoadingIsOpen(true)
-    try {
-      setIsLoading(true);
+    setIsLoading(true);
 
-      await DoRegister(name, email, password);
-
-      console.log('despues: ' + isSignupResultOpen)
-
+    if(name==''|| email=='' || password == ''){
       setIsLoading(false);
-      setShowSignup(false)
+      setPasswordIncorrect(true)
+    }else{
+      try {
+  
+        await DoRegister(name, email, password);
+  
+        console.log('despues: ' + isSignupResultOpen)
+  
+        setShowSignup(false)
+  
+  
+  
+      } catch (error) {
+        console.error('Error fetching version:', error);
+      } finally {
+        setIsLoading(false);
 
-
-
-    } catch (error) {
-      console.error('Error fetching version:', error);
-    } finally {
-      setLoadingIsOpen(false)
-
+      }
     }
+    
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -88,7 +92,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
           <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg z-[50] '>
             <div
               onClick={() => { setShowSignup(false), toggleSwitch }}
-              className={`w-56  flex items-center rounded-full  cursor-pointer bg-black border-2 border-green mb-5 font-medium`}
+              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-green mb-5 font-medium`}
             >
 
               <div
@@ -105,26 +109,26 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
             </div>
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <PersonRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
             </div>
 
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgray' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                <EmailRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="email" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
             </div>
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-darkgray' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="password" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-black focus:outline-none placeholder:text-darkgray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <KeyRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
             </div>
             <div className='flex items-center w-full 2xl:px-40 xl:px-24 ' >
             <div className=' flex  w-full rounded-lg p-0.5 mb-4'>
-                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green rounded-lg group hover:bg-darkgreen'>
+                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green text-blaack rounded-lg group hover:bg-darkgreen'>
                   Login
                 </button>
 
@@ -133,8 +137,12 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
             </div>
 
 
-            
-            <h3 className='flex justify-center items-center text-gray text-xs select-none'>{version}</h3>
+            {
+              passwordIncorrect ? <span className='text-red text-sm mb-1  '>Complete all</span>
+                :
+                <></>
+            }
+            <h3 className='flex justify-center items-center text-whitegray text-xs select-none'>{version}</h3>
           </div>
 
           <SignupResult isOpen={isSignupResultOpen} onClose={() => setIsSignupResultOpen(!isSignupResultOpen)} />

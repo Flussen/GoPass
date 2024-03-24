@@ -130,7 +130,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
     return (
 
-        <div id="Generator" className='flex justify-between bg-black h-screen '>
+        <div id="Generator" className='flex justify-between  h-screen '>
 
             <OptionsOverlay
                 setShowGenerator={setShowGenerator}
@@ -153,13 +153,13 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                         <div className="flex-col items-start justify-center bg-darkgray rounded-lg  xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">
                                 <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
-                                    <div className="flex justify-between items-center mb-3 px-4 bg-black rounded-lg  w-full">
+                                    <div className="flex justify-between items-center mb-3 px-4 bg-[#DEEFFF] rounded-lg  w-full">
                                         <input type="text" readOnly value={password} className="select-all w-full text-white flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
                                         <div
                                             onClick={() => generatePassword(sliderValue)}
-                                            className='ml-4 text-gray cursor-pointer hover:text-green'
+                                            className='ml-4 text-whitegray cursor-pointer hover:text-green'
                                         >
-                                            <AutorenewRoundedIcon sx={{ fontSize: 28 }} />
+                                            <AutorenewRoundedIcon sx={{ fontSize: 28 }} className="" />
                                         </div>
                                     </div>
 
@@ -219,7 +219,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                     </div>
 
                                 </div>
-                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-green rounded-lg text-back text-xl font-semibold   cursor-pointer  ">
+                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-green rounded-lg text-darkgray text-xl font-semibold   cursor-pointer  ">
                                     <div className="flex items-center justify-center w-full rounded-md space-x-2 bg-blackbox h-12  ">
                                         <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
                                         <div>
@@ -237,7 +237,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
 
                         </div>
-                        <div className="flex items-center justify-center bg-darkgray border-2 border-border rounded-lg  lg:basis-1/5 ">
+                        <div className="flex items-center justify-center bg-darkgray rounded-lg  lg:basis-1/5 ">
                             <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-white max-xl:space-x-6 max-xl:py-10">
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}

@@ -11,7 +11,7 @@ interface SettingsProps {
 const SettingsComp: React.FC<SettingsProps> = ({ setShowProfile }) => {
 
     return (
-        <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[20%] w-[100px]  bg-darkgray border-2 border-border rounded-lg   ml-8 mt-8 mb-8 pt-[0.5rem] h-[92%] ">
+        <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[20%] w-[100px]  bg-darkgray  rounded-lg   ml-8 mt-8 mb-8 pt-[0.5rem] h-[92%] ">
             <div className="flex-col justify-center w-full   px-[20px]  space-y-[3rem]">
                 <div onClick={() => { setShowProfile(false) }} className="flex items-center justify-center h-14 w-14 mt-5 2xl:ml-2  rounded-lg bg-gray cursor-pointer text-green hover:bg-whitegray">
                     <ArrowBackIosNewRoundedIcon sx={{ fontSize: 28 }}/>

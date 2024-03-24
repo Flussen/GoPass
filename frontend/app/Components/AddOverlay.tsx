@@ -131,7 +131,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
-                                    <div className='flex justify-between items-center mb-2 '>
+                                    <div className='flex justify-between items-center mb-4 '>
                                         <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-darkgray" />
                                         <input autoComplete="nope" type="password" className=' rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-darkgray text-white ' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
