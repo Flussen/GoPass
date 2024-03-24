@@ -110,20 +110,22 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
             if (data && data.passwords) {
                 
                 const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
+                    
                     const decryptedPwd = await ShowPassword(userName, password.id, userKey);
                     return { ...password, pwd: decryptedPwd };
+
                 }));
+                setPasswords(decryptedPasswords);
+
                 setArePasswords(true)
 
 
 
-                console.log('Cargado dentro del if')
-                setPasswords(decryptedPasswords);
                 
 
             } else {
                 console.error("Passwords not found in response:", data);
-                
+                setArePasswords(false)
             }
 
         } catch (error) {
@@ -142,6 +144,12 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
         }
     };
 
+    
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault(); // Previene la recarga de la página
+        await getPass(); // Llama a la función pullLogin
+    
+      };
     const searchPasswords = passwords.filter((password) => password.title.toLowerCase().includes(search.toLowerCase()));
 
     
