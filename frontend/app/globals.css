@@ -15,12 +15,12 @@
 
 /* Personalizar el riel de la barra de desplazamiento (el track) */
 ::-webkit-scrollbar-track {
-  background: #0c0c0c; /* Color de fondo */
+  background: #ffffff; /* Color de fondo */
 }
 
 /* Personalizar el manejo de la barra de desplazamiento (el thumb) */
 ::-webkit-scrollbar-thumb {
-  background: #252525; /* Color del thumb */
+  background: #00A3FF; /* Color del thumb */
   border-radius: 20px;
 }
 
