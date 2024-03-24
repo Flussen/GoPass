@@ -25,13 +25,13 @@ const SettingsComp: React.FC<SettingsProps> = ({ setShowProfile }) => {
 
                         <div className={`2xl:flex hidden `}>Your Account</div>
                     </div>
-                    <div className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${false ? 'text-green max-2xl:bg-gray' : 'text-gray  hover:text-whitegray'}`}>
+                    <div className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${false ? 'text-green max-2xl:bg-gray' : 'text-whitegray  hover:text-green'}`}>
 
                     <MonitorRoundedIcon sx={{ fontSize: 28 }} className="" />
 
                         <div className=" 2xl:flex hidden">Apparence</div>
                     </div>
-                    <div className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${false ? ' text-green max-2xl:bg-border' : 'text-gray  hover:text-whitegray'}`}>
+                    <div className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${false ? ' text-green max-2xl:bg-border' : 'text-whitegray  hover:text-green'}`}>
                     <HelpRoundedIcon sx={{ fontSize: 28 }} className="" />
                         <div className=" 2xl:flex hidden">Help</div>
                     </div>

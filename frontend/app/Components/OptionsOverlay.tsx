@@ -88,7 +88,7 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setSh
         </div>
       </div>
       <div className="flex flex-col justify-between w-full 2xl:px-[15%]  px-[20px]  space-y-2 mt-[5.5rem] mb-5 ">
-        <div className="flex items-center 2xl:justify-start justify-center 2xl:pl-[10%]  h-14 rounded-2xl  hover:text-green space-x-2 cursor-pointer text-xl font-semibold text-whitegray opacity-75 hover:opacity-100" >
+        <div onClick={() => { setShowProfile(true) }} className="flex items-center 2xl:justify-start justify-center 2xl:pl-[10%]  h-14 rounded-2xl  hover:text-green space-x-2 cursor-pointer text-xl font-semibold text-whitegray opacity-75 hover:opacity-100" >
           <SettingsRoundedIcon />
           <div className=" 2xl:flex hidden">
             Settings

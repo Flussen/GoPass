@@ -24,7 +24,7 @@ interface GeneratorProps {
 
 }
 const PrettoSlider = styled(Slider)({
-    color: "#ADFF00",
+    color: "#00A3FF",
     height: 8,
     "& .MuiSlider-track": {
         border: "none",
@@ -32,7 +32,7 @@ const PrettoSlider = styled(Slider)({
     "& .MuiSlider-thumb": {
         height: 24,
         width: 24,
-        backgroundColor: "#ADFF00",
+        backgroundColor: "#00A3FF",
         border: "2px solid currentColor",
         "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
             boxShadow: "inherit",
@@ -45,13 +45,13 @@ const PrettoSlider = styled(Slider)({
         lineHeight: 0,
         fontSize: 12,
         background: "unset",
-        color: "#000000",
+        color: "#FFFFFF",
         padding: 0,
         margin: 5,
         width: 28,
         height: 28,
         borderRadius: "20% 20% 20% 20%",
-        backgroundColor: "#ADFF00",
+        backgroundColor: "#00A3FF",
         transformOrigin: "bottom left",
         transform: "translate(50%, -100%)  scale(0)",
         "&::before": { display: "none" },
@@ -189,7 +189,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                         <div className="font-semibold text-2xl basis-1/4 text-white">
                                             Password Length
                                         </div>
-                                        <div className="flex space-x-4 items-center basis-3/4 text-gray">
+                                        <div className="flex space-x-4 items-center basis-3/4 text-green">
                                             <div>
                                                 1
                                             </div>
