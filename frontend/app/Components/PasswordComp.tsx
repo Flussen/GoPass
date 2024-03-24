@@ -123,7 +123,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
             } else {
                 console.error("Passwords not found in response:", data);
-                
+                setArePasswords(false)
             }
 
         } catch (error) {
