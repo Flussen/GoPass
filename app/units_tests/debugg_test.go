@@ -2,6 +2,7 @@ package units_tests
 
 import (
 	"GoPass/app"
+	"GoPass/backend/controllers"
 	"GoPass/backend/models"
 	"encoding/json"
 	"fmt"
@@ -137,5 +138,28 @@ func TestAsd2(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println("new data:", &pwd)
+
+	configsDefault.UI = "black"
+
+	newRequest := models.UserRequest{
+		Username: "newUsername",
+		Email:    "newmail@hotmail.com",
+		Config:   configsDefault,
+	}
+
+	err = controllers.UpdateProfile(db, userTest, newRequest)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	userInfo, err := app.GetUserInfo(userTest)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var finallyUser models.User
+
+	json.Unmarshal([]byte(userInfo), &finallyUser)
+
+	fmt.Println(finallyUser)
 }

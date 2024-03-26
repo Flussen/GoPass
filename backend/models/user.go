@@ -11,6 +11,13 @@ type User struct {
 }
 
 type Config struct {
-	UI     string   `json:"ui"`
-	Groups []string `json:"groups"`
+	UI       string   `json:"ui"`
+	Groups   []string `json:"groups"`
+	Language string   `json:"language"`
+}
+
+type UserRequest struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Config   Config `json:"Preference"`
 }

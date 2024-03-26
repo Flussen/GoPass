@@ -107,8 +107,8 @@ func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) erro
 	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
 }
 
-func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error {
-	panic("not implemented")
+func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) error {
+	return controllers.UpdateProfile(a.DB, username, newModel)
 }
 
 func (a *App) DoSetPasswordConfig(id, user string, data models.Data) error {
