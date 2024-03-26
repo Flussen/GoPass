@@ -45,30 +45,11 @@ func NewAppWithDB(db *bbolt.DB) *App {
 }
 
 /*
-   ------------------------------------------------
-   Do type function, that are exported in typescript so
-   that specific things are done, such as registering, creating
-   a login session, they generally perform actions that return
-   verification or authentication data.
-
-	->> DO type functions continue below <<--
+   ----------------------Auth----------------------
+  	Functions for authentication flow, registration,
+	exiting sessions. They start with Do.
    ------------------------------------------------
 */
-
-// Login is called when the user clicks the login button
-// Will perform various checks on the database bucket,
-// if the bucket exists, if the user exists in the bucket,
-// if the password is comparable to the hash
-// it will also parse the data, decrypt the userKey stored in the database
-// and generate a login token. (Expiry in 30 days)
-func (a *App) DoLogin(username, password string) (string, error) {
-	bytes, err := auth.Login(a.DB, username, password)
-	if err != nil {
-		return "", err
-	}
-
-	return string(bytes), nil
-}
 
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(username, email, password string, configs models.Config) error {
@@ -78,10 +59,31 @@ func (a *App) DoRegister(username, email, password string, configs models.Config
 	return auth.Register(a.DB, username, email, password, configs)
 }
 
-// Saves a password for the given username and service
-//
-//	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password string, data models.Data) (string, error) {
+// verifies the user's credentials and if they are correct it will create a
+// token and save in lastsession, a token that is only valid for 30 days
+func (a *App) DoLogin(username, password string) (string, error) {
+	bytes, err := auth.Login(a.DB, username, password)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bytes), nil
+}
+
+// logout system to clean the token and expirytime variable in the database
+func (a *App) DoLogout() error {
+	return sessiontoken.CleanSessionToken(a.DB)
+}
+
+/*
+   -------------------Passwords--------------------
+  	In this section the operation of passwords is managed,
+	the common CRUD for passwords is worked on.
+   ------------------------------------------------
+*/
+
+// saves a password for the given username and service.
+func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password string, data models.Settings) (string, error) {
 	date := time.Now().Format(time.DateTime)
 	id, err := controllers.SavePassword(a.DB, user, userKey, usernameToSave, title, password, date, data)
 	if err != nil {
@@ -90,9 +92,7 @@ func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password 
 	return id, nil
 }
 
-// DeletePassword deletes a password saved in the database by the given username and service.
-//
-//	controllers.DeletePass(DB, username, service) // is the controller for delete the password in the database
+// removes a password, which requires the user to whom that password belongs and the password id.
 func (a *App) DoDeleteUserPassword(username, id string) error {
 	return controllers.DeletePass(a.DB, username, id)
 }
@@ -101,6 +101,24 @@ func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername,
 	newDate := time.Now().Format(time.DateTime)
 	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
+
+func (a *App) DoSetPasswordSettings(id, user string, data models.Settings) error {
+	return controllers.SetPasswordSettings(a.DB, id, user, data)
+}
+
+func (a *App) GetPasswordById(username, id string) (string, error) {
+	json, err := controllers.UserPasswordByID(a.DB, username, id)
+	if err != nil {
+		return "", err
+	}
+	return string(json), nil
+}
+
+/*
+   --------------------Account---------------------
+  	User management with account, update, information.
+   ------------------------------------------------
+*/
 
 // Change password for the user ACCOUNT!!
 func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
@@ -111,27 +129,7 @@ func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) 
 	return controllers.UpdateProfile(a.DB, username, newModel)
 }
 
-func (a *App) DoSetPasswordConfig(id, user string, data models.Data) error {
-	return controllers.SetPasswordConfig(a.DB, id, user, data)
-}
-
-// logout system to clean the token and expirytime variable in the database
-func (a *App) DoLogout() error {
-	return sessiontoken.CleanSessionToken(a.DB)
-}
-
-/*
-   ------------------------------------------------
-	Get type functions, they work to receive a specific data,
-	they can do decryption processes to receive that data
-	but generally they only receive data to export it to the
-	typescript frontend.
-
-	->> GET type functions continue below <<--
-   ------------------------------------------------
-*/
-
-func (a *App) GetUserInfo(username string) (string, error) {
+func (a *App) GetAccountInfo(username string) (string, error) {
 	model, err := controllers.GetUserInfo(a.DB, username)
 	if err != nil {
 		eh.NewGoPassErrorf("ERROR: %v", err)
@@ -144,18 +142,29 @@ func (a *App) GetUserInfo(username string) (string, error) {
 	return string(byteModel), nil
 }
 
-func (a *App) GetUserPasswordById(username, id string) (string, error) {
-	json, err := controllers.UserPasswordByID(a.DB, username, id)
+// Retrieves the passwords of the user with the given username
+func (a *App) GetAccountPasswords(username string) (string, error) {
+	pwds, err := controllers.GetUserPasswords(a.DB, username)
 	if err != nil {
 		return "", err
 	}
-	return string(json), nil
+	container := models.PasswordsContainer{Passwords: pwds}
+	jsonData, err := json.Marshal(container)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonData), nil
 }
+
+/*
+   ---------------------Token----------------------
+  	JWT management, generation, verification and general
+	operation of the token system.
+   ------------------------------------------------
+*/
 
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
-//
-//	components.VerifySessionToken(DB, token) // is the verificator
 func (a *App) VerifyToken(token string) (bool, error) {
 	valid, err := sessiontoken.VerifyToken(token)
 	if err != nil {
@@ -169,26 +178,35 @@ func (a *App) VerifyToken(token string) (bool, error) {
 	return valid, nil
 }
 
-// Retrieves the passwords of the user with the given username
-//
-//	components.VerifySessionToken(DB, token) // is the controller for get the user passwords
-func (a *App) GetUserPasswords(username string) (string, error) {
-	pwds, err := controllers.GetUserPasswords(a.DB, username)
-	if err != nil {
-		return "", err
-	}
-	container := models.PasswordsContainer{Passwords: pwds}
-	jsonData, err := json.Marshal(container)
-	if err != nil {
-		return "", err
-	}
-	return string(jsonData), nil
+func (a *App) GetLastSession() (string, error) {
+
+	var sessionBytes []byte
+
+	a.DB.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte("LastSessionSaved"))
+		if b == nil {
+			return eh.NewGoPassError(eh.ErrBucketNotFound)
+		}
+
+		sessionBytes = b.Get([]byte("lastsession"))
+		if sessionBytes == nil {
+			return eh.NewGoPassError("the last session is empty or was deleted, login again")
+		}
+
+		return nil
+	})
+
+	return string(sessionBytes), nil
 }
 
+/*
+   ------------------Cryptography------------------
+  	Functions of the encryption and decryption system.
+   ------------------------------------------------
+*/
+
 // Shows the password by the userKey decryption method
-//
-//	encryption.RevealPassword(encryptedPassword, userKey) // It is the encryption controller
-func (a *App) ShowPassword(username, id, userKey string) (string, error) {
+func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 
 	var dataPassword models.Password
 
@@ -222,32 +240,16 @@ func (a *App) ShowPassword(username, id, userKey string) (string, error) {
 	return decrypted, nil
 }
 
+/*
+   ----------------General purposes----------------
+  	General, extra or purposes that do not fit into
+	their own category.
+   ------------------------------------------------
+*/
+
 // ListUsers retrieves user information concurrently
-//
-//	controllers.GetUsersConcurrently(db, userIDs) // is the controller for get users simultaneously
-func (a *App) GetListUsers() (string, error) {
+func (a *App) GetListAccounts() (string, error) {
 	return controllers.GetUsersConcurrently(a.DB)
-}
-
-func (a *App) GetLastSession() (string, error) {
-
-	var sessionBytes []byte
-
-	a.DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("LastSessionSaved"))
-		if b == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		sessionBytes = b.Get([]byte("lastsession"))
-		if sessionBytes == nil {
-			return eh.NewGoPassError("the last session is empty or was deleted, login again")
-		}
-
-		return nil
-	})
-
-	return string(sessionBytes), nil
 }
 
 // GetVersion returns the version of the application. Example 1.0.1
@@ -255,14 +257,7 @@ func (a *App) GetVersion() string {
 	return "0.1 BETA - Rejewski"
 }
 
-/*
-   ------------------------------------------------
-	Test type functions, is only for testing the frontend
-	get and return information.
-
-	->> GET type functions continue below <<--
-   ------------------------------------------------
-*/
+// -----------------> TEST's <-----------------
 
 // Greet test for frontend development
 func (a *App) TestGreet(username string) (string, error) {

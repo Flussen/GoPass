@@ -11,7 +11,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, creationDate string, data models.Data) (string, error) {
+func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, creationDate string, data models.Settings) (string, error) {
 
 	if user == "" || userKey == "" || usernameToSave == "" ||
 		title == "" || password == "" || data.Icon == "" ||
@@ -31,7 +31,7 @@ func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, 
 		Title:    title,
 		Username: usernameToSave,
 		Pwd:      encryptedPassword,
-		Data: models.Data{
+		Data: models.Settings{
 			Favorite: data.Favorite,
 			Group:    data.Group,
 			Icon:     data.Icon,
@@ -158,7 +158,7 @@ func UserPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
 	return pwdByte, nil
 }
 
-func SetPasswordConfig(db *bbolt.DB, id, user string, data models.Data) error {
+func SetPasswordSettings(db *bbolt.DB, id, user string, data models.Settings) error {
 	if id == "" || user == "" {
 		return eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
