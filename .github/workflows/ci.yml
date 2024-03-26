@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build
 
 on:
   push:
@@ -13,17 +13,17 @@ jobs:
     name: Build on Linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5.0.0
         with:
-          go-version: '^1.22'
+          go-version: '1.22'
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: Build Linux Binary
         run: wails build -clean
       - name: Upload Linux Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: linux-binary
           path: ./build/myapp
@@ -32,17 +32,17 @@ jobs:
     name: Build on Windows
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5.0.0
         with:
-          go-version: '^1.22'
+          go-version: '1.22'
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: Build Windows Binary
         run: wails build -nsis -clean
       - name: Upload Windows Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: windows-binary
           path: ./build/myapp.exe
@@ -51,17 +51,17 @@ jobs:
     name: Build on macOS
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5.0.0
         with:
-          go-version: '^1.22'
+          go-version: '1.22'
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: Build macOS Binary
         run: wails build -clean
       - name: Upload macOS Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: macos-binary
           path: ./build/myapp.app
