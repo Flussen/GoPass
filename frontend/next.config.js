@@ -13,6 +13,11 @@ const nextConfig = {
     // Optional: Change the output directory `out` -> `dist`
     distDir: "dist",
     compress: false,
+    i18n: {
+      locales: ['en', 'es'], // Reemplaza estos códigos de idioma con los que desees usar
+      defaultLocale: 'en', // Establece el idioma predeterminado
+      // Puedes añadir más configuraciones específicas de i18n aquí si es necesario
+  },
   };
   
   module.exports = nextConfig;

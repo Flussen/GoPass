@@ -30,7 +30,7 @@ import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import {useTranslations} from 'next-intl';
+
 
 interface DashboardProps {
   setShowGenerator: (show: boolean) => void;
@@ -56,8 +56,6 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
   const [arePasswords, setArePasswords] = useState(true)
-
-  const t = useTranslations('Index');
 
 
 
@@ -95,7 +93,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
               </div>
               <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
                 <div>
-                {t('title')}
+BustaLover
                 </div>
                 <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
 
