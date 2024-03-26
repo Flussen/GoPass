@@ -64,7 +64,11 @@ If you are interested in contributing to GoPass, please check our contribution g
 
 ## License
 
-GoPass is distributed under an [GPL-3.0 license](LICENSE), allowing broad and free use for all users.
+GoPass is distributed under an GPL-3.0 [LICENSE](LICENSE), allowing broad and free use for all users.
+
+## Disclaimer
+
+Please be sure to read our [Disclaimer](DISCLAIMER.md) before using this software.
 
 ---
 
