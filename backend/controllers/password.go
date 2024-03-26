@@ -11,10 +11,11 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, status, userKey, creationDate string) (string, error) {
+func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, creationDate string, data models.Data) (string, error) {
 
-	if user == "" || usernameToSave == "" || service == "" ||
-		password == "" || userKey == "" || icon == "" || status == "" {
+	if user == "" || userKey == "" || usernameToSave == "" ||
+		title == "" || password == "" || data.Icon == "" ||
+		data.Status == "" || data.Group == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
@@ -26,12 +27,16 @@ func SavePassword(db *bbolt.DB, user, usernameToSave, service, password, icon, s
 	id := uuid.New().String()
 
 	newPasswordData := models.Password{
-		Title:       service,
-		Id:          id,
-		Pwd:         encryptedPassword,
-		Username:    usernameToSave,
-		Icon:        icon,
-		Status:      status,
+		Id:       id,
+		Title:    title,
+		Username: usernameToSave,
+		Pwd:      encryptedPassword,
+		Data: models.Data{
+			Favorite: data.Favorite,
+			Group:    data.Group,
+			Icon:     data.Icon,
+			Status:   data.Status,
+		},
 		CreatedDate: creationDate,
 	}
 
@@ -92,24 +97,36 @@ func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, 
 			return err
 		}
 
-		newPasswordData := models.Password{
-			Title:       newTitle,
-			Id:          id,
-			Pwd:         encryptedPassword,
-			Username:    newUsername,
-			CreatedDate: newDate,
-		}
-
-		dataBytes, err := json.Marshal(newPasswordData)
-		if err != nil {
-			return err
-		}
-
 		err = db.Update(func(tx *bbolt.Tx) error {
+
 			userBucket := tx.Bucket([]byte(user))
 			if userBucket == nil {
 				return fmt.Errorf("bucket not found for user %s", user)
 			}
+
+			dataByte := userBucket.Get([]byte(id))
+
+			var oldPass models.Password
+
+			err := json.Unmarshal(dataByte, &oldPass)
+			if err != nil {
+				return err
+			}
+
+			newPasswordData := models.Password{
+				Title:       newTitle,
+				Id:          id,
+				Pwd:         encryptedPassword,
+				Username:    newUsername,
+				CreatedDate: newDate,
+				Data:        oldPass.Data,
+			}
+
+			dataBytes, err := json.Marshal(newPasswordData)
+			if err != nil {
+				return err
+			}
+
 			return userBucket.Put([]byte(id), dataBytes)
 		})
 		if err != nil {
@@ -139,4 +156,67 @@ func UserPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
 		return nil, err
 	}
 	return pwdByte, nil
+}
+
+func SetPasswordConfig(db *bbolt.DB, id, user string, data models.Data) error {
+	if id == "" || user == "" {
+		return eh.NewGoPassError(eh.ErrEmptyParameters)
+	}
+
+	var oldPassword models.Password
+
+	err := db.View(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(user))
+		if userBucket == nil {
+			return fmt.Errorf("bucket not found for user %s", user)
+		}
+
+		passwordByte := userBucket.Get([]byte(id))
+		if passwordByte == nil {
+			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, user)
+		}
+
+		err := json.Unmarshal(passwordByte, &oldPassword)
+		if err != nil {
+			return eh.NewGoPassError(eh.ErrUnmarshal)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if data.Group == "" {
+		data.Group = oldPassword.Data.Group
+	}
+	if data.Icon == "" {
+		data.Icon = oldPassword.Data.Icon
+	}
+	if data.Status == "" {
+		data.Status = oldPassword.Data.Status
+	}
+
+	newModel := models.Password{
+		Id:          oldPassword.Id,
+		Title:       oldPassword.Title,
+		Username:    oldPassword.Username,
+		Pwd:         oldPassword.Pwd,
+		Data:        data,
+		CreatedDate: oldPassword.CreatedDate,
+	}
+
+	return db.Update(func(tx *bbolt.Tx) error {
+		userBucket := tx.Bucket([]byte(user))
+		if userBucket == nil {
+			return fmt.Errorf("bucket not found for user %s", user)
+		}
+
+		bytes, err := json.Marshal(newModel)
+		if err != nil {
+			return err
+		}
+		return userBucket.Put([]byte(id), bytes)
+	})
 }

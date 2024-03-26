@@ -9,7 +9,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func Register(db *bbolt.DB, username, email, password string) error {
+func Register(db *bbolt.DB, username, email, password string, configs models.Config) error {
 
 	err := controllers.RegistryChecker(db, username, email, password)
 	if err != nil {
@@ -27,6 +27,7 @@ func Register(db *bbolt.DB, username, email, password string) error {
 		Email:     email,
 		Password:  string(hashedPassword),
 		UserKey:   UserKey,
+		Config:    configs,
 		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 

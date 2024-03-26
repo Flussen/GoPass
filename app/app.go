@@ -71,17 +71,19 @@ func (a *App) DoLogin(username, password string) (string, error) {
 }
 
 // Register registers a new user with the given username, email, and password
-func (a *App) DoRegister(username, email, password string) error {
-	return auth.Register(a.DB, username, email, password)
+func (a *App) DoRegister(username, email, password string, configs models.Config) error {
+	if configs.Groups == nil || configs.UI == "" {
+		return eh.NewGoPassError(eh.ErrEmptyParameters)
+	}
+	return auth.Register(a.DB, username, email, password, configs)
 }
 
 // Saves a password for the given username and service
 //
 //	controllers.SavePassword(DB, username, userKey, service, password) // is the controller for Save the password
-func (a *App) DoSaveUserPassword(user, usernameToSave, service, password, icon, status, userKey string) (string, error) {
+func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password string, data models.Data) (string, error) {
 	date := time.Now().Format(time.DateTime)
-	id, err := controllers.SavePassword(a.DB, user, usernameToSave, service,
-		password, icon, status, userKey, date)
+	id, err := controllers.SavePassword(a.DB, user, userKey, usernameToSave, title, password, date, data)
 	if err != nil {
 		return "", err
 	}
@@ -107,6 +109,10 @@ func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) erro
 
 func (a *App) DoChangeAccountInfo(username, newUsername, newEmail string) error {
 	panic("not implemented")
+}
+
+func (a *App) DoSetPasswordConfig(id, user string, data models.Data) error {
+	return controllers.SetPasswordConfig(a.DB, id, user, data)
 }
 
 // logout system to clean the token and expirytime variable in the database

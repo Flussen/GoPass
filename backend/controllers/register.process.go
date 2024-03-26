@@ -55,7 +55,7 @@ func CreateUser(db *bbolt.DB, user models.User) error {
 			return err
 		}
 
-		// Use the user's ID as the key to store the serialized value
+		// Use the user's username as the key to store the serialized value
 		return b.Put([]byte(user.Username), userBytes)
 	})
 }
