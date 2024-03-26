@@ -91,26 +91,26 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
             popperRef.current.update();
         }
     };
-   
 
-    async function getPass(){
-        try{
+
+    async function getPass() {
+        try {
             const decryptedPass = await ShowPassword(userName, id, userKey)
-        }catch{
+        } catch {
 
         }
     }
-   
+
     async function getPasswords() {
         try {
             const response = await GetUserPasswords(userName);
-            console.log('Get passwords'+response)
+            console.log('Get passwords' + response)
             const data = JSON.parse(response);
             setArePasswords(true)
             if (data && data.passwords) {
-                
+
                 const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
-                    
+
                     const decryptedPwd = await ShowPassword(userName, password.id, userKey);
                     return { ...password, pwd: decryptedPwd };
 
@@ -121,7 +121,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
 
 
-                
+
 
             } else {
                 console.error("Passwords not found in response:", data);
@@ -144,74 +144,91 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
         }
     };
 
-    
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
         await getPass(); // Llama a la función pullLogin
-    
-      };
+
+    };
+
     const searchPasswords = passwords.filter((password) => password.title.toLowerCase().includes(search.toLowerCase()));
 
-    
+
     return (
         <>
-            
-                    <div className=" flex-col w-full space-y-5 overflow-y-auto max-2xl:max-h-[80%] max-h-[40rem] px-2 mb-10">
-                        {searchPasswords.map((password, index) => (
+            <div className="flex w-full text-lg font-semibold pl-5 mb-5 text-gray">
 
-                            <div key={index} className="w-full ">
-                                <div onChange={() => { setIcon(password.icon) }} onClick={() => {setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id)}} className="flex w-full h-24 bg-darkgray  p-3 rounded-lg text-xl cursor-pointer">
-                                    <div className="flex items-center basis-3/6 space-x-5">
-                                        <div className="rounded-lg bg-[#DEEFFF] shadow-shadow text-white w-[4.5rem] h-full flex items-center justify-center">
-                                            <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)} className="text-white text-2xl" />
-                                        </div>
-                                        <div className="flex-col text-md">
-                                            <div className="font-bold text-green">
-                                                {password.title}
-                                            </div>
-                                            <div className="text-gray text-lg font-medium hover:text-whitegray">
-                                                {password.username}
-                                            </div>
-                                        </div>
+                <div className="basis-3/6">
+                    Name
+                </div>
+                <div className="basis-2/6">
+                    Password
+                </div>
+                <div className="basis-1/6">
+                    Status
+                </div>
+            </div>
+            <div className="  flex-col w-full overflow-y-auto  max-2xl:max-h-[80%]  h-[29.35rem]  max-h-[29.35rem] bg-darkgray rounded-lg ">
+
+                {searchPasswords.map((password, index) => (
+
+                    <div key={index} className="w-full ">
+                        <div onChange={() => { setIcon(password.icon) }} onClick={() => { setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id) }} className="flex w-full h-[5.74rem]  p-5 rounded-lg  cursor-pointer">
+                            <div className="flex items-center basis-3/6 space-x-5">
+                                <div className="rounded-lg bg-black shadow-shadow text-whitebg w-20 h-full flex items-center justify-center text-2xl">
+                                    <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)}  />
+                                </div>
+                                <div className="flex-col text-lg">
+                                    <div className="font-bold text-primary">
+                                        {password.title}
                                     </div>
-                                    <div className="flex items-center  basis-2/6 ">
-
-                                        <div ref={areaRef}
-                                            onMouseMove={handleMouseMove} className="group " >
-                                            <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-back bg-transparent focus:outline-none cursor-pointer  inline-block  " />                                
-                                                <div className="hidden absolute group-hover:flex justify-center items-end mt-[-3.5rem]">
-
-                                                    <div className=" bg-gray px-2 py-1 rounded-lg text-sm z-30">
-                                                        Click to Copy
-                                                    </div>
-                                                    <div className="absolute bg-gray h-5 w-5 rotate-45 " />
-                                                </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center  xl:basis-1/6">
-                                        <div ref={areaRef}
-                                            onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-green' : password.status == 'Medium' ? ' text-green' : 'text-red '} `}>
-                                            {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium'  ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
-                                            <div className="hidden xl:flex">
-                                                {password.status == 'Strong' ? 'Strong' : password.status == 'Strong'  ? 'Medium' : 'Weak'}
-                                            </div>
-                                        </div>
+                                    <div className="text-gray text-base font-medium hover:text-whitegray">
+                                        {password.username}
                                     </div>
                                 </div>
-                                <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>
-                                    <></>
-                                </EditOverlay>
-
                             </div>
+                            <div className="flex items-center  basis-2/6 ">
 
-                        ))
-                        }
+                                <div ref={areaRef}
+                                    onMouseMove={handleMouseMove} className="group " >
+                                    <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-whitebg bg-transparent focus:outline-none cursor-pointer  inline-block  " />
+                                    <div className="hidden absolute group-hover:flex justify-center items-end mt-[-3.5rem]">
 
-                    </div >
-                    
+                                        <div className=" bg-gray px-2 py-1 rounded-lg text-sm z-30">
+                                            Click to Copy
+                                        </div>
+                                        <div className="absolute bg-gray h-5 w-5 rotate-45 " />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center  xl:basis-1/6">
+                                <div ref={areaRef}
+                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-green' : password.status == 'Medium' ? ' text-green' : 'text-red '} `}>
+                                    {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium' ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
+                                    <div className="hidden xl:flex">
+                                        {password.status == 'Strong' ? 'Strong' : password.status == 'Strong' ? 'Medium' : 'Weak'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-center">
+                            <div className="h-0.5 w-[90%] bg-gray rounded-full" />
 
-                  
-            
+                        </div>
+                        <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>
+                            <></>
+                        </EditOverlay>
+
+                    </div>
+
+                ))
+                }
+
+            </div >
+
+
+
+
 
         </>
 

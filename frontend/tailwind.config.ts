@@ -29,14 +29,16 @@ const config: Config = {
       },
       colors: {
         
-        'blaack': '#DEEFFF',
-        'darkgray': '#F8FCFF',
-        'whitegray':'#90A8B9',
-        'gray':'#CAE6FF',
-        'white':'#00172E',
-        'green':'#00A3FF',
-        'darkgreen': '#0091E2',
-        'red':'#FF0000'
+        'primary':'#00A3FF',
+        'black':'#1D2124',
+        'darkgray':'#282C2F',
+        'gray':'#485359',
+        'whitegray':'#B2BABF',
+        'blackwhite':'#D1D6DB',
+        'whitebg':'#E1EEFD',
+        'white':'#F6FAFF',
+        'red':'#FF2E2E',
+        'orange':'#FFC328'
 
       },
       borderRadius: {
