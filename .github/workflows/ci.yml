@@ -21,7 +21,7 @@ jobs:
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: Build Linux Binary
-        run: wails build linux
+        run: wails build -clean
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: Build macOS Binary
-        run: wails build darwin
+        run: wails build -clean
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v2
         with:
