@@ -1,7 +1,8 @@
 "use client"
-import React, { use } from 'react';
+import React, { use, useEffect } from 'react';
 import { useState } from 'react';
 import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
+import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import PersonIcon from '../../Public/person.svg';
 import KeyIcon from '../../Public/key.svg';
@@ -42,6 +43,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
+
   async function pullLogin() {
 
     setLoadingIsOpen(true)
@@ -77,16 +79,16 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
       <div className='flex justify-between items-center px-[5%] pt-[3%]'>
 
         <div className=' font-bold text-4xl'>
-          <span className='bg-green bg-clip-text text-transparent'>Go</span> <span className='text-white'>Pass</span>
+          <span className='bg-primary bg-clip-text text-transparent'>Go</span> <span className='text-white'>Pass</span>
         </div>
         <div className='bg-darkgray p-2 flex justify-center items-center rounded-lg h-12 w-12'>
-          <MenuRoundedIcon className='text-green' sx={{ fontSize: 24 }} />
+          <MenuRoundedIcon className='text-primary' sx={{ fontSize: 24 }} />
         </div>
       </div>
       {/* Login Box */}
       <div className=' flex justify-center items-center h-[83%] pb-[3%]  mt-10'>
         <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] h-full rounded-lg bg-darkgray  max-xl:py-20  '>
-          <div className='hidden xl:flex bg-green justify-center items-center rounded-lg xl:opacity-100'>
+          <div className='hidden xl:flex bg-primary justify-center items-center rounded-lg xl:opacity-100'>
 
 
           </div>
@@ -95,11 +97,11 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
           <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg  '>
             <div
               onClick={() => { setShowSignup(true), toggleSwitch }}
-              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-green mb-5 font-medium`}
+              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-primary mb-5 font-medium`}
             >
 
               <div
-                className={`flex justify-center bg-green w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base   ${isEnabled ? 'translate-x-28' : 'translate-x-0'
+                className={`flex justify-center bg-primary w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base   ${isEnabled ? 'translate-x-28' : 'translate-x-0'
                   }`}
               > {isEnabled ? 'Sign Up' : 'Login'}</div>
               <div
@@ -108,14 +110,14 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
               > {!isEnabled ? 'Sign Up' : 'Login'}</div>
             </div>
             <div className='text-5xl font-bold mb-12 text-white '>
-              <span className='bg-green bg-clip-text text-transparent'>Welcome</span>  Back!
+              <span className='bg-primary bg-clip-text text-transparent'>Welcome</span>  Back!
             </div>
 
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
 
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <PersonRoundedIcon className='absolute ml-4 text-primary' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12   xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
 
             </div>
@@ -123,18 +125,20 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4  '>
 
               <div className='flex items-center w-full '>
-                <KeyRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="password" className='flex rounded-lg  text-white b pl-12 w-full h-14 py-2 focus:outline-none bg-blaack placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <KeyRoundedIcon className='absolute ml-4 text-primary' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg   b pl-12 w-full h-14 py-2 focus:outline-none bg-blaack placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
 
 
             </div>
             <div className={`flex items-center w-full 2xl:px-40 xl:px-24 ${passwordIncorrect ? 'mb-2' : 'mb-4'} `} >
               <div className=' flex  w-full rounded-lg p-0.5 '>
-                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green text-blaack rounded-lg group hover:bg-darkgreen'>
+                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-primary text-blaack rounded-lg group hover:bg-darkprimary'>
                   Login
                 </button>
-
+                <div>
+                  {version}
+                </div>
 
               </div>
 

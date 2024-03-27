@@ -203,7 +203,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                             </div>
                             <div className="flex items-center  xl:basis-1/6">
                                 <div ref={areaRef}
-                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-green' : password.status == 'Medium' ? ' text-green' : 'text-red '} `}>
+                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-primary' : password.status == 'Medium' ? ' text-primary' : 'text-red '} `}>
                                     {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium' ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
                                     <div className="hidden xl:flex">
                                         {password.status == 'Strong' ? 'Strong' : password.status == 'Strong' ? 'Medium' : 'Weak'}

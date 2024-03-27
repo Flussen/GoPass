@@ -1,9 +1,8 @@
 "use client"
 import React, { useEffect } from 'react';
-import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import { useState } from 'react';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-
+import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg";
 import Mener from "../../Public/men.svg"
@@ -78,10 +77,10 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
       <div className='flex justify-between items-center px-[5%] pt-[3%]'>
 
         <div className=' font-bold text-4xl'>
-          <span className='bg-green bg-clip-text text-transparent'>Go</span> <span className='text-white'>Pass</span>
+          <span className='bg-primary bg-clip-text text-transparent'>Go</span> <span className='text-white'>Pass</span>
         </div>
         <div className='bg-darkgray p-2 flex justify-center items-center rounded-lg h-12 w-12'>
-          <MenuRoundedIcon className='text-green' sx={{ fontSize: 24 }} />
+          <MenuRoundedIcon className='text-primary' sx={{ fontSize: 24 }} />
         </div>
       </div>
       {/* Login Box */}
@@ -92,11 +91,11 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
           <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg z-[50] '>
             <div
               onClick={() => { setShowSignup(false), toggleSwitch }}
-              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-green mb-5 font-medium`}
+              className={`w-56  flex items-center rounded-full  cursor-pointer bg-blaack border-2 border-primary mb-5 font-medium`}
             >
 
               <div
-                className={`flex justify-center bg-green w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base   ${isEnabled ? 'translate-x-28' : 'translate-x-0'
+                className={`flex justify-center bg-primary w-28 py-0.5 rounded-full shadow-md transform duration-300 ease-in-out text-base   ${isEnabled ? 'translate-x-28' : 'translate-x-0'
                   }`}
               > {isEnabled ? 'Sign Up' : 'Login'}</div>
               <div
@@ -105,30 +104,30 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
               > {!isEnabled ? 'Sign Up' : 'Login'}</div>
             </div>
             <div className='text-5xl font-bold mb-12 text-white'>
-              Let&apos;s <span className='text-green'>Start!</span>
+              Let&apos;s <span className='text-primary'>Start!</span>
             </div>
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <PersonRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
+                <PersonRoundedIcon className='absolute ml-4 text-primary' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="text" className='flex rounded-lg  pl-12   xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Username' value={name} onChange={(e) => setName(e.target.value)} />
               </div>
             </div>
 
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <EmailRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="email" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                <EmailRoundedIcon className='absolute ml-4 text-primary' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="email" className='flex rounded-lg  pl-12   xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
             </div>
             <div className='flex-col items-center w-full 2xl:px-40 xl:px-24 mb-4 '>
               <div className='flex items-center w-full   '>
-                <KeyRoundedIcon className='absolute ml-4 text-green' sx={{ fontSize: 24 }} />
-                <input autoComplete="nope" type="password" className='flex rounded-lg  pl-12  text-white xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <KeyRoundedIcon className='absolute ml-4 text-primary' sx={{ fontSize: 24 }} />
+                <input autoComplete="nope" type="password" className='flex rounded-lg  pl-12   xl:w-full w-[34rem] h-14 py-2 bg-blaack focus:outline-none placeholder:text-whitegray' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
             </div>
             <div className='flex items-center w-full 2xl:px-40 xl:px-24 ' >
             <div className=' flex  w-full rounded-lg p-0.5 mb-4'>
-                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-green text-blaack rounded-lg group hover:bg-darkgreen'>
+                <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-primary text-blaack rounded-lg group hover:bg-darkprimary'>
                   Login
                 </button>
 
@@ -146,7 +145,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
           </div>
 
           <SignupResult isOpen={isSignupResultOpen} onClose={() => setIsSignupResultOpen(!isSignupResultOpen)} />
-          <div className='hidden xl:flex justify-center rounded-lg bg-green items-center xl:opacity-100'>
+          <div className='hidden xl:flex justify-center rounded-lg bg-primary items-center xl:opacity-100'>
 
           </div>
         </div>

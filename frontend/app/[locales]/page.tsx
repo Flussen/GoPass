@@ -44,8 +44,8 @@ export default function Home() {
           setShowDashboard(true)
         }
       }
-    } catch {
-      console.log('Not a saved session')
+    } catch(error) {
+      console.log('Not a saved session'+ error)
     }finally{
       setIsLoading(false)
     }

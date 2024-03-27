@@ -107,7 +107,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
                                 </div>
                                 <div className="flex-col jusitfy-center items-center space-y-2">
 
-                                    <div className=" flex items-center bg-green  text-blaack px-7 h-12 rounded-lg">
+                                    <div className=" flex items-center bg-primary  text-blaack px-7 h-12 rounded-lg">
                                         Custom
                                     </div>
                                 </div>
@@ -118,26 +118,26 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
                                         Title
                                     </div>
                                     <div className='flex justify-between items-center mb-2'>
-                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input autoComplete="nope" type="text" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
                                     <div className='flex justify-between items-center mb-2 '>
-                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input autoComplete="nope" type="text" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between items-center mb-4 '>
-                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input autoComplete="nope" type="password" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white ' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
 
                                     <div className="flex justify-center ">
-                                        <button type="submit" className="flex justify-center items-center w-40 h-12  rounded-lg text-blaack cursor-pointer bg-green hover:bg-darkgreen font-semibold">
+                                        <button type="submit" className="flex justify-center items-center w-40 h-12  rounded-lg text-blaack cursor-pointer bg-primary hover:bg-darkprimary font-semibold">
                                             Add Now
                                         </button>
                                     </div>

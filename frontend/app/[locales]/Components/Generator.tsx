@@ -77,10 +77,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
     const [sliderValue, setSliderValue] = useState<number>(25);
     const [password, setPassword] = useState<string>("");
     const calculateBarWidth = (value: number) => {
-        setBarColor1(value > 1 ? 'bg-green' : 'bg-gray');
-        setBarColor2(value > 5 ? 'bg-green' : 'bg-gray');
-        setBarColor3(value > 10 ? 'bg-green' : 'bg-gray');
-        setBarColor4(value > 25 ? 'bg-green' : 'bg-gray');
+        setBarColor1(value > 1 ? 'bg-primary' : 'bg-gray');
+        setBarColor2(value > 5 ? 'bg-primary' : 'bg-gray');
+        setBarColor3(value > 10 ? 'bg-primary' : 'bg-gray');
+        setBarColor4(value > 25 ? 'bg-primary' : 'bg-gray');
     };
 
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
@@ -145,7 +145,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                 <div className="flex-col justify-center w-full items-start">
                     <div className='flex justify-start mb-10'>
                         <div className='text-5xl font-bold text-white'>
-                            Password <span className="bg-green bg-clip-text text-transparent">Generator</span>
+                            Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>
                         </div>
 
                     </div>
@@ -157,7 +157,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                         <input type="text" readOnly value={password} className="select-all w-full text-white flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
                                         <div
                                             onClick={() => generatePassword(sliderValue)}
-                                            className='ml-4 text-whitegray cursor-pointer hover:text-green'
+                                            className='ml-4 text-whitegray cursor-pointer hover:text-primary'
                                         >
                                             <AutorenewRoundedIcon sx={{ fontSize: 28 }} className="" />
                                         </div>
@@ -189,7 +189,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                         <div className="font-semibold text-2xl basis-1/4 text-white">
                                             Password Length
                                         </div>
-                                        <div className="flex space-x-4 items-center basis-3/4 text-green">
+                                        <div className="flex space-x-4 items-center basis-3/4 text-primary">
                                             <div>
                                                 1
                                             </div>
@@ -219,7 +219,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                     </div>
 
                                 </div>
-                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-green rounded-lg text-darkgray text-xl font-semibold   cursor-pointer  ">
+                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-primary rounded-lg text-darkgray text-xl font-semibold   cursor-pointer  ">
                                     <div className="flex items-center justify-center w-full rounded-md space-x-2 bg-blackbox h-12  ">
                                         <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
                                         <div>
@@ -242,21 +242,21 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}
 
-                                        onChange={() => handleCheckboxChange(setIncludeUppercase, includeUppercase)} type="checkbox" className=" accent-green  scale-150 " />
+                                        onChange={() => handleCheckboxChange(setIncludeUppercase, includeUppercase)} type="checkbox" className=" accent-primary  scale-150 " />
                                     <div>
                                         Uppercase
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <input checked={includeLowercase}
-                                        onChange={() => handleCheckboxChange(setIncludeLowercase, includeLowercase)} type="checkbox" className="accent-green  scale-150 " />
+                                        onChange={() => handleCheckboxChange(setIncludeLowercase, includeLowercase)} type="checkbox" className="accent-primary  scale-150 " />
                                     <div>
                                         Lowercase
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <input checked={includeNumbers}
-                                        onChange={() => handleCheckboxChange(setIncludeNumbers, includeNumbers)} type="checkbox" className="accent-green  scale-150" />
+                                        onChange={() => handleCheckboxChange(setIncludeNumbers, includeNumbers)} type="checkbox" className="accent-primary  scale-150" />
                                     <div>
                                         Numbers
                                     </div>
@@ -266,7 +266,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                         checked={includeSymbols}
                                         onChange={() => handleCheckboxChange(setIncludeSymbols, includeSymbols)}
                                         type="checkbox"
-                                        className="accent-green  scale-150" />
+                                        className="accent-primary  scale-150" />
                                     <div>
                                         Symbols
                                     </div>

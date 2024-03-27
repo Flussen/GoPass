@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
@@ -30,6 +31,8 @@ import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
+import useTranslation from 'next-translate/useTranslation';
+import { useTranslations } from "next-intl";
 
 
 interface DashboardProps {
@@ -57,6 +60,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
   const [arePasswords, setArePasswords] = useState(true)
 
+  const t = useTranslations('Index');
 
 
   return (
@@ -78,7 +82,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
           </div>
           <div className="flex items-center space-x-6 ">
             <div className="flex items-center">
-              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full text-green font-semibold space-x-2">
+              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
 
                 <DarkModeRoundedIcon sx={{ fontSize: 24 }} />
               </div>
@@ -87,14 +91,14 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
               </div>
             </div>
             <div className="flex items-center">
-              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full text-green font-semibold space-x-2">
+              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
 
                 <AccountCircleRoundedIcon sx={{ fontSize: 36 }} />
               </div>
               <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
                 <div>
-BustaLover
-                </div>
+                BustaLover 
+                           </div>
                 <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
 
               </div>
@@ -149,7 +153,7 @@ BustaLover
                   <div className="text-2xl">
                     Add your first password!
                   </div>
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-green rounded-lg h-12 group hover:bg-darkgreen">
+                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-primary rounded-lg h-12 group hover:bg-darkprimary">
                     <button className=" px-7 text-black rounded-md font-medium ">
                       Add Password
                     </button>
