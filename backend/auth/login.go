@@ -43,7 +43,7 @@ func Login(db *bbolt.DB, username, password string) ([]byte, error) {
 		return nil, errors.New(eh.ErrInvalidCredentils)
 	}
 
-	token, err := sessiontoken.CreateNewToken(storedUser.ID, storedUser.Username)
+	token, err := sessiontoken.CreateNewToken(storedUser.ID, storedUser.Account)
 	if err != nil {
 		return nil, err
 	}

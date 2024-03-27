@@ -17,15 +17,16 @@ import (
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler" // Error handler
-	"GoPass/backend/models"          // Importing another custom package
+	"GoPass/backend/models"
+	"GoPass/backend/pkg/request"
+	"GoPass/backend/pkg/response"
+	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 
 	"encoding/json"
 	"time"
 
-	// Package for generating unique UUIDs
-	"go.etcd.io/bbolt" // Package for handling Bolt databases
-	// Package for password hashing
+	"go.etcd.io/bbolt"
 )
 
 // App is an empty struct that will add the functions that will
@@ -52,17 +53,18 @@ func NewAppWithDB(db *bbolt.DB) *App {
 */
 
 // Register registers a new user with the given username, email, and password
-func (a *App) DoRegister(username, email, password string, configs models.Config) error {
-	if configs.Groups == nil || configs.UI == "" {
-		return eh.NewGoPassError(eh.ErrEmptyParameters)
+func (a *App) DoRegister(request request.Register) (response.Register, error) {
+	if request.Account == "" || request.Email == "" ||
+		request.Password == "" {
+		return response.Register{}, eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
-	return auth.Register(a.DB, username, email, password, configs)
+	return auth.Register(a.DB, request.Account, request.Email, request.Password, request.Configs)
 }
 
 // verifies the user's credentials and if they are correct it will create a
 // token and save in lastsession, a token that is only valid for 30 days
-func (a *App) DoLogin(username, password string) (string, error) {
-	bytes, err := auth.Login(a.DB, username, password)
+func (a *App) DoLogin(request request.Login) (string, error) {
+	bytes, err := auth.Login(a.DB, request.Account, request.Password)
 	if err != nil {
 		return "", err
 	}
@@ -75,6 +77,14 @@ func (a *App) DoLogout() error {
 	return sessiontoken.CleanSessionToken(a.DB)
 }
 
+func (a *App) DoCheckSeeds(request request.SeedsCheck) error {
+	return recovery.CheckSeeds(a.DB, request.Account, request.Seeds)
+}
+
+func (a *App) DoRecovery(request request.Recovery) error {
+	return auth.NewRecovery(a.DB, request.Account, request.NewPassword)
+}
+
 /*
    -------------------Passwords--------------------
   	In this section the operation of passwords is managed,
@@ -83,7 +93,7 @@ func (a *App) DoLogout() error {
 */
 
 // saves a password for the given username and service.
-func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password string, data models.Settings) (string, error) {
+func (a *App) DoSavePassword(user, userKey, usernameToSave, title, password string, data models.Settings) (string, error) {
 	date := time.Now().Format(time.DateTime)
 	id, err := controllers.SavePassword(a.DB, user, userKey, usernameToSave, title, password, date, data)
 	if err != nil {
@@ -93,13 +103,13 @@ func (a *App) DoSaveUserPassword(user, userKey, usernameToSave, title, password 
 }
 
 // removes a password, which requires the user to whom that password belongs and the password id.
-func (a *App) DoDeleteUserPassword(username, id string) error {
-	return controllers.DeletePass(a.DB, username, id)
+func (a *App) DoDeletePassword(username, id string) error {
+	return controllers.DeletePassword(a.DB, username, id)
 }
 
-func (a *App) DoUpdateUserPassword(username, userKey, id, newTitle, newUsername, newPwd string) error {
+func (a *App) DoUpdatePassword(username, userKey, id, newTitle, newUsername, newPwd string) error {
 	newDate := time.Now().Format(time.DateTime)
-	return controllers.UpdatePass(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
+	return controllers.UpdatePassword(a.DB, username, id, userKey, newTitle, newPwd, newUsername, newDate)
 }
 
 func (a *App) DoSetPasswordSettings(id, user string, data models.Settings) error {
@@ -107,7 +117,7 @@ func (a *App) DoSetPasswordSettings(id, user string, data models.Settings) error
 }
 
 func (a *App) GetPasswordById(username, id string) (string, error) {
-	json, err := controllers.UserPasswordByID(a.DB, username, id)
+	json, err := controllers.GetPasswordByID(a.DB, username, id)
 	if err != nil {
 		return "", err
 	}
@@ -254,7 +264,7 @@ func (a *App) GetListAccounts() (string, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.1 BETA - Rejewski"
+	return "0.1.1 BETA - Rejewski"
 }
 
 // -----------------> TEST's <-----------------

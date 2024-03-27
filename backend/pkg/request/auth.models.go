@@ -13,3 +13,13 @@ type Login struct {
 	Account  string `json:"account"`
 	Password string `json:"password"`
 }
+
+type SeedsCheck struct {
+	Account string   `json:"account"`
+	Seeds   []string `json:"seeds"`
+}
+
+type Recovery struct {
+	Account     string `json:"account"`
+	NewPassword string `json:"new_password"`
+}

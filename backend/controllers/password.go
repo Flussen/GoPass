@@ -57,7 +57,7 @@ func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, 
 	return id, nil
 }
 
-func DeletePass(DB *bbolt.DB, user, id string) error {
+func DeletePassword(DB *bbolt.DB, user, id string) error {
 	if user == "" || id == "" {
 		return fmt.Errorf(eh.ErrEmptyParameters)
 	}
@@ -80,7 +80,7 @@ func DeletePass(DB *bbolt.DB, user, id string) error {
 	})
 }
 
-func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, newDate string) error {
+func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, newDate string) error {
 	if user == "" || id == "" || userKey == "" ||
 		newTitle == "" || newPwd == "" ||
 		newUsername == "" || newDate == "" {
@@ -137,7 +137,7 @@ func UpdatePass(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, 
 	return eh.NewGoPassError(eh.ErrInvalidUserKey)
 }
 
-func UserPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
+func GetPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
 	var pwdByte []byte
 	err := db.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))

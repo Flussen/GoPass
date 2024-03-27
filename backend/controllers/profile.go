@@ -36,7 +36,7 @@ func UpdateProfile(db *bbolt.DB, username string, newModel models.UserRequest) e
 			return eh.NewGoPassError(eh.ErrUnmarshal)
 		}
 
-		userOriginalData.Username = newModel.Username
+		userOriginalData.Account = newModel.Account
 		userOriginalData.Email = newModel.Email
 		userOriginalData.Config = newModel.Config
 

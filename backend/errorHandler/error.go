@@ -20,6 +20,7 @@ const (
 	ErrLogicFunctionName           = "logic or implementation error, please check in '%s' Go Function"
 	ErrEmptyParameters             = "none of the parameters can be empty"
 	ErrInvalidUserKey              = "the userKey is invalid"
+	ErrInternalServer              = "internal server error"
 )
 
 func (e *GoPassErrors) Error() string {

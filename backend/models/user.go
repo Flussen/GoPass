@@ -1,13 +1,14 @@
 package models
 
 type User struct {
-	ID        string `json:"id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	UserKey   string `json:"encryptedUserKey"`
-	Config    Config `json:"Preference"`
-	CreatedAt string `json:"created_at"`
+	ID        string   `json:"id"`
+	Account   string   `json:"account"`
+	Email     string   `json:"email"`
+	Password  string   `json:"password"`
+	UserKey   string   `json:"encryptedUserKey"`
+	Seeds     []string `json:"seeds"`
+	Config    Config   `json:"config"`
+	CreatedAt string   `json:"created_at"`
 }
 
 type Config struct {
@@ -17,7 +18,7 @@ type Config struct {
 }
 
 type UserRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Config   Config `json:"Preference"`
+	Account string `json:"account"`
+	Email   string `json:"email"`
+	Config  Config `json:"Preference"`
 }

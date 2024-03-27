@@ -2,164 +2,71 @@ package units_tests
 
 import (
 	"GoPass/app"
-	"GoPass/backend/controllers"
 	"GoPass/backend/models"
+	"GoPass/backend/pkg/request"
 	"encoding/json"
 	"fmt"
 	"testing"
 )
 
-func TestAsd(t *testing.T) {
+func TestXD(t *testing.T) {
 	db, cleanup := CreateTestDB()
 	defer cleanup()
 
-	const (
-		userTest  = "User"
-		emailTest = "email@hotmail.com"
-		passTest  = "password"
-	)
+	app := &app.App{DB: db}
 
-	groups := []string{"datos", "xd"}
-
-	configsDefault := models.Config{
-		UI:     "default",
-		Groups: groups,
+	rqr := request.Register{
+		Account:  "testUser",
+		Email:    "mail@hotmail.com",
+		Password: "passwordtest",
+		Configs:  models.Config{},
 	}
 
-	app := &app.App{DB: db}
 	// Register process
-	err := app.DoRegister(userTest, emailTest, passTest, configsDefault)
+	rsp, err := app.DoRegister(rqr)
 	if err != nil {
 		t.Fatalf("DoRegister failed: %v", err)
 	}
 
-	// app.DoLogin(userTest, passTest)
+	rql := request.Login{
+		Account:  "testUser",
+		Password: "passwordtest",
+	}
 
-	// data, err := app.GetLastSession()
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
+	// Login process
+	js, err := app.DoLogin(rql)
+	if err != nil {
+		t.Fatalf("DoLogin failed: %v", err)
+	}
 
-	data, err := app.GetUserInfo("User")
+	var rspLogin models.Receive
+
+	err = json.Unmarshal([]byte(js), &rspLogin)
+	if err != nil {
+		t.Fatalf("json.Unmarshal failed: %v", err)
+	}
+
+	err = app.DoCheckSeeds(request.SeedsCheck{Account: rql.Account, Seeds: rsp.Seeds})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var user models.User
-
-	err = json.Unmarshal([]byte(data), &user)
+	err = app.DoRecovery(request.Recovery{Account: rql.Account, NewPassword: "newpassword!"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	fmt.Println(user.Config)
-}
+	app.DoLogout()
 
-func TestAsd2(t *testing.T) {
-	db, cleanup := CreateTestDB()
-	defer cleanup()
-
-	const (
-		userTest  = "User"
-		emailTest = "email@hotmail.com"
-		passTest  = "password"
-	)
-
-	groups := []string{"datos", "xd"}
-
-	configsDefault := models.Config{
-		UI:     "default",
-		Groups: groups,
-	}
-
-	dataPassword := models.Data{
-		Favorite: false,
-		Group:    "licences",
-		Icon:     "icondefault",
-		Status:   "statusdefult",
-	}
-
-	app := &app.App{DB: db}
-	// Register process
-	err := app.DoRegister(userTest, emailTest, passTest, configsDefault)
-	if err != nil {
-		t.Fatalf("DoRegister failed: %v", err)
-	}
-
-	data, _ := app.DoLogin(userTest, passTest)
-	var response models.Receive
-	json.Unmarshal([]byte(data), &response)
-
-	id, err := app.DoSaveUserPassword(userTest, response.UserKey, "test", "title", "pwd", dataPassword)
+	data, err := app.DoLogin(request.Login{Account: rql.Account, Password: "newpassword!"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	passwordByte, err := app.GetUserPasswordById(userTest, id)
+	err = json.Unmarshal([]byte(data), &rspLogin)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var pwd models.Password
-
-	json.Unmarshal([]byte(passwordByte), &pwd)
-
-	// fmt.Println("original:", &pwd)
-
-	err = app.DoUpdateUserPassword(userTest, response.UserKey, id, "newtitle", "newUsername", "newPassword")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	passwordByte, err = app.GetUserPasswordById(userTest, id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	json.Unmarshal([]byte(passwordByte), &pwd)
-
-	// fmt.Println("new update:", &pwd)
-
-	newModel := models.Data{
-		Favorite: true,
-		Group:    "pepito",
-	}
-
-	err = app.DoSetPasswordConfig(id, userTest, newModel)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	passwordByte, err = app.GetUserPasswordById(userTest, id)
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = json.Unmarshal([]byte(passwordByte), &pwd)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	configsDefault.UI = "black"
-
-	newRequest := models.UserRequest{
-		Username: "newUsername",
-		Email:    "newmail@hotmail.com",
-		Config:   configsDefault,
-	}
-
-	err = controllers.UpdateProfile(db, userTest, newRequest)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	userInfo, err := app.GetUserInfo(userTest)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var finallyUser models.User
-
-	json.Unmarshal([]byte(userInfo), &finallyUser)
-
-	fmt.Println(finallyUser)
+	fmt.Println(rspLogin)
 }
