@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: linux-binary
-          path: ./build/myapp
+          path: ./build/bin/GoPass
 
   build-windows:
     name: Build on Windows
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: windows-binary
-          path: ./build/myapp.exe
+          path: ./build/bin/GoPass-amd64-installer.exe
 
   build-macos:
     name: Build on macOS
@@ -64,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: macos-binary
-          path: ./build/myapp.app
+          path: ./build/bin/GoPass.app
