@@ -39,6 +39,8 @@ func TestXD(t *testing.T) {
 		t.Fatalf("DoLogin failed: %v", err)
 	}
 
+	fmt.Println(rsp.Seeds)
+
 	var rspLogin models.Receive
 
 	err = json.Unmarshal([]byte(js), &rspLogin)
