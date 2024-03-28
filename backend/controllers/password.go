@@ -143,19 +143,22 @@ func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUserna
 	return eh.NewGoPassError(eh.ErrInvalidUserKey)
 }
 
-func GetPasswordByID(db *bbolt.DB, username, id string) ([]byte, error) {
+func GetPasswordByID(db *bbolt.DB, account, id string) ([]byte, error) {
 	var pwdByte []byte
+
+	keyName := fmt.Sprintf("%s:%s", account, id)
+
 	err := db.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(username))
+		userBucket := tx.Bucket([]byte(database.BucketPassword))
 		if userBucket == nil {
 			return eh.NewGoPassError(eh.ErrBucketNotFound)
 		}
 
-		encryptedPasswordBytes := userBucket.Get([]byte(id))
-		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, username)
+		passwordBytes := userBucket.Get([]byte(keyName))
+		if passwordBytes == nil {
+			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, account)
 		}
-		pwdByte = encryptedPasswordBytes
+		pwdByte = passwordBytes
 		return nil
 	})
 	if err != nil {
