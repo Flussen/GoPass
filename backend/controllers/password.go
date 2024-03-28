@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	database "GoPass/backend/db"
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
@@ -46,7 +47,7 @@ func SavePassword(db *bbolt.DB, account, userKey, usernameToSave, title, passwor
 	keyName := fmt.Sprintf("%s:%s", account, newPassword.ID)
 
 	err = db.Update(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(account))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(database.BucketPassword))
 		if err != nil {
 			return err
 		}
@@ -59,22 +60,25 @@ func SavePassword(db *bbolt.DB, account, userKey, usernameToSave, title, passwor
 	return newPassword.ID, nil
 }
 
-func DeletePassword(DB *bbolt.DB, user, id string) error {
-	if user == "" || id == "" {
+func DeletePassword(DB *bbolt.DB, account, id string) error {
+	if account == "" || id == "" {
 		return fmt.Errorf(eh.ErrEmptyParameters)
 	}
+
+	keyName := fmt.Sprintf("%s:%s", account, id)
+
 	return DB.Update(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(user))
-		if userBucket == nil {
-			return fmt.Errorf("bucket not found for user %s", user)
+		bucket := tx.Bucket([]byte(database.BucketPassword))
+		if bucket == nil {
+			eh.NewGoPassError(eh.ErrInternalServer)
 		}
 
-		err := userBucket.Delete([]byte(id))
+		err := bucket.Delete([]byte(keyName))
 		if err != nil {
-			return fmt.Errorf("failed to delete password for id %s: %v", id, err)
+			return eh.NewGoPassError("id not found or cannot deleted")
 		}
 
-		if userBucket.Get([]byte(id)) != nil {
+		if bucket.Get([]byte(keyName)) != nil {
 			return fmt.Errorf("password for id %s was not deleted", id)
 		}
 

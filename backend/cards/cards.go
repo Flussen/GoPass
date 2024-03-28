@@ -14,10 +14,6 @@ import (
 
 func PutNewCard(db *bbolt.DB, account string, request request.Card) (string, error) {
 
-	type ContainerCards struct {
-		Cards []models.Card
-	}
-
 	if request.Card == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
