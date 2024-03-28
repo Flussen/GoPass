@@ -125,6 +125,16 @@ func (a *App) GetPasswordById(username, id string) (string, error) {
 }
 
 /*
+   -------------------Cards--------------------
+
+   ------------------------------------------------
+*/
+
+func (a *App) DoNewCard(account string, card request.Card) error {
+	return nil
+}
+
+/*
    --------------------Account---------------------
   	User management with account, update, information.
    ------------------------------------------------

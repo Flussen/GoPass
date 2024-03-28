@@ -11,9 +11,9 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, creationDate string, data models.Settings) (string, error) {
+func SavePassword(db *bbolt.DB, account, userKey, usernameToSave, title, password, creationDate string, data models.Settings) (string, error) {
 
-	if user == "" || userKey == "" || usernameToSave == "" ||
+	if account == "" || userKey == "" || usernameToSave == "" ||
 		title == "" || password == "" || data.Icon == "" ||
 		data.Status == "" || data.Group == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
@@ -24,10 +24,8 @@ func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, 
 		return "", err
 	}
 
-	id := uuid.New().String()
-
-	newPasswordData := models.Password{
-		Id:       id,
+	newPassword := models.Password{
+		ID:       uuid.New().String(),
 		Title:    title,
 		Username: usernameToSave,
 		Pwd:      encryptedPassword,
@@ -40,21 +38,25 @@ func SavePassword(db *bbolt.DB, user, userKey, usernameToSave, title, password, 
 		CreatedDate: creationDate,
 	}
 
-	dataBytes, err := json.Marshal(newPasswordData)
+	passwordByte, err := json.Marshal(newPassword)
 	if err != nil {
 		return "", err
 	}
+
+	keyName := fmt.Sprintf("%s:%s", account, newPassword.ID)
+
 	err = db.Update(func(tx *bbolt.Tx) error {
-		passwordBucket, err := tx.CreateBucketIfNotExists([]byte(user))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(account))
 		if err != nil {
 			return err
 		}
-		return passwordBucket.Put([]byte(id), dataBytes)
+
+		return bucket.Put([]byte(keyName), passwordByte)
 	})
 	if err != nil {
 		return "", err
 	}
-	return id, nil
+	return newPassword.ID, nil
 }
 
 func DeletePassword(DB *bbolt.DB, user, id string) error {
@@ -115,7 +117,7 @@ func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUserna
 
 			newPasswordData := models.Password{
 				Title:       newTitle,
-				Id:          id,
+				ID:          id,
 				Pwd:         encryptedPassword,
 				Username:    newUsername,
 				CreatedDate: newDate,
@@ -199,7 +201,7 @@ func SetPasswordSettings(db *bbolt.DB, id, user string, data models.Settings) er
 	}
 
 	newModel := models.Password{
-		Id:          oldPassword.Id,
+		ID:          oldPassword.ID,
 		Title:       oldPassword.Title,
 		Username:    oldPassword.Username,
 		Pwd:         oldPassword.Pwd,

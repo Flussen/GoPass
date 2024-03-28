@@ -4,8 +4,9 @@ type User struct {
 	ID        string   `json:"id"`
 	Account   string   `json:"account"`
 	Email     string   `json:"email"`
-	Password  string   `json:"password"`
-	UserKey   string   `json:"encryptedUserKey"`
+	Password  string   `json:"passwords"`
+	Card      []Card   `json:"cards"`
+	UserKey   string   `json:"userKey"`
 	Seeds     []string `json:"seeds"`
 	Config    Config   `json:"config"`
 	CreatedAt string   `json:"created_at"`
