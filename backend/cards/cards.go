@@ -222,3 +222,38 @@ func UpdateCard(db *bbolt.DB, account, id string, rqst request.Card) error {
 
 	return err
 }
+
+func DeleteCard(db *bbolt.DB, account, id string) error {
+	if account == "" || id == "" {
+		return eh.ErrEmptyParameter
+	}
+
+	keyName := fmt.Sprintf("%s:%s", account, id)
+
+	return db.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketCards))
+		if bucket == nil {
+			log.Println("ERROR: bucket not found")
+			return eh.ErrInternalServer
+		}
+
+		card := bucket.Get([]byte(keyName))
+		if card == nil {
+			return eh.ErrNotFound
+		}
+
+		err := bucket.Delete([]byte(keyName))
+		if err != nil {
+			log.Println("ERROR:", err)
+			return eh.ErrInternalServer
+		}
+
+		card = bucket.Get([]byte(keyName))
+		if card != nil {
+			log.Println("ERROR:", "could not be deleted")
+			return eh.ErrInternalServer
+		}
+
+		return nil
+	})
+}

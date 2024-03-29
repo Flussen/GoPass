@@ -410,3 +410,71 @@ func TestUpdateCard(t *testing.T) {
 		})
 	}
 }
+
+func TestDeleteCard(t *testing.T) {
+	assert := assert.New(t)
+	db, rLogin, cleanup := initTest()
+	defer cleanup()
+
+	id, _ := NewCard(db, rLogin.Account, request.Card{
+		Card:         "Mastercard",
+		Holder:       "John Doe",
+		Number:       5216570769466262,
+		SecurityCode: 179,
+		Month:        rand.Intn(12) + 1,
+		Year:         1 + time.Now().Year(),
+		Settings: models.Settings{
+			Favorite: true,
+			Group:    "visas",
+			Icon:     "default",
+			Status:   "secured",
+		},
+	})
+
+	tests := []struct {
+		name      string
+		account   string
+		id        string
+		expectErr bool
+	}{
+		{
+			"deleted fail",
+			"baduser",
+			id,
+			true,
+		},
+		{
+			"deleted",
+			rLogin.Account,
+			id,
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := DeleteCard(db, tt.account, tt.id)
+
+			if tt.expectErr {
+				assert.NotNil(err)
+				log.Println(err)
+
+				card, err := GetCardById(db, tt.account, tt.id)
+				if err != nil && err != eh.ErrNotFound {
+					t.Fatal(err)
+				}
+
+				log.Println(card.ID)
+			} else {
+				assert.Nil(err)
+
+				card, err := GetCardById(db, rLogin.Account, id)
+				if err != nil && err != eh.ErrNotFound {
+					t.Fatal(err)
+				}
+
+				assert.Empty(card.ID)
+			}
+		})
+	}
+}
