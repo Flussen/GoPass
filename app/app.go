@@ -160,8 +160,8 @@ func (a *App) DoNewCard(account string, card request.Card) (string, error) {
 	return cards.NewCard(a.DB, account, card)
 }
 
-func (a *App) UpdateCard(account, id string) error {
-	panic("not implemented")
+func (a *App) UpdateCard(account, id string, request request.Card) error {
+	return cards.UpdateCard(a.DB, account, id, request)
 }
 
 func (a *App) DeleteCard(account, id string) error {
