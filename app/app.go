@@ -153,7 +153,7 @@ func (a *App) GetAllCards(account string) ([]models.Card, error) {
 }
 
 func (a *App) GetCardById(account, id string) (models.Card, error) {
-	panic("not implemented")
+	return cards.GetCardById(a.DB, account, id)
 }
 
 func (a *App) DoNewCard(account string, card request.Card) (string, error) {

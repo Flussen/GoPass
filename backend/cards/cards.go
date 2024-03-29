@@ -101,5 +101,43 @@ func GetAllCards(db *bbolt.DB, account string) ([]models.Card, error) {
 		return nil, err
 	}
 
+	if cards == nil {
+		return nil, eh.ErrNotFound
+	}
+
 	return cards, err
+}
+
+func GetCardById(db *bbolt.DB, account, id string) (models.Card, error) {
+
+	if account == "" || id == "" {
+		return models.Card{}, eh.ErrEmptyParameter
+	}
+
+	var card models.Card
+
+	err := db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketCards))
+
+		keyuuid := fmt.Sprintf("%s:%s", account, id)
+		cardByte := bucket.Get([]byte(keyuuid))
+		if cardByte == nil {
+			return eh.ErrNotFound
+		}
+
+		err := json.Unmarshal(cardByte, &card)
+		if err != nil {
+			return eh.ErrInternalServer
+		}
+		return nil
+	})
+	if err != nil {
+		return models.Card{}, err
+	}
+
+	if card.ID == "" {
+		return models.Card{}, eh.ErrNotFound
+	}
+
+	return card, nil
 }

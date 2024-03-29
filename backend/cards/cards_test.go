@@ -1,6 +1,7 @@
 package cards
 
 import (
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"fmt"
@@ -18,6 +19,112 @@ func generateRandomNumber(n int) uint {
 	min := uint(math.Pow10(n - 1)) // Mínimo número posible de n dígitos
 	max := uint(math.Pow10(n) - 1) // Máximo número posible de n dígitos
 	return min + uint(rand.Intn(int(max-min)))
+}
+
+func TestGetAllCards(t *testing.T) {
+	assert := assert.New(t)
+	db, rLogin, cleanup := initTest()
+	defer cleanup()
+
+	tests := []struct {
+		name      string
+		account   string
+		expectErr bool
+	}{
+		{
+			"all passwords were obtained",
+			rLogin.Account,
+			false,
+		},
+		{
+			"test fail",
+			"imNotA_user",
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cards, err := GetAllCards(db, tt.account)
+
+			log.Println(err)
+
+			if tt.expectErr {
+				assert.NotNil(err)
+				assert.Nil(cards)
+			} else {
+				assert.NotNil(cards)
+				assert.Nil(err)
+			}
+		})
+	}
+}
+
+func TestGetCardByID(t *testing.T) {
+	assert := assert.New(t)
+	db, rLogin, cleanup := initTest()
+	defer cleanup()
+
+	id, _ := NewCard(db, rLogin.Account, request.Card{
+		Card:         "Mastercard",
+		Holder:       "John Doe",
+		Number:       5216570769466262,
+		SecurityCode: 179,
+		Month:        rand.Intn(12) + 1,
+		Year:         1 + time.Now().Year(),
+		Settings: models.Settings{
+			Favorite: true,
+			Group:    "visas",
+			Icon:     "default",
+			Status:   "secured",
+		},
+	})
+
+	tests := []struct {
+		name      string
+		account   string
+		id        string
+		expectErr bool
+	}{
+		{
+			"get passed",
+			rLogin.Account,
+			id,
+			false,
+		},
+		{
+			"test fail 1",
+			rLogin.Account,
+			"iamnotaid",
+			true,
+		},
+		{
+			"test fail 2",
+			"iamnotauser",
+			id,
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			card, err := GetCardById(db, tt.account, tt.id)
+
+			log.Println(err)
+
+			if tt.expectErr {
+				assert.NotNil(err)
+				if err != eh.ErrNotFound {
+					t.Fatal("It didn't turn out to be a programmed error.")
+				}
+				assert.Empty(card)
+			} else {
+				assert.NotEmpty(card)
+				assert.Nil(err)
+				assert.Equal(card.ID, id)
+			}
+		})
+	}
 }
 
 func TestNewCard(t *testing.T) {

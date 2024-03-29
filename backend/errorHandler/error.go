@@ -24,6 +24,7 @@ const (
 var (
 	ErrUserNotFound   = NewGoPassError("could not get the user within this bucket")
 	ErrNotFound       = NewGoPassError("not found")
+	ErrEmptyParameter = NewGoPassError("none of the parameters can be empty")
 	ErrInternalServer = NewGoPassError("internal server error")
 )
 
