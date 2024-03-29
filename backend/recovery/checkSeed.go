@@ -17,7 +17,7 @@ func CheckSeeds(db *bbolt.DB, account string, seeds []string) error {
 	return db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte("Users"))
 		if bucket == nil {
-			return eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrUserNotFound
 		}
 
 		userByte := bucket.Get([]byte(account))

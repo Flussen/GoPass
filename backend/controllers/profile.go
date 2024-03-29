@@ -26,7 +26,7 @@ func UpdateProfile(db *bbolt.DB, username string, newModel models.UserRequest) e
 
 		userBytes := bucket.Get([]byte(username))
 		if userBytes == nil {
-			return eh.NewGoPassError(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		var userOriginalData models.User

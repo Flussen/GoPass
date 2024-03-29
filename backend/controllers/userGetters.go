@@ -83,7 +83,7 @@ func GetUserInfo(db *bbolt.DB, username string) (*models.User, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return eh.NewGoPassError(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)

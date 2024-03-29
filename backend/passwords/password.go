@@ -84,7 +84,7 @@ func DeletePassword(DB *bbolt.DB, account, id string) error {
 	return DB.Update(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(database.BucketPassword))
 		if bucket == nil {
-			eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrInternalServer
 		}
 
 		err := bucket.Delete([]byte(keyName))
@@ -124,7 +124,7 @@ func UpdatePassword(db *bbolt.DB, account, id, userKey, newTitle, newPwd, newUse
 
 			userBucket := tx.Bucket([]byte(database.BucketPassword))
 			if userBucket == nil {
-				eh.NewGoPassError(eh.ErrInternalServer)
+				return eh.ErrInternalServer
 			}
 
 			dataByte := userBucket.Get([]byte(keyName))
@@ -185,7 +185,7 @@ func GetPasswordByID(db *bbolt.DB, account, id string) (models.Password, error) 
 	}
 
 	if password.ID == "" {
-		return models.Password{}, eh.NewGoPassError(eh.ErrInternalServer)
+		return models.Password{}, eh.ErrInternalServer
 	}
 
 	return password, nil
@@ -203,7 +203,7 @@ func SetPasswordSettings(db *bbolt.DB, account, id string, data models.Settings)
 	err := db.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(database.BucketPassword))
 		if userBucket == nil {
-			return eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrInternalServer
 		}
 
 		passwordByte := userBucket.Get([]byte(keyName))
@@ -245,7 +245,7 @@ func SetPasswordSettings(db *bbolt.DB, account, id string, data models.Settings)
 	return db.Update(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(database.BucketPassword))
 		if userBucket == nil {
-			return eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrInternalServer
 		}
 
 		bytes, err := json.Marshal(newModel)
@@ -260,9 +260,13 @@ func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 	var passwords []models.Password
 
 	err := db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(database.BucketPassword))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(database.BucketPassword))
+		if err != nil {
+			return eh.ErrInternalServer
+		}
+
 		if bucket == nil {
-			return eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrInternalServer
 		}
 
 		c := bucket.Cursor()
@@ -276,7 +280,7 @@ func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 			err := json.Unmarshal(v, &pass)
 			if err != nil {
 				log.Println("ERROR:", err)
-				return eh.NewGoPassError(eh.ErrInternalServer)
+				return eh.ErrInternalServer
 			}
 
 			fmt.Println(k, v)

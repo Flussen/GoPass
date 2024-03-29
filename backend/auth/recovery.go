@@ -13,12 +13,12 @@ func NewRecovery(db *bbolt.DB, account, newPassword string) error {
 	return db.Update(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte("Users"))
 		if bucket == nil {
-			eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrInternalServer
 		}
 
 		bytes := bucket.Get([]byte(account))
 		if bytes == nil {
-			eh.NewGoPassError(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		var user models.User
@@ -34,7 +34,7 @@ func NewRecovery(db *bbolt.DB, account, newPassword string) error {
 
 		hashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), 15)
 		if err != nil {
-			return eh.NewGoPassError(eh.ErrInternalServer)
+			return eh.ErrUserNotFound
 		}
 
 		user.Password = string(hashed)

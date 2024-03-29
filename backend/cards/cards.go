@@ -1,11 +1,13 @@
 package cards
 
 import (
+	database "GoPass/backend/db"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,8 +22,16 @@ func NewCard(db *bbolt.DB, account string, request request.Card) (string, error)
 
 	cardExpiry := time.Date(request.Year, time.Month(request.Month), 1, 0, 0, 0, 0, time.UTC)
 
-	if time.Now().Before(cardExpiry) {
+	if !time.Now().Before(cardExpiry) {
 		return "", eh.NewGoPassError("card is maybe expired")
+	}
+
+	if len(strconv.FormatUint(uint64(request.Number), 10)) < 16 {
+		return "", eh.NewGoPassError("the card number cannot be less than 16")
+	}
+
+	if len(strconv.FormatUint(uint64(request.SecurityCode), 10)) < 3 {
+		return "", eh.NewGoPassError("the securiy number cannot be less than 3")
 	}
 
 	newCard := models.Card{
@@ -42,7 +52,7 @@ func NewCard(db *bbolt.DB, account string, request request.Card) (string, error)
 	keyName := fmt.Sprintf("%s:%s", account, newCard.ID)
 
 	err = db.Update(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("cards"))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(database.BucketCards))
 		if err != nil {
 			return err
 		}
@@ -55,3 +65,7 @@ func NewCard(db *bbolt.DB, account string, request request.Card) (string, error)
 	}
 	return newCard.ID, nil
 }
+
+// func GetAllCards() ([]models.Card, error) {
+// 	var cards []models.Card
+// }

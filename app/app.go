@@ -148,11 +148,11 @@ func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
    ------------------------------------------------
 */
 
-func (a *App) GetCardById(account, id string) (models.Card, error) {
+func (a *App) GetAllCards(account string) ([]models.Card, error) {
 	panic("not implemented")
 }
 
-func (a *App) GetAllCards(account string) ([]models.Card, error) {
+func (a *App) GetCardById(account, id string) (models.Card, error) {
 	panic("not implemented")
 }
 
@@ -253,7 +253,7 @@ func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 	err := a.DB.View(func(tx *bbolt.Tx) error {
 		userBucket := tx.Bucket([]byte(username))
 		if userBucket == nil {
-			return eh.NewGoPassError(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		encryptedPasswordBytes := userBucket.Get([]byte(id))

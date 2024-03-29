@@ -13,18 +13,18 @@ type GoPassErrors struct {
 const (
 	ErrLogin_AuthenticationFailure = "authentication failure"
 	ErrBucketNotFound              = "'Users' bucket not found"
-	ErrUserNotFound                = "could not get the user within this bucket"
 	ErrInvalidCredentils           = "invalid credentials"
 	ErrUnmarshal                   = "error from Unmarshal process"
 	ErrMarshal                     = "error from Marshal process"
 	ErrLogicFunctionName           = "logic or implementation error, please check in '%s' Go Function"
 	ErrEmptyParameters             = "none of the parameters can be empty"
 	ErrInvalidUserKey              = "the userKey is invalid"
-	ErrInternalServer              = "internal server error"
 )
 
 var (
-	ErrNotFound = NewGoPassError("not found")
+	ErrUserNotFound   = NewGoPassError("could not get the user within this bucket")
+	ErrNotFound       = NewGoPassError("not found")
+	ErrInternalServer = NewGoPassError("internal server error")
 )
 
 func (e *GoPassErrors) Error() string {

@@ -38,7 +38,7 @@ func Register(db *bbolt.DB, account, email, password string, configs models.Conf
 	}
 
 	if newUser.Seeds == nil {
-		return response.Register{}, eh.NewGoPassError(eh.ErrInternalServer)
+		return response.Register{}, eh.ErrInternalServer
 	}
 
 	if err := controllers.CreateUser(db, newUser); err != nil {

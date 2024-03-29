@@ -28,7 +28,7 @@ func Login(db *bbolt.DB, username, password string) (response.Login, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return errors.New(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)
