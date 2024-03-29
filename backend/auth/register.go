@@ -2,37 +2,52 @@ package auth
 
 import (
 	"GoPass/backend/controllers"
+	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
+	"GoPass/backend/pkg/response"
+	"GoPass/backend/recovery"
 	"time"
 
 	"github.com/google/uuid"
 	"go.etcd.io/bbolt"
 )
 
-func Register(db *bbolt.DB, username, email, password string) error {
+func Register(db *bbolt.DB, account, email, password string, configs models.Config) (response.Register, error) {
 
-	err := controllers.RegistryChecker(db, username, email, password)
+	err := controllers.RegistryChecker(db, account, email, password)
 	if err != nil {
-		return err
+		return response.Register{}, err
 	}
 
 	hashedPassword, UserKey, err := controllers.RegistrySecurer(password)
 	if err != nil {
-		return err
+		return response.Register{}, err
 	}
+
+	newSeeds := recovery.GenerateSeedPhrase(15)
 
 	newUser := models.User{
 		ID:        uuid.New().String(),
-		Username:  username,
+		Account:   account,
 		Email:     email,
 		Password:  string(hashedPassword),
+		Seeds:     newSeeds,
 		UserKey:   UserKey,
+		Config:    configs,
 		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 
-	if err := controllers.CreateUser(db, newUser); err != nil {
-		return err
+	if newUser.Seeds == nil {
+		return response.Register{}, eh.ErrInternalServer
 	}
 
-	return nil
+	if err := controllers.CreateUser(db, newUser); err != nil {
+		return response.Register{}, err
+	}
+	rsp := response.Register{
+		ID:      newUser.ID,
+		Account: newUser.Account,
+		Seeds:   newUser.Seeds,
+	}
+	return rsp, nil
 }

@@ -20,7 +20,7 @@ func validateEmail(email string) bool {
 func RegistryChecker(DB *bbolt.DB, username, email, password string) error {
 
 	if username == "" || password == "" {
-		return eh.NewGoPassError("fields cannot be empty")
+		return eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
 	if !validateEmail(email) {
