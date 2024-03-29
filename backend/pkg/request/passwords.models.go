@@ -1,9 +1,13 @@
 package request
 
-type SavePassword struct {
-	Account    string       `json:"account"`
-	AccountKey string       `json:"accountKey"`
-	Data       passwordData `json:"data"`
+import "GoPass/backend/models"
+
+type Password struct {
+	UserKey  string `json:"userKey"`
+	Title    string `json:"title"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Settings models.Settings
 }
 
 type DeletePassword struct {
@@ -11,9 +15,17 @@ type DeletePassword struct {
 	ID      string `json:"id"`
 }
 
-type UpdatePassword struct {
-	Account    string       `json:"account"`
-	AccountKey string       `json:"accountKey"`
-	ID         string       `json:"id"`
-	Data       passwordData `json:"data"`
+type SimplePassword struct {
+	ID       string `json:"id"`
+	Title    string `json:"title"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type CompletePassword struct {
+	ID       string          `json:"id"`
+	Title    string          `json:"title"`
+	Username string          `json:"username"`
+	Password string          `json:"password"`
+	Data     models.Settings `json:"data"`
 }

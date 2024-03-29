@@ -5,3 +5,8 @@ type Register struct {
 	Account string   `json:"account"`
 	Seeds   []string `json:"seeds"`
 }
+
+type Login struct {
+	Token   string `json:"token"`
+	UserKey string `json:"userKey"`
+}

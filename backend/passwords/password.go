@@ -1,23 +1,37 @@
-package controllers
+package passwords
 
 import (
+	"GoPass/backend/controllers"
 	database "GoPass/backend/db"
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/google/uuid"
 	"go.etcd.io/bbolt"
 )
 
-func SavePassword(db *bbolt.DB, account, userKey, usernameToSave, title, password, creationDate string, data models.Settings) (string, error) {
+func SavePassword(db *bbolt.DB, account, userKey, username, title, password, creationDate string, settings models.Settings) (string, error) {
 
-	if account == "" || userKey == "" || usernameToSave == "" ||
-		title == "" || password == "" || data.Icon == "" ||
-		data.Status == "" || data.Group == "" {
+	if account == "" || userKey == "" || username == "" ||
+		title == "" || password == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
+	}
+
+	if settings.Group == "" {
+		settings.Group = "none"
+	}
+
+	if settings.Icon == "" {
+		settings.Icon = "default"
+	}
+
+	if settings.Status == "" {
+		settings.Status = "default"
 	}
 
 	encryptedPassword, err := encryption.EncryptPassword(password, userKey)
@@ -28,13 +42,13 @@ func SavePassword(db *bbolt.DB, account, userKey, usernameToSave, title, passwor
 	newPassword := models.Password{
 		ID:       uuid.New().String(),
 		Title:    title,
-		Username: usernameToSave,
+		Username: username,
 		Pwd:      encryptedPassword,
 		Data: models.Settings{
-			Favorite: data.Favorite,
-			Group:    data.Group,
-			Icon:     data.Icon,
-			Status:   data.Status,
+			Favorite: settings.Favorite,
+			Group:    settings.Group,
+			Icon:     settings.Icon,
+			Status:   settings.Status,
 		},
 		CreatedDate: creationDate,
 	}
@@ -75,25 +89,26 @@ func DeletePassword(DB *bbolt.DB, account, id string) error {
 
 		err := bucket.Delete([]byte(keyName))
 		if err != nil {
+			log.Println("ERROR:", err)
 			return eh.NewGoPassError("id not found or cannot deleted")
 		}
 
 		if bucket.Get([]byte(keyName)) != nil {
-			return fmt.Errorf("password for id %s was not deleted", id)
+			return eh.NewGoPassErrorf("password for id %s was not deleted", id)
 		}
 
 		return nil
 	})
 }
 
-func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUsername, newDate string) error {
-	if user == "" || id == "" || userKey == "" ||
+func UpdatePassword(db *bbolt.DB, account, id, userKey, newTitle, newPwd, newUsername, newDate string) error {
+	if account == "" || id == "" || userKey == "" ||
 		newTitle == "" || newPwd == "" ||
 		newUsername == "" || newDate == "" {
 		return eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
-	data, err := GetUserInfo(db, user)
+	data, err := controllers.GetUserInfo(db, account)
 	if err != nil {
 		return err
 	}
@@ -103,14 +118,16 @@ func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUserna
 			return err
 		}
 
+		keyName := fmt.Sprintf("%s:%s", account, id)
+
 		err = db.Update(func(tx *bbolt.Tx) error {
 
-			userBucket := tx.Bucket([]byte(user))
+			userBucket := tx.Bucket([]byte(database.BucketPassword))
 			if userBucket == nil {
-				return fmt.Errorf("bucket not found for user %s", user)
+				eh.NewGoPassError(eh.ErrInternalServer)
 			}
 
-			dataByte := userBucket.Get([]byte(id))
+			dataByte := userBucket.Get([]byte(keyName))
 
 			var oldPass models.Password
 
@@ -133,7 +150,7 @@ func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUserna
 				return err
 			}
 
-			return userBucket.Put([]byte(id), dataBytes)
+			return userBucket.Put([]byte(keyName), dataBytes)
 		})
 		if err != nil {
 			return err
@@ -143,8 +160,8 @@ func UpdatePassword(db *bbolt.DB, user, id, userKey, newTitle, newPwd, newUserna
 	return eh.NewGoPassError(eh.ErrInvalidUserKey)
 }
 
-func GetPasswordByID(db *bbolt.DB, account, id string) ([]byte, error) {
-	var pwdByte []byte
+func GetPasswordByID(db *bbolt.DB, account, id string) (models.Password, error) {
+	var password models.Password
 
 	keyName := fmt.Sprintf("%s:%s", account, id)
 
@@ -158,31 +175,40 @@ func GetPasswordByID(db *bbolt.DB, account, id string) ([]byte, error) {
 		if passwordBytes == nil {
 			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, account)
 		}
-		pwdByte = passwordBytes
+
+		json.Unmarshal(passwordBytes, &password)
+
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return models.Password{}, err
 	}
-	return pwdByte, nil
+
+	if password.ID == "" {
+		return models.Password{}, eh.NewGoPassError(eh.ErrInternalServer)
+	}
+
+	return password, nil
 }
 
-func SetPasswordSettings(db *bbolt.DB, id, user string, data models.Settings) error {
-	if id == "" || user == "" {
+func SetPasswordSettings(db *bbolt.DB, account, id string, data models.Settings) error {
+	if id == "" || account == "" {
 		return eh.NewGoPassError(eh.ErrEmptyParameters)
 	}
 
 	var oldPassword models.Password
 
+	keyName := fmt.Sprintf("%s:%s", account, id)
+
 	err := db.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(user))
+		userBucket := tx.Bucket([]byte(database.BucketPassword))
 		if userBucket == nil {
-			return fmt.Errorf("bucket not found for user %s", user)
+			return eh.NewGoPassError(eh.ErrInternalServer)
 		}
 
-		passwordByte := userBucket.Get([]byte(id))
+		passwordByte := userBucket.Get([]byte(keyName))
 		if passwordByte == nil {
-			return eh.NewGoPassErrorf("password not found for %s\nUser: %s", id, user)
+			return eh.NewGoPassErrorf("password not found for id: %s", id)
 		}
 
 		err := json.Unmarshal(passwordByte, &oldPassword)
@@ -217,15 +243,51 @@ func SetPasswordSettings(db *bbolt.DB, id, user string, data models.Settings) er
 	}
 
 	return db.Update(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(user))
+		userBucket := tx.Bucket([]byte(database.BucketPassword))
 		if userBucket == nil {
-			return fmt.Errorf("bucket not found for user %s", user)
+			return eh.NewGoPassError(eh.ErrInternalServer)
 		}
 
 		bytes, err := json.Marshal(newModel)
 		if err != nil {
 			return err
 		}
-		return userBucket.Put([]byte(id), bytes)
+		return userBucket.Put([]byte(keyName), bytes)
 	})
+}
+
+func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
+	var passwords []models.Password
+
+	err := db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketPassword))
+		if bucket == nil {
+			return eh.NewGoPassError(eh.ErrInternalServer)
+		}
+
+		c := bucket.Cursor()
+		prefix := []byte(fmt.Sprintf("%s:", account))
+
+		for k, v := c.Seek(prefix); k != nil && strings.HasPrefix(string(k),
+			string(prefix)); k, v = c.Next() {
+
+			var pass models.Password
+
+			err := json.Unmarshal(v, &pass)
+			if err != nil {
+				log.Println("ERROR:", err)
+				return eh.NewGoPassError(eh.ErrInternalServer)
+			}
+
+			fmt.Println(k, v)
+			passwords = append(passwords, pass)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Println("ERROR:", err)
+		return []models.Password{}, err
+	}
+
+	return passwords, err
 }

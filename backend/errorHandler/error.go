@@ -23,6 +23,10 @@ const (
 	ErrInternalServer              = "internal server error"
 )
 
+var (
+	ErrNotFound = NewGoPassError("not found")
+)
+
 func (e *GoPassErrors) Error() string {
 	return e.Title
 }

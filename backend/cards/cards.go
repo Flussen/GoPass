@@ -12,7 +12,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func PutNewCard(db *bbolt.DB, account string, request request.Card) (string, error) {
+func NewCard(db *bbolt.DB, account string, request request.Card) (string, error) {
 
 	if request.Card == "" {
 		return "", eh.NewGoPassError(eh.ErrEmptyParameters)
