@@ -23,10 +23,15 @@ func TestGetAllCards(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// cards array, error
-			// []cards, error
+			cards, err := GetAllCards(db, rLogin.Account)
 
-			// cards are more then 1
+			if tt.expectErr {
+				assert.NotNil(err)
+				assert.Nil(cards)
+			} else {
+				assert.NotNil(cards)
+				assert.Nil(err)
+			}
 		})
 	}
 }

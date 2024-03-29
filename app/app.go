@@ -149,7 +149,7 @@ func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
 */
 
 func (a *App) GetAllCards(account string) ([]models.Card, error) {
-	panic("not implemented")
+	return cards.GetAllCards(a.DB, account)
 }
 
 func (a *App) GetCardById(account, id string) (models.Card, error) {

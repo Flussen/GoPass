@@ -260,12 +260,9 @@ func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 	var passwords []models.Password
 
 	err := db.View(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(database.BucketPassword))
-		if err != nil {
-			return eh.ErrInternalServer
-		}
-
+		bucket := tx.Bucket([]byte(database.BucketPassword))
 		if bucket == nil {
+			log.Println("ERROR: bucket not exist")
 			return eh.ErrInternalServer
 		}
 
@@ -283,14 +280,13 @@ func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 				return eh.ErrInternalServer
 			}
 
-			fmt.Println(k, v)
 			passwords = append(passwords, pass)
 		}
 		return nil
 	})
 	if err != nil {
 		log.Println("ERROR:", err)
-		return []models.Password{}, err
+		return nil, err
 	}
 
 	return passwords, err

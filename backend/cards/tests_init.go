@@ -6,14 +6,12 @@ import (
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/test"
 	"math/rand"
-	"testing"
 	"time"
 
 	"go.etcd.io/bbolt"
 )
 
-func initTest() (*bbolt.DB, request.Login, func()) {
-	var t *testing.T
+func initTest() (*bbolt.DB, request.Register, func()) {
 	db, cleanup := test.CreateTestDB()
 
 	// Register process
@@ -27,18 +25,12 @@ func initTest() (*bbolt.DB, request.Login, func()) {
 	_, err := auth.Register(db, rRegister.Account, rRegister.Email,
 		rRegister.Password, rRegister.Configs)
 	if err != nil {
-		t.Fatalf("register failed: %v", err)
+		panic(err)
 	}
 
-	// Login process
-	rLogin := request.Login{
-		Account:  "flussen",
-		Password: "admin",
-	}
-
-	_, err = auth.Login(db, rLogin.Account, rLogin.Password)
+	_, err = auth.Login(db, rRegister.Account, rRegister.Password)
 	if err != nil {
-		t.Fatalf("Login failed: %v", err)
+		panic(err)
 	}
 
 	card1 := request.Card{
@@ -70,14 +62,14 @@ func initTest() (*bbolt.DB, request.Login, func()) {
 		},
 	}
 
-	_, err = NewCard(db, rLogin.Account, card1)
+	_, err = NewCard(db, rRegister.Account, card1)
 	if err != nil {
-		t.Fatal(err)
+		panic(err)
 	}
-	_, err = NewCard(db, rLogin.Account, card2)
+	_, err = NewCard(db, rRegister.Account, card2)
 	if err != nil {
-		t.Fatal(err)
+		panic(err)
 	}
 
-	return db, rLogin, cleanup
+	return db, rRegister, cleanup
 }

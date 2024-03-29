@@ -7,7 +7,9 @@ import (
 	"GoPass/backend/pkg/request"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -66,6 +68,38 @@ func NewCard(db *bbolt.DB, account string, request request.Card) (string, error)
 	return newCard.ID, nil
 }
 
-// func GetAllCards() ([]models.Card, error) {
-// 	var cards []models.Card
-// }
+func GetAllCards(db *bbolt.DB, account string) ([]models.Card, error) {
+	var cards []models.Card
+
+	err := db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketCards))
+		if bucket == nil {
+			log.Println("ERROR: bucket not exist")
+			return eh.ErrInternalServer
+		}
+
+		c := bucket.Cursor()
+		prefix := []byte(fmt.Sprintf("%s:", account))
+
+		for k, v := c.Seek(prefix); k != nil && strings.HasPrefix(string(k),
+			string(prefix)); k, v = c.Next() {
+
+			var card models.Card
+
+			err := json.Unmarshal(v, &card)
+			if err != nil {
+				log.Println("ERROR:", err)
+				return eh.ErrInternalServer
+			}
+
+			cards = append(cards, card)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Println("ERROR:", err)
+		return nil, err
+	}
+
+	return cards, err
+}
