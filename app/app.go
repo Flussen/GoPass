@@ -24,6 +24,7 @@ import (
 	"GoPass/backend/pkg/response"
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
+	"context"
 
 	"encoding/json"
 	"time"
@@ -35,7 +36,8 @@ import (
 // be added to main.go so that wails go compiles. This is the way to
 // improve the abstraction of the program so that the program scales.
 type App struct {
-	DB *bbolt.DB
+	DB  *bbolt.DB
+	ctx context.Context
 }
 
 // NewApp create an instance for wails to work on in the main package and receive the app
@@ -45,6 +47,10 @@ func NewApp() *App {
 
 func NewAppWithDB(db *bbolt.DB) *App {
 	return &App{DB: db}
+}
+
+func (a *App) Startup(ctx context.Context) {
+	a.ctx = ctx
 }
 
 /*
@@ -165,7 +171,7 @@ func (a *App) UpdateCard(account, id string, request request.Card) error {
 }
 
 func (a *App) DeleteCard(account, id string) error {
-	panic("not implemented")
+	return cards.DeleteCard(a.DB, account, id)
 }
 
 /*
