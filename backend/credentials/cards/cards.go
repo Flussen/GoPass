@@ -53,6 +53,7 @@ func NewCard(db *bbolt.DB, account string, rqst request.Card) (string, error) {
 		Expiry:       cardExpiry,
 		SecurityCode: rqst.SecurityCode,
 		Settings:     rqst.Settings,
+		CreatedAt:    time.Now(),
 	}
 
 	cardByte, err := json.Marshal(newCard)

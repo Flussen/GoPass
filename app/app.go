@@ -27,7 +27,6 @@ import (
 	"context"
 
 	"encoding/json"
-	"time"
 
 	"go.etcd.io/bbolt"
 )
@@ -101,14 +100,8 @@ func (a *App) DoRecovery(request request.Recovery) error {
 */
 
 // saves a password for the given username and service.
-func (a *App) DoSavePassword(account string, request request.Password) (string, error) {
-	date := time.Now().Format(time.DateTime)
-	id, err := passwords.SavePassword(a.DB, account, request.UserKey, request.Username,
-		request.Title, request.Password, date, request.Settings)
-	if err != nil {
-		return "", err
-	}
-	return id, nil
+func (a *App) DoNewPassword(account, userKey string, rqst request.Password) (string, error) {
+	return passwords.NewPassword(a.DB, account, userKey, rqst)
 }
 
 // removes a password, which requires the user to whom that password belongs and the password id.
@@ -116,10 +109,8 @@ func (a *App) DoDeletePassword(username, id string) error {
 	return passwords.DeletePassword(a.DB, username, id)
 }
 
-func (a *App) DoUpdatePassword(account, userKey string, password request.SimplePassword) error {
-	newDate := time.Now().Format(time.DateTime)
-	return passwords.UpdatePassword(a.DB, account, password.ID, userKey, password.Title,
-		password.Password, password.Username, newDate)
+func (a *App) DoUpdatePassword(account, id, userKey string, rqst request.Password) error {
+	return passwords.UpdatePassword(a.DB, account, id, userKey, rqst)
 }
 
 func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) error {
@@ -127,25 +118,12 @@ func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) er
 }
 
 func (a *App) GetPasswordById(account, id string) (models.Password, error) {
-	password, err := passwords.GetPasswordByID(a.DB, account, id)
-	if err != nil {
-		return models.Password{}, err
-	}
-	return password, nil
+	return passwords.GetPasswordByID(a.DB, account, id)
 }
 
 // Get all passwords by a account
 func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
-	pwds, err := passwords.GetAllPasswords(a.DB, account)
-	if err != nil {
-		return []models.Password{}, err
-	}
-
-	if pwds == nil {
-		return []models.Password{}, eh.ErrNotFound
-	}
-
-	return pwds, nil
+	return passwords.GetAllPasswords(a.DB, account)
 }
 
 /*
