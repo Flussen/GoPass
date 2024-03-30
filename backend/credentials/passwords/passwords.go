@@ -92,11 +92,11 @@ func DeletePassword(DB *bbolt.DB, account, id string) error {
 		err := bucket.Delete([]byte(keyName))
 		if err != nil {
 			log.Println("ERROR:", err)
-			return eh.NewGoPassError("id not found or cannot deleted")
+			return eh.ErrInternalServer
 		}
 
 		if bucket.Get([]byte(keyName)) != nil {
-			return eh.NewGoPassErrorf("password for id %s was not deleted", id)
+			return eh.ErrNotFound
 		}
 
 		return nil

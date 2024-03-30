@@ -253,3 +253,132 @@ func TestUpdatePassword(t *testing.T) {
 		})
 	}
 }
+
+func TestSetPasswordSettings(t *testing.T) {
+	db, rspL, rqstR, cleanup := initTestPassword()
+	defer cleanup()
+
+	assert := assert.New(t)
+
+	passwordID, err := NewPassword(db, rqstR.Account, rspL.UserKey, request.Password{
+		Title:    "Password for Settings Test",
+		Username: "userSettings",
+		Pwd:      "password123",
+		Settings: models.Settings{Favorite: false, Group: "group1", Icon: "icon1", Status: "status1"},
+	})
+	assert.NoError(err)
+
+	tests := []struct {
+		name        string
+		account     string
+		id          string
+		settings    models.Settings
+		expectError bool
+	}{
+		{
+			name:        "successful settings update",
+			account:     rqstR.Account,
+			id:          passwordID,
+			settings:    models.Settings{Favorite: true, Group: "group2", Icon: "icon2", Status: "status2"},
+			expectError: false,
+		},
+		{
+			name:        "empty id and account",
+			account:     "",
+			id:          "",
+			settings:    models.Settings{},
+			expectError: true,
+		},
+		{
+			name:        "password not found",
+			account:     rqstR.Account,
+			id:          "nonexistent",
+			settings:    models.Settings{Favorite: true},
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := SetPasswordSettings(db, tt.account, tt.id, tt.settings)
+
+			if tt.expectError {
+				assert.Error(err)
+			} else {
+				assert.NoError(err)
+
+				// Verify if settings were updated correctly
+				updatedPassword, err := GetPasswordByID(db, tt.account, tt.id)
+				assert.NoError(err)
+				assert.Equal(tt.settings.Favorite, updatedPassword.Settings.Favorite)
+				if tt.settings.Group != "" {
+					assert.Equal(tt.settings.Group, updatedPassword.Settings.Group)
+				}
+				if tt.settings.Icon != "" {
+					assert.Equal(tt.settings.Icon, updatedPassword.Settings.Icon)
+				}
+				if tt.settings.Status != "" {
+					assert.Equal(tt.settings.Status, updatedPassword.Settings.Status)
+				}
+			}
+		})
+	}
+}
+
+func TestDeletePassword(t *testing.T) {
+	db, rspL, rqstR, cleanup := initTestPassword()
+	defer cleanup()
+
+	assert := assert.New(t)
+
+	passwordID, err := NewPassword(db, rqstR.Account, rspL.UserKey, request.Password{
+		Title:    "Password for Deletion Test",
+		Username: "deleteUser",
+		Pwd:      "deletePwd",
+		Settings: models.Settings{Favorite: true, Group: "deleteGroup", Icon: "deleteIcon", Status: "deleteStatus"},
+	})
+	assert.NoError(err)
+
+	tests := []struct {
+		name        string
+		account     string
+		id          string
+		expectError bool
+	}{
+		{
+			name:        "successful deletion",
+			account:     rqstR.Account,
+			id:          passwordID,
+			expectError: false,
+		},
+		{
+			name:        "empty account",
+			account:     "",
+			id:          passwordID,
+			expectError: true,
+		},
+		{
+			name:        "empty id",
+			account:     rqstR.Account,
+			id:          "",
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := DeletePassword(db, tt.account, tt.id)
+
+			log.Println(err)
+
+			if tt.expectError {
+				assert.Error(err)
+			} else {
+				assert.NoError(err)
+
+				_, err := GetPasswordByID(db, tt.account, tt.id)
+				assert.Error(err)
+			}
+		})
+	}
+}
