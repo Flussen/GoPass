@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/google/uuid"
 	"go.etcd.io/bbolt"
@@ -258,6 +259,9 @@ func SetPasswordSettings(db *bbolt.DB, account, id string, data models.Settings)
 
 func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 	var passwords []models.Password
+	var wg sync.WaitGroup
+	passwordChan := make(chan models.Password)
+	errorChan := make(chan error)
 
 	err := db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(database.BucketPassword))
@@ -272,21 +276,51 @@ func GetAllPasswords(db *bbolt.DB, account string) ([]models.Password, error) {
 		for k, v := c.Seek(prefix); k != nil && strings.HasPrefix(string(k),
 			string(prefix)); k, v = c.Next() {
 
-			var pass models.Password
+			wg.Add(1)
+			go func(val []byte) {
+				defer wg.Done()
 
-			err := json.Unmarshal(v, &pass)
-			if err != nil {
-				log.Println("ERROR:", err)
-				return eh.ErrInternalServer
-			}
-
-			passwords = append(passwords, pass)
+				var password models.Password
+				err := json.Unmarshal(val, &password)
+				if err != nil {
+					log.Println("ERROR:", err)
+					errorChan <- err
+				} else {
+					passwordChan <- password
+				}
+			}(v)
 		}
 		return nil
 	})
 	if err != nil {
 		log.Println("ERROR:", err)
 		return nil, err
+	}
+
+	go func() {
+		wg.Wait()
+		close(passwordChan)
+		close(errorChan)
+	}()
+
+	for password := range passwordChan {
+		passwords = append(passwords, password)
+	}
+
+	var firstError error
+	for err := range errorChan {
+		if firstError == nil {
+			firstError = err
+		}
+		log.Println("ERROR:", err)
+	}
+
+	if firstError != nil {
+		return nil, eh.ErrInternalServer
+	}
+
+	if len(passwords) == 0 {
+		return nil, eh.ErrNotFound
 	}
 
 	return passwords, err
