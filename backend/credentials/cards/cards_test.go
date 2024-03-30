@@ -55,6 +55,7 @@ func TestGetAllCards(t *testing.T) {
 			} else {
 				assert.NotNil(cards)
 				assert.Nil(err)
+				fmt.Println(cards)
 			}
 		})
 	}

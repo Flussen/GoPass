@@ -13,13 +13,13 @@ import (
 	// Package imports
 
 	"GoPass/backend/auth"
-	"GoPass/backend/cards"
 	"GoPass/backend/controllers"
+	"GoPass/backend/credentials/cards"
+	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler" // Error handler
 	"GoPass/backend/models"
-	"GoPass/backend/passwords"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
 	"GoPass/backend/recovery"
