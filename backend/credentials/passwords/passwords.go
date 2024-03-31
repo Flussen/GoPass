@@ -108,7 +108,7 @@ func UpdatePassword(db *bbolt.DB, account, id, userKey string, rqst request.Pass
 		return eh.ErrEmptyParameter
 	}
 
-	data, err := profile.GetAccounInfo(db, account)
+	data, err := profile.GetAccountInfo(db, account)
 	if err != nil {
 		return err
 	}

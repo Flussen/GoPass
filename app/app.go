@@ -158,7 +158,7 @@ func (a *App) DeleteCard(account, id string) error {
 
 // Change password for the user ACCOUNT!!
 func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
-	return profile.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+	return profile.ChangeAccountPassword(a.DB, username, originalPwd, newPwd)
 }
 
 func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) error {
@@ -166,7 +166,7 @@ func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) 
 }
 
 func (a *App) GetAccountInfo(username string) (string, error) {
-	model, err := profile.GetAccounInfo(a.DB, username)
+	model, err := profile.GetAccountInfo(a.DB, username)
 	if err != nil {
 		eh.NewGoPassErrorf("ERROR: %v", err)
 	}
@@ -288,7 +288,7 @@ func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 */
 
 // ListUsers retrieves user information concurrently
-func (a *App) GetListAccounts() (string, error) {
+func (a *App) GetListAccounts() ([]models.User, error) {
 	return profile.GetUsersConcurrently(a.DB)
 }
 

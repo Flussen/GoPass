@@ -54,7 +54,7 @@ func UpdateProfile(db *bbolt.DB, account string, newModel models.UserRequest) er
 }
 
 // ChangeUserPassword changes a user's password in the database.
-func ChangeUserPassword(db *bbolt.DB, account, originalPwd, newPwd string) error {
+func ChangeAccountPassword(db *bbolt.DB, account, originalPwd, newPwd string) error {
 	return db.Update(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(database.BucketUsers))
 		if bucket == nil {
@@ -62,12 +62,15 @@ func ChangeUserPassword(db *bbolt.DB, account, originalPwd, newPwd string) error
 			return eh.ErrInternalServer
 		}
 
-		user, err := GetAccounInfo(db, account)
-		if err != nil {
+		userByte := bucket.Get([]byte(account))
+		if userByte == nil {
 			return eh.ErrNotFound
 		}
+		var user models.User
+		json.Unmarshal(userByte, &user)
 
-		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(originalPwd)); err != nil {
+		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(originalPwd))
+		if err != nil {
 			return eh.ErrInvalidCredentils
 		}
 
@@ -96,25 +99,21 @@ func ChangeUserPassword(db *bbolt.DB, account, originalPwd, newPwd string) error
 }
 
 // GetUsersConcurrently retrieves all users in the database
-// under develop
-func GetUsersConcurrently(db *bbolt.DB) (string, error) {
-	var users []*models.User
+func GetUsersConcurrently(db *bbolt.DB) ([]models.User, error) {
+	var users []models.User
 
-	resultChan := make(chan *models.User)
+	resultChan := make(chan models.User)
 	errorChan := make(chan error)
-
 	var wg sync.WaitGroup
 
-	var err error
-
-	db.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("Users"))
-		if b == nil {
+	err := db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketUsers))
+		if bucket == nil {
 			log.Println("Users bucket not found")
-			return nil
+			return eh.ErrInternalServer
 		}
 
-		c := b.Cursor()
+		c := bucket.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			wg.Add(1)
@@ -127,12 +126,16 @@ func GetUsersConcurrently(db *bbolt.DB) (string, error) {
 					return
 				}
 
-				resultChan <- &user
+				resultChan <- user
 			}(v)
 		}
 
 		return nil
 	})
+
+	if err != nil {
+		return nil, eh.ErrInternalServer
+	}
 
 	go func() {
 		wg.Wait()
@@ -141,23 +144,26 @@ func GetUsersConcurrently(db *bbolt.DB) (string, error) {
 	}()
 
 	for user := range resultChan {
+		user.Password = ""
 		users = append(users, user)
 	}
 
-	for err := range errorChan {
-		log.Printf("Error unmarshalling user: %v", err)
+	for e := range errorChan {
+		if err == nil {
+			err = e
+		}
+		log.Println(err)
 	}
 
-	datajs, err := json.Marshal(users)
-	if err != nil {
-		log.Printf("Error unmarshalling user: %v", err)
+	if users == nil {
+		return nil, eh.NewGoPassError("there are no users!")
 	}
 
-	return string(datajs), err
+	return users, err
 }
 
 // GetUserInfo retrieves user information from the database
-func GetAccounInfo(db *bbolt.DB, account string) (models.User, error) {
+func GetAccountInfo(db *bbolt.DB, account string) (models.User, error) {
 
 	var storedUser models.User
 	err := db.View(func(tx *bbolt.Tx) error {

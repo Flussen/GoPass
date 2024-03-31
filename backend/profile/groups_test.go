@@ -53,7 +53,7 @@ func TestNewGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := GetAccounInfo(db, tt.account)
+				user, err := GetAccountInfo(db, tt.account)
 				assert.NoError(err)
 
 				assert.Equal(tt.groups, user.Config.Groups)
@@ -112,7 +112,7 @@ func TestDeleteGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := GetAccounInfo(db, tt.account)
+				user, err := GetAccountInfo(db, tt.account)
 				assert.NoError(err)
 				assert.Len(user.Config.Groups, 1)
 
