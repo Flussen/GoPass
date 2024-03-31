@@ -13,20 +13,20 @@ import (
 	// Package imports
 
 	"GoPass/backend/auth"
-	"GoPass/backend/cards"
 	"GoPass/backend/controllers"
+	"GoPass/backend/credentials/cards"
+	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler" // Error handler
 	"GoPass/backend/models"
-	"GoPass/backend/passwords"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
+	"context"
 
 	"encoding/json"
-	"time"
 
 	"go.etcd.io/bbolt"
 )
@@ -35,7 +35,8 @@ import (
 // be added to main.go so that wails go compiles. This is the way to
 // improve the abstraction of the program so that the program scales.
 type App struct {
-	DB *bbolt.DB
+	DB  *bbolt.DB
+	ctx context.Context
 }
 
 // NewApp create an instance for wails to work on in the main package and receive the app
@@ -45,6 +46,10 @@ func NewApp() *App {
 
 func NewAppWithDB(db *bbolt.DB) *App {
 	return &App{DB: db}
+}
+
+func (a *App) Startup(ctx context.Context) {
+	a.ctx = ctx
 }
 
 /*
@@ -95,14 +100,8 @@ func (a *App) DoRecovery(request request.Recovery) error {
 */
 
 // saves a password for the given username and service.
-func (a *App) DoSavePassword(account string, request request.Password) (string, error) {
-	date := time.Now().Format(time.DateTime)
-	id, err := passwords.SavePassword(a.DB, account, request.UserKey, request.Username,
-		request.Title, request.Password, date, request.Settings)
-	if err != nil {
-		return "", err
-	}
-	return id, nil
+func (a *App) DoNewPassword(account, userKey string, rqst request.Password) (string, error) {
+	return passwords.NewPassword(a.DB, account, userKey, rqst)
 }
 
 // removes a password, which requires the user to whom that password belongs and the password id.
@@ -110,10 +109,8 @@ func (a *App) DoDeletePassword(username, id string) error {
 	return passwords.DeletePassword(a.DB, username, id)
 }
 
-func (a *App) DoUpdatePassword(account, userKey string, password request.SimplePassword) error {
-	newDate := time.Now().Format(time.DateTime)
-	return passwords.UpdatePassword(a.DB, account, password.ID, userKey, password.Title,
-		password.Password, password.Username, newDate)
+func (a *App) DoUpdatePassword(account, id, userKey string, rqst request.Password) error {
+	return passwords.UpdatePassword(a.DB, account, id, userKey, rqst)
 }
 
 func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) error {
@@ -121,25 +118,12 @@ func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) er
 }
 
 func (a *App) GetPasswordById(account, id string) (models.Password, error) {
-	password, err := passwords.GetPasswordByID(a.DB, account, id)
-	if err != nil {
-		return models.Password{}, err
-	}
-	return password, nil
+	return passwords.GetPasswordByID(a.DB, account, id)
 }
 
 // Get all passwords by a account
 func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
-	pwds, err := passwords.GetAllPasswords(a.DB, account)
-	if err != nil {
-		return []models.Password{}, err
-	}
-
-	if pwds == nil {
-		return []models.Password{}, eh.ErrNotFound
-	}
-
-	return pwds, nil
+	return passwords.GetAllPasswords(a.DB, account)
 }
 
 /*
@@ -165,7 +149,7 @@ func (a *App) UpdateCard(account, id string, request request.Card) error {
 }
 
 func (a *App) DeleteCard(account, id string) error {
-	panic("not implemented")
+	return cards.DeleteCard(a.DB, account, id)
 }
 
 /*

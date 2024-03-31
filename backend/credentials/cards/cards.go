@@ -10,6 +10,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -52,6 +53,7 @@ func NewCard(db *bbolt.DB, account string, rqst request.Card) (string, error) {
 		Expiry:       cardExpiry,
 		SecurityCode: rqst.SecurityCode,
 		Settings:     rqst.Settings,
+		CreatedAt:    time.Now(),
 	}
 
 	cardByte, err := json.Marshal(newCard)
@@ -78,6 +80,9 @@ func NewCard(db *bbolt.DB, account string, rqst request.Card) (string, error) {
 
 func GetAllCards(db *bbolt.DB, account string) ([]models.Card, error) {
 	var cards []models.Card
+	var wg sync.WaitGroup
+	cardChan := make(chan models.Card)
+	errorChan := make(chan error)
 
 	err := db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(database.BucketCards))
@@ -92,24 +97,51 @@ func GetAllCards(db *bbolt.DB, account string) ([]models.Card, error) {
 		for k, v := c.Seek(prefix); k != nil && strings.HasPrefix(string(k),
 			string(prefix)); k, v = c.Next() {
 
-			var card models.Card
+			wg.Add(1)
+			go func(val []byte) {
+				defer wg.Done()
 
-			err := json.Unmarshal(v, &card)
-			if err != nil {
-				log.Println("ERROR:", err)
-				return eh.ErrInternalServer
-			}
-
-			cards = append(cards, card)
+				var card models.Card
+				err := json.Unmarshal(val, &card)
+				if err != nil {
+					log.Println("ERROR:", err)
+					errorChan <- err
+				} else {
+					cardChan <- card
+				}
+			}(v)
 		}
 		return nil
 	})
+
 	if err != nil {
 		log.Println("ERROR:", err)
 		return nil, err
 	}
 
-	if cards == nil {
+	go func() {
+		wg.Wait()
+		close(cardChan)
+		close(errorChan)
+	}()
+
+	for card := range cardChan {
+		cards = append(cards, card)
+	}
+
+	var firstError error
+	for err := range errorChan {
+		if firstError == nil {
+			firstError = err
+		}
+		log.Println("ERROR:", err)
+	}
+
+	if firstError != nil {
+		return nil, eh.ErrInternalServer
+	}
+
+	if len(cards) == 0 {
 		return nil, eh.ErrNotFound
 	}
 
