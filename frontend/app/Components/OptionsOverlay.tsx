@@ -22,8 +22,8 @@ import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import WysiwygRoundedIcon from '@mui/icons-material/WysiwygRounded';
 interface OptionsOverlayProps {
-  setShowGenerator: (show: boolean) => void;
-  showGenerator: boolean;
+  setOptionName: (show: string) => void;
+  optionName: string;
   children: React.ReactNode;
   userName: string;
   setShowDashboard: (show: boolean) => void;
@@ -31,7 +31,7 @@ interface OptionsOverlayProps {
 
 }
 
-const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setShowGenerator, showGenerator, children, userName, setShowProfile }) => {
+const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setOptionName, optionName, children, userName, setShowProfile }) => {
 
   const [showSecureFiles, setShowSecureFiles] = useState(false);
 
@@ -65,27 +65,27 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setSh
         </div>
 
         <div className="">
-          <div onClick={() => { setShowGenerator(false) }} className={`flex items-center 2xl:justify-start justify-center w-full  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${!showGenerator ? ' bg-black border-l-2 border-primary' : ' hover:text-blackwhite'}`}>
+          <div onClick={() => { setOptionName('') }} className={`flex items-center 2xl:justify-start justify-center w-full  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == '' ? ' bg-black border-l-2 border-primary' : ' hover:text-blackwhite'}`}>
 
             <GridViewRoundedIcon sx={{ fontSize: 32 }} />
 
             <div className={`2xl:flex hidden `}>Dashboard</div>
           </div>
-          <div onClick={() => { setShowGenerator(false) }} className={`flex items-center 2xl:justify-start justify-center w-full h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${false ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite'}`}>
+          <div onClick={() => { setOptionName('Groups') }} className={`flex items-center 2xl:justify-start justify-center w-full h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Groups' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite'}`}>
 
             <WysiwygRoundedIcon sx={{ fontSize: 32 }} />
 
 
             <div className=" 2xl:flex hidden">My Groups</div>
           </div>
-          <div onClick={() => { setShowGenerator(false) }} className={`flex items-center 2xl:justify-start justify-center w-full  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${false ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite'}`}>
+          <div onClick={() => { setOptionName('Cards') }} className={`flex items-center 2xl:justify-start justify-center w-full border-l-2 border-darkgray  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Cards' ? 'bg-black  border-primary' : 'hover:text-blackwhite'}`}>
 
-          <CreditCardRoundedIcon sx={{ fontSize: 32 }} />
+            <CreditCardRoundedIcon sx={{ fontSize: 32 }} />
 
 
-<div className=" 2xl:flex hidden">My Cards</div>
+            <div className=" 2xl:flex hidden">My Cards</div>
           </div>
-          <div onClick={() => { setShowGenerator(true) }} className={`flex items-center 2xl:justify-start justify-center w-full  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${showGenerator ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite'}`}>
+          <div onClick={() => { setOptionName('Generator') }} className={`flex items-center 2xl:justify-start justify-center w-full  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Generator' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite'}`}>
 
             <PasswordRoundedIcon sx={{ fontSize: 32 }} />
 

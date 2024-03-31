@@ -34,37 +34,28 @@ import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import useTranslation from 'next-translate/useTranslation';
 
 
-interface DashboardProps {
-  setOptionName: (show: string) => void;
-  optionName: string;
-  userKey: string;
-  userName: string;
-  setShowDashboard: (show: boolean) => void;
-  setShowProfile: (show: boolean) => void;
-  showDashboard: boolean;
+interface GroupProps{
+    setOptionName: (show: string) => void;
+    optionName: string;
+    userKey: string;
+    userName: string;
+    setShowDashboard: (show: boolean) => void;
+    setShowProfile: (show: boolean) => void;
+    showDashboard: boolean;
 }
 
-
-
-const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName }) => {
-  const [email, setEmail] = useState("example@gmail.com");
-  const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setEmail(event.target.value);
-  };
-  const [titlee, setTitlee] = useState('')
+const Groups: React.FC<GroupProps> = ({showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName}) =>{
+    const [titlee, setTitlee] = useState('')
   const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setTitlee(event.target.value);
   };
-  const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
   const [arePasswords, setArePasswords] = useState(true)
 
+    return(
+        <div id="Dashboard" className='flex justify-between h-full '>
 
-
-  return (
-    <div id="Dashboard" className='flex justify-between h-full '>
-
-      <OptionsOverlay
+<OptionsOverlay
         setOptionName={setOptionName}
         optionName={optionName}
         userName={userName}
@@ -104,67 +95,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
 
           </div>
         </div>
-        <div className=" flex w-full space-x-12 h-full ">
-          <div className="w-[70%] h-full  ">
-            <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
-              <div className="flex justify-between  items-center">
-                <div className="text-5xl text-whitebg font-bold">
-                  My <span className="  text-primary">Password</span>
-                </div>
-                <div className="flex items-center space-x-6">
-                  <div className="flex justify-center items-center text-base space-x-2 text-gray hover:text-whitebg h-12 bg-darkgray rounded-full w-24 cursor-pointer">
-
-                    <div>
-                      Sort
-                    </div>
-                    <SortRoundedIcon sx={{ fontSize: 24 }} />
-
-                  </div>
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl ">
-
-                    <AddRoundedIcon sx={{ fontSize: 24 }} />
-                    <div >
-                      New Pass
-                    </div>
-                  </div>
-                </div>
-
-
-                <AddOverlay isOpen={isAddOverlayOpen} onClose={() => setIsAddOverlayOpen(!isAddOverlayOpen)} userKey={userKey} userName={userName} setArePasswords={setArePasswords} >
-                  <>
-                  </>
-                </AddOverlay>
-              </div>
-
-
-
-
-
-            </div>
-            {
-              arePasswords ?
-                <PasswordComp
-                  isAddOverlayOpen={isAddOverlayOpen} showDashboard={showDashboard} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
-
-                :
-                <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
-                  <div className="text-2xl">
-                    Add your first password!
-                  </div>
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-primary rounded-lg h-12 group hover:bg-darkprimary">
-                    <button className=" px-7 text-black rounded-md font-medium ">
-                      Add Password
-                    </button>
-                  </div>
-
-                </div>
-            }
-          </div>
-          <div className=" bg-primary h-full w-[30%] ">
-            fsdfds
-          </div>
-
-        </div>
+       
 
 
       </div>
@@ -172,12 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
 
 
     </div>
-
-
-
-
-
-  )
+    )
 }
 
-export default Dashboard
+export default Groups;

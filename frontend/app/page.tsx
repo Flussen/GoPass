@@ -10,6 +10,9 @@ import SignupResult from './Components/SignupResult';
 import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"
+import GroupsComp from "./Components/GroupsComp"
+import CardsComp from "./Components/CardsComp"
+
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
@@ -22,7 +25,7 @@ export default function Home() {
   const [tokenVerificated, setTokenVerificated] = useState(false)
   const [token, setToken] = useState('')
   const [showProfile, setShowProfile]=useState(false);
-
+ const [optionName, setOptionName] = useState('')
 
 
   
@@ -73,18 +76,23 @@ export default function Home() {
   }else if(showDashboard ) {
     return (
       <div className='h-screen'>
-        {showGenerator ? (
-          <Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} />
-        ) 
-        :
-        (
-          <Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setShowGenerator={setShowGenerator} showGenerator={showGenerator} userName={userName} userKey={userKey} />
-        )}
+      
+{
+  optionName == 'Generator'? 
+  (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} />):
+  optionName == 'Groups'?
+  (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />):
+  optionName == 'Cards'?
+ ( <CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+  :
+  (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+
+}
+
+
+        
       </div>
-
     )
-
-
   }
 
   return (

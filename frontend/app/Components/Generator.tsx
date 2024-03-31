@@ -16,8 +16,8 @@ import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingR
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 interface GeneratorProps {
-    setShowGenerator: (show: boolean) => void;
-    showGenerator: boolean
+    setOptionName: (show: string) => void;
+    optionName: string;
     userName: string;
     setShowDashboard: (show: boolean) => void;
     setShowProfile: (show: boolean) => void;
@@ -63,7 +63,7 @@ const PrettoSlider = styled(Slider)({
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setShowGenerator, showGenerator, userName }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setOptionName, optionName, userName }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -132,14 +132,14 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
         <div id="Generator" className='flex justify-between  h-screen '>
 
-            <OptionsOverlay
-                setShowGenerator={setShowGenerator}
-                showGenerator={showGenerator}
-                userName={userName}
-                setShowDashboard={setShowDashboard}
-                setShowProfile={setShowProfile}            >
-                <></>
-            </OptionsOverlay>
+<OptionsOverlay
+        setOptionName={setOptionName}
+        optionName={optionName}
+        userName={userName}
+        setShowDashboard={setShowDashboard}
+        setShowProfile={setShowProfile}      >
+        <></>
+      </OptionsOverlay>
             <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-24 space-y-24 2xl:ml-[20%] ml-[8.5%]">
             
                 <div className="flex-col justify-center w-full items-start">
