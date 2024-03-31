@@ -69,7 +69,6 @@ func TestDeleteGroup(t *testing.T) {
 
 	assert := assert.New(t)
 
-	// Agregar grupos para preparar el test
 	err := NewGroup(db, account.Account, []string{"group1", "group2"})
 	assert.NoError(err)
 
@@ -127,6 +126,57 @@ func TestDeleteGroup(t *testing.T) {
 				}
 
 				assert.False(groupFound, "The group should have been deleted")
+			}
+		})
+	}
+}
+
+func TestGetGroups(t *testing.T) {
+	db, account, cleanup := initTestProfile()
+	defer cleanup()
+
+	assert := assert.New(t)
+
+	err := NewGroup(db, account.Account, []string{"group1", "group2"})
+	assert.NoError(err)
+
+	tests := []struct {
+		name        string
+		account     string
+		expectError bool
+		expectCount int
+	}{
+		{
+			name:        "get groups successfully",
+			account:     account.Account,
+			expectError: false,
+			expectCount: 2,
+		},
+		{
+			name:        "non-existent account",
+			account:     "nonexistent",
+			expectError: true,
+			expectCount: 0,
+		},
+		{
+			name:        "account with no groups",
+			account:     "accounttest2", // account added in init tests
+			expectError: true,
+			expectCount: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			groups, err := GetGroups(db, tt.account)
+
+			if tt.expectError {
+				assert.Error(err)
+				assert.Nil(groups)
+			} else {
+				assert.NoError(err)
+				assert.NotNil(groups)
+				assert.Len(groups, tt.expectCount)
 			}
 		})
 	}

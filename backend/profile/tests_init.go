@@ -26,6 +26,12 @@ func initTestProfile() (*bbolt.DB, request.Register, func()) {
 		panic(err)
 	}
 
+	_, err = auth.Register(db, "accounttest2", "mailtest@mail.com",
+		rRegister.Password, rRegister.Configs)
+	if err != nil {
+		panic(err)
+	}
+
 	_, err = auth.Login(db, rRegister.Account, rRegister.Password)
 	if err != nil {
 		panic(err)
