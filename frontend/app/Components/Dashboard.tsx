@@ -32,7 +32,7 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import useTranslation from 'next-translate/useTranslation';
-
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
 interface DashboardProps {
   setOptionName: (show: string) => void;
@@ -58,7 +58,6 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
   const [arePasswords, setArePasswords] = useState(true)
-
 
 
   return (
@@ -95,8 +94,8 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
               </div>
               <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
                 <div>
-                BustaLover 
-                           </div>
+                  BustaLover
+                </div>
                 <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
 
               </div>
@@ -105,10 +104,10 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
           </div>
         </div>
         <div className=" flex w-full space-x-12 h-full ">
-          <div className="w-[70%] h-full  ">
+          <div className="w-[65%] h-full  ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
-                <div className="text-5xl text-whitebg font-bold">
+                <div className="text-4xl text-whitebg font-bold">
                   My <span className="  text-primary">Password</span>
                 </div>
                 <div className="flex items-center space-x-6">
@@ -120,7 +119,8 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
                     <SortRoundedIcon sx={{ fontSize: 24 }} />
 
                   </div>
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl ">
+                  
+                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
 
                     <AddRoundedIcon sx={{ fontSize: 24 }} />
                     <div >
@@ -128,24 +128,16 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
                     </div>
                   </div>
                 </div>
-
-
                 <AddOverlay isOpen={isAddOverlayOpen} onClose={() => setIsAddOverlayOpen(!isAddOverlayOpen)} userKey={userKey} userName={userName} setArePasswords={setArePasswords} >
                   <>
                   </>
                 </AddOverlay>
               </div>
-
-
-
-
-
             </div>
             {
               arePasswords ?
                 <PasswordComp
                   isAddOverlayOpen={isAddOverlayOpen} showDashboard={showDashboard} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
-
                 :
                 <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
                   <div className="text-2xl">
@@ -156,12 +148,22 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
                       Add Password
                     </button>
                   </div>
-
                 </div>
             }
           </div>
-          <div className=" bg-primary h-full w-[30%] ">
-            fsdfds
+          <div className=" flex flex-col justify-start items-center  h-full w-[35%] ">
+            <div className="flex justify-between items-end w-full ">
+              <div className="text-4xl text-whitebg  font-bold">
+                My <span className="  text-primary">Groups</span>
+              </div>
+              <div onClick={() => setOptionName('Groups')} className="flex text-gray items-center hover:text-whitegray cursor-pointer">
+                <div>
+                  See More
+                </div>
+                <KeyboardArrowRightRoundedIcon sx={{ fontSize: 24 }} />
+
+              </div>
+            </div>
           </div>
 
         </div>

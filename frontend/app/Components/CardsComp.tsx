@@ -50,7 +50,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
     setTitlee(event.target.value);
   };
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
-  const [arePasswords, setArePasswords] = useState(true)
+  const [areCards, setAreCards] = useState(false)
 
     return(
         <div id="Dashboard" className='flex justify-between h-full '>
@@ -95,7 +95,60 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
 
           </div>
         </div>
-       
+        <div className=" flex w-full space-x-12 h-full ">
+          <div className="w-[65%] h-full  ">
+            <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
+              <div className="flex justify-between  items-center">
+                <div className="text-4xl text-whitebg font-bold">
+                  My <span className="  text-primary">Password</span>
+                </div>
+                <div className="flex items-center space-x-6">
+                  <div className="flex justify-center items-center text-base space-x-2 text-gray hover:text-whitebg h-12 bg-darkgray rounded-full w-24 cursor-pointer">
+
+                    <div>
+                      Sort
+                    </div>
+                    <SortRoundedIcon sx={{ fontSize: 24 }} />
+
+                  </div>
+                  
+                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
+
+                    <AddRoundedIcon sx={{ fontSize: 24 }} />
+                    <div >
+                      New Pass
+                    </div>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+            {
+              areCards ?
+              <></>
+                :
+                <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
+                  <div className="text-2xl">
+                    Add your first password!
+                  </div>
+                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-primary rounded-lg h-12 group hover:bg-darkprimary">
+                    <button className=" px-7 text-black rounded-md font-medium ">
+                      Add Password
+                    </button>
+                  </div>
+                </div>
+            }
+          </div>
+          <div className=" flex flex-col justify-start items-center  h-full w-[35%] ">
+            <div className="flex justify-between items-end w-full ">
+              <div className="text-4xl text-whitebg  font-bold">
+                My <span className="  text-primary">Groups</span>
+              </div>
+              
+            </div>
+          </div>
+
+        </div>
 
 
       </div>
