@@ -27,6 +27,8 @@ export namespace models {
 	    expiry: any;
 	    security_code: number;
 	    settings: Settings;
+	    // Go type: time
+	    created_at: any;
 	
 	    static createFrom(source: any = {}) {
 	        return new Card(source);
@@ -41,6 +43,7 @@ export namespace models {
 	        this.expiry = this.convertValues(source["expiry"], null);
 	        this.security_code = source["security_code"];
 	        this.settings = this.convertValues(source["settings"], Settings);
+	        this.created_at = this.convertValues(source["created_at"], null);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -83,7 +86,8 @@ export namespace models {
 	    username: string;
 	    pwd: string;
 	    settings: Settings;
-	    created_date: string;
+	    // Go type: time
+	    created_at: any;
 	
 	    static createFrom(source: any = {}) {
 	        return new Password(source);
@@ -96,7 +100,7 @@ export namespace models {
 	        this.username = source["username"];
 	        this.pwd = source["pwd"];
 	        this.settings = this.convertValues(source["settings"], Settings);
-	        this.created_date = source["created_date"];
+	        this.created_at = this.convertValues(source["created_at"], null);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -118,6 +122,52 @@ export namespace models {
 		}
 	}
 	
+	export class User {
+	    id: string;
+	    account: string;
+	    email: string;
+	    passwords: string;
+	    cards: Card[];
+	    userKey: string;
+	    seeds: string[];
+	    config: Config;
+	    created_at: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new User(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.account = source["account"];
+	        this.email = source["email"];
+	        this.passwords = source["passwords"];
+	        this.cards = this.convertValues(source["cards"], Card);
+	        this.userKey = source["userKey"];
+	        this.seeds = source["seeds"];
+	        this.config = this.convertValues(source["config"], Config);
+	        this.created_at = source["created_at"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class UserRequest {
 	    account: string;
 	    email: string;
@@ -214,10 +264,10 @@ export namespace request {
 	    }
 	}
 	export class Password {
-	    userKey: string;
 	    title: string;
 	    username: string;
-	    password: string;
+	    pwd: string;
+	    settings: models.Settings;
 	
 	    static createFrom(source: any = {}) {
 	        return new Password(source);
@@ -225,11 +275,29 @@ export namespace request {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.userKey = source["userKey"];
 	        this.title = source["title"];
 	        this.username = source["username"];
-	        this.password = source["password"];
+	        this.pwd = source["pwd"];
+	        this.settings = this.convertValues(source["settings"], models.Settings);
 	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class Recovery {
 	    account: string;
@@ -293,24 +361,6 @@ export namespace request {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.account = source["account"];
 	        this.seeds = source["seeds"];
-	    }
-	}
-	export class SimplePassword {
-	    id: string;
-	    title: string;
-	    username: string;
-	    password: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new SimplePassword(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.title = source["title"];
-	        this.username = source["username"];
-	        this.password = source["password"];
 	    }
 	}
 

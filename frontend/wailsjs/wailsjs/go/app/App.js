@@ -6,6 +6,10 @@ export function DeleteCard(arg1, arg2) {
   return window['go']['app']['App']['DeleteCard'](arg1, arg2);
 }
 
+export function DeleteGroup(arg1, arg2) {
+  return window['go']['app']['App']['DeleteGroup'](arg1, arg2);
+}
+
 export function DoChangeAccountInfo(arg1, arg2) {
   return window['go']['app']['App']['DoChangeAccountInfo'](arg1, arg2);
 }
@@ -34,6 +38,14 @@ export function DoNewCard(arg1, arg2) {
   return window['go']['app']['App']['DoNewCard'](arg1, arg2);
 }
 
+export function DoNewGroup(arg1, arg2) {
+  return window['go']['app']['App']['DoNewGroup'](arg1, arg2);
+}
+
+export function DoNewPassword(arg1, arg2, arg3) {
+  return window['go']['app']['App']['DoNewPassword'](arg1, arg2, arg3);
+}
+
 export function DoRecovery(arg1) {
   return window['go']['app']['App']['DoRecovery'](arg1);
 }
@@ -42,16 +54,12 @@ export function DoRegister(arg1) {
   return window['go']['app']['App']['DoRegister'](arg1);
 }
 
-export function DoSavePassword(arg1, arg2) {
-  return window['go']['app']['App']['DoSavePassword'](arg1, arg2);
-}
-
 export function DoSetPasswordSettings(arg1, arg2, arg3) {
   return window['go']['app']['App']['DoSetPasswordSettings'](arg1, arg2, arg3);
 }
 
-export function DoUpdatePassword(arg1, arg2, arg3) {
-  return window['go']['app']['App']['DoUpdatePassword'](arg1, arg2, arg3);
+export function DoUpdatePassword(arg1, arg2, arg3, arg4) {
+  return window['go']['app']['App']['DoUpdatePassword'](arg1, arg2, arg3, arg4);
 }
 
 export function GetAccountInfo(arg1) {
@@ -68,6 +76,10 @@ export function GetAllPasswords(arg1) {
 
 export function GetCardById(arg1, arg2) {
   return window['go']['app']['App']['GetCardById'](arg1, arg2);
+}
+
+export function GetGroups(arg1) {
+  return window['go']['app']['App']['GetGroups'](arg1);
 }
 
 export function GetLastSession() {
