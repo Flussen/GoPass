@@ -15,14 +15,13 @@ import Candau from "../../Public/lock-dynamic-gradient.svg"
 import LoadingComp from './Loading';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 
 interface SignupProps {
   setShowSignup: (value: boolean) => void;
   version: string;
   setIsLoading: (loading: boolean) => void;
 }
-
-
 
 const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading }) => {
 
@@ -35,7 +34,19 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
   const [passwordIncorrect, setPasswordIncorrect]= useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
-  async function pullRegister() {
+  const registerData = new request.Register({
+    account: 'testAccount',
+    email: 'test@example.com',
+    password: 'testPassword',
+    configs: new models.Config({
+        ui: '',
+        groups: [],
+        language: ''
+    })
+});
+
+
+  async function pullRegister(registerData: request.Register) {
     setIsLoading(true);
 
     if(name==''|| email=='' || password == ''){
@@ -44,7 +55,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
     }else{
       try {
   
-        await DoRegister(name, email, password);
+        const rsp = await DoRegister(registerData);
   
         console.log('despues: ' + isSignupResultOpen)
   
@@ -64,7 +75,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Previene la recarga de la página
-    await pullRegister(); // Llama a la función pullRegister
+    await pullRegister(registerData); // Llama a la función pullRegister
 
   };
 

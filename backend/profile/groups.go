@@ -1,0 +1,131 @@
+package profile
+
+import (
+	database "GoPass/backend/db"
+	eh "GoPass/backend/errorHandler"
+	"GoPass/backend/models"
+	"encoding/json"
+	"log"
+
+	"go.etcd.io/bbolt"
+)
+
+func NewGroup(db *bbolt.DB, account string, groups []string) error {
+	if account == "" || groups == nil {
+		return eh.ErrEmptyParameter
+	}
+
+	return db.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketUsers))
+		if bucket == nil {
+			log.Println("bucket not found")
+			return eh.ErrInternalServer
+		}
+
+		accountByte := bucket.Get([]byte(account))
+		if accountByte == nil {
+			return eh.ErrNotFound
+		}
+
+		var user models.User
+		err := json.Unmarshal(accountByte, &user)
+		if err != nil {
+			log.Println("ERROR:", err)
+			return err
+		}
+
+		user.Config.Groups = append(user.Config.Groups, groups...)
+
+		userByte, err := json.Marshal(user)
+		if err != nil {
+			log.Println("ERROR:", err)
+			return err
+		}
+
+		if err = bucket.Put([]byte(account), userByte); err != nil {
+			log.Println(err)
+			return eh.ErrInternalServer
+		}
+		return nil
+	})
+}
+
+func DeleteGroup(db *bbolt.DB, account, group string) error {
+	return db.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketUsers))
+		if bucket == nil {
+			log.Println("bucket not found")
+			return eh.ErrInternalServer
+		}
+
+		userByte := bucket.Get([]byte(account))
+		if userByte == nil {
+			log.Println("user not found")
+			return eh.ErrNotFound
+		}
+
+		var user models.User
+
+		err := json.Unmarshal(userByte, &user)
+		if err != nil {
+			log.Println("error in unmarshal:", err)
+			return eh.ErrInternalServer
+		}
+
+		filteredGroups := []string{}
+		for _, v := range user.Config.Groups {
+			if v != group {
+				filteredGroups = append(filteredGroups, v)
+			}
+		}
+		user.Config.Groups = filteredGroups
+
+		updatedUserByte, err := json.Marshal(user)
+		if err != nil {
+			log.Println("error in marshal:", err)
+			return eh.ErrInternalServer
+		}
+
+		err = bucket.Put([]byte(account), updatedUserByte)
+		if err != nil {
+			log.Println("error in saving user:", err)
+			return eh.ErrInternalServer
+		}
+
+		return nil
+	})
+}
+
+func GetGroups(db *bbolt.DB, account string) ([]string, error) {
+	var groups []string
+	err := db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketUsers))
+		if bucket == nil {
+			log.Println("bucket not found")
+			return eh.ErrInternalServer
+		}
+
+		userByte := bucket.Get([]byte(account))
+		if userByte == nil {
+			return eh.ErrNotFound
+		}
+		var user models.User
+		if err := json.Unmarshal(userByte, &user); err != nil {
+			log.Println("error in unmarshal:", err)
+			return eh.ErrInternalServer
+		}
+
+		groups = append(groups, user.Config.Groups...)
+
+		return nil
+	})
+	if err != nil {
+		log.Println("ERROR:", err)
+		return nil, eh.ErrInternalServer
+	}
+
+	if groups == nil {
+		return nil, eh.NewGoPassError("apparently there are no groups in this user")
+	}
+	return groups, nil
+}

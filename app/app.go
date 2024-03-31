@@ -10,8 +10,6 @@
 package app
 
 import (
-	// Package imports
-
 	"GoPass/backend/auth"
 	"GoPass/backend/controllers"
 	"GoPass/backend/credentials/cards"
@@ -22,6 +20,7 @@ import (
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
+	"GoPass/backend/profile"
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 	"context"
@@ -128,7 +127,7 @@ func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
 
 /*
    -------------------Cards--------------------
-
+	Cards functions
    ------------------------------------------------
 */
 
@@ -178,6 +177,24 @@ func (a *App) GetAccountInfo(username string) (string, error) {
 		eh.NewGoPassErrorf("ERROR: %v", err)
 	}
 	return string(byteModel), nil
+}
+
+/*
+   -------------------Groups--------------------
+	Groups
+   ------------------------------------------------
+*/
+
+func (a *App) DoNewGroup(account string, groups []string) error {
+	return profile.NewGroup(a.DB, account, groups)
+}
+
+func (a *App) DeleteGroup(account, group string) error {
+	return profile.DeleteGroup(a.DB, account, group)
+}
+
+func (a *App) GetGroups(account string) ([]string, error) {
+	return profile.GetGroups(a.DB, account)
 }
 
 /*

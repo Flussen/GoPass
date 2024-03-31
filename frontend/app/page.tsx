@@ -10,6 +10,7 @@ import SignupResult from './Components/SignupResult';
 import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"
+import { request } from '@/wailsjs/wailsjs/go/models';
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
