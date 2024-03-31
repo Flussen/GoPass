@@ -136,9 +136,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
                 <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-primary text-blaack rounded-lg group hover:bg-darkprimary'>
                   Login
                 </button>
-                <div>
-                  {version}
-                </div>
+                
 
               </div>
 

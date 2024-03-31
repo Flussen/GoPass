@@ -32,7 +32,6 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import useTranslation from 'next-translate/useTranslation';
-import { useTranslations } from "next-intl";
 
 
 interface DashboardProps {
@@ -60,7 +59,6 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
   const [arePasswords, setArePasswords] = useState(true)
 
-  const t = useTranslations('Index');
 
 
   return (
