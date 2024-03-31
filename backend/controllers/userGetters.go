@@ -71,29 +71,6 @@ func GetUsersConcurrently(db *bbolt.DB) (string, error) {
 	return string(datajs), err
 }
 
-// GetUserPasswords retrieves passwords of the user from the database
-func GetUserPasswords(db *bbolt.DB, username string) ([]models.Password, error) {
-	var passwords []models.Password
-
-	err := db.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(username))
-		if userBucket == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		return userBucket.ForEach(func(k, v []byte) error {
-			var pwd models.Password
-			if err := json.Unmarshal(v, &pwd); err != nil {
-				return err
-			}
-			passwords = append(passwords, pwd)
-			return nil
-		})
-	})
-
-	return passwords, err
-}
-
 // GetUserInfo retrieves user information from the database
 func GetUserInfo(db *bbolt.DB, username string) (*models.User, error) {
 
@@ -106,7 +83,7 @@ func GetUserInfo(db *bbolt.DB, username string) (*models.User, error) {
 
 		userBytes := b.Get([]byte(username))
 		if userBytes == nil {
-			return eh.NewGoPassError(eh.ErrUserNotFound)
+			return eh.ErrUserNotFound
 		}
 
 		return json.Unmarshal(userBytes, &storedUser)

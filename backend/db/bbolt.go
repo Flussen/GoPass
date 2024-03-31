@@ -7,6 +7,12 @@ import (
 	"go.etcd.io/bbolt" // Package for handling Bolt databases
 )
 
+const (
+	BucketPassword = "passwords"
+	BucketCards    = "cards"
+	BucketUsers    = "Users"
+)
+
 // OpenDB opens the Bolt database and returns a pointer to it
 func OpenDB() *bbolt.DB {
 	// Open the Bolt database with the given name and options
