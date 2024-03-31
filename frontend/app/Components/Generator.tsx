@@ -15,6 +15,13 @@ import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+
+
+
 interface GeneratorProps {
     setOptionName: (show: string) => void;
     optionName: string;
@@ -63,7 +70,7 @@ const PrettoSlider = styled(Slider)({
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setOptionName, optionName, userName }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard, setOptionName, optionName, userName }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -73,7 +80,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
     const [barColor3, setBarColor3] = useState('bg-black');
     const [barColor4, setBarColor4] = useState('bg-black');
 
-
+    const [titlee, setTitlee] = useState('')
+    const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setTitlee(event.target.value);
+    };
     const [sliderValue, setSliderValue] = useState<number>(25);
     const [password, setPassword] = useState<string>("");
     const calculateBarWidth = (value: number) => {
@@ -132,19 +142,46 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
         <div id="Generator" className='flex justify-between  h-screen '>
 
-<OptionsOverlay
-        setOptionName={setOptionName}
-        optionName={optionName}
-        userName={userName}
-        setShowDashboard={setShowDashboard}
-        setShowProfile={setShowProfile}      >
-        <></>
-      </OptionsOverlay>
-            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-24 space-y-24 2xl:ml-[20%] ml-[8.5%]">
-            
+            <OptionsOverlay
+                setOptionName={setOptionName}
+                optionName={optionName}
+                userName={userName}
+                setShowDashboard={setShowDashboard}
+                setShowProfile={setShowProfile}      >
+                <></>
+            </OptionsOverlay>
+            <div className="flex flex-col justify-start items-start  w-[84%] ml-[16%] p-12 h-full">
+                <div id="HEADER" className="flex justify-end w-full rounded-lg text-base mb-16 ">
+                    
+                    <div className="flex items-center space-x-6 h-12">
+                        <div className="flex items-center">
+                            <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
+
+                                <DarkModeRoundedIcon sx={{ fontSize: 24 }} />
+                            </div>
+                            <div className="flex justify-end items-center pr-2 h-11 w-24 border-2 border-gray rounded-full text-whitebg ">
+                                <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
+
+                                <AccountCircleRoundedIcon sx={{ fontSize: 36 }} />
+                            </div>
+                            <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
+                                <div>
+                                    BustaLover
+                                </div>
+                                <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div className="flex-col justify-center w-full items-start">
                     <div className='flex justify-start mb-10'>
-                        <div className='text-5xl font-bold text-white'>
+                        <div className='text-4xl font-bold text-whitebg'>
                             Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>
                         </div>
 
@@ -153,8 +190,8 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                         <div className="flex-col items-start justify-center bg-darkgray rounded-lg  xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">
                                 <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
-                                    <div className="flex justify-between items-center mb-3 px-4 bg-[#DEEFFF] rounded-lg  w-full">
-                                        <input type="text" readOnly value={password} className="select-all w-full text-white flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
+                                    <div className="flex justify-between items-center mb-3 px-4 bg-black rounded-lg  w-full">
+                                        <input type="text" readOnly value={password} className="select-all w-full text-whitebg flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
                                         <div
                                             onClick={() => generatePassword(sliderValue)}
                                             className='ml-4 text-whitegray cursor-pointer hover:text-primary'
@@ -186,7 +223,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
                                     </div>
                                     <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">
-                                        <div className="font-semibold text-2xl basis-1/4 text-white">
+                                        <div className="font-semibold text-2xl basis-1/4 text-whitebg">
                                             Password Length
                                         </div>
                                         <div className="flex space-x-4 items-center basis-3/4 text-primary">
@@ -238,7 +275,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
                         </div>
                         <div className="flex items-center justify-center bg-darkgray rounded-lg  lg:basis-1/5 ">
-                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-white max-xl:space-x-6 max-xl:py-10">
+                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-whitebg max-xl:space-x-6 max-xl:py-10">
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}
 
