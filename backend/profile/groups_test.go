@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"GoPass/backend/controllers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -54,7 +53,7 @@ func TestNewGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := controllers.GetUserInfo(db, tt.account)
+				user, err := GetAccounInfo(db, tt.account)
 				assert.NoError(err)
 
 				assert.Equal(tt.groups, user.Config.Groups)
@@ -113,7 +112,7 @@ func TestDeleteGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := controllers.GetUserInfo(db, tt.account)
+				user, err := GetAccounInfo(db, tt.account)
 				assert.NoError(err)
 				assert.Len(user.Config.Groups, 1)
 

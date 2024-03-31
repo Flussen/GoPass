@@ -11,7 +11,6 @@ package app
 
 import (
 	"GoPass/backend/auth"
-	"GoPass/backend/controllers"
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
@@ -159,15 +158,15 @@ func (a *App) DeleteCard(account, id string) error {
 
 // Change password for the user ACCOUNT!!
 func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
-	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+	return profile.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
 }
 
 func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) error {
-	return controllers.UpdateProfile(a.DB, username, newModel)
+	return profile.UpdateProfile(a.DB, username, newModel)
 }
 
 func (a *App) GetAccountInfo(username string) (string, error) {
-	model, err := controllers.GetUserInfo(a.DB, username)
+	model, err := profile.GetAccounInfo(a.DB, username)
 	if err != nil {
 		eh.NewGoPassErrorf("ERROR: %v", err)
 	}
@@ -290,7 +289,7 @@ func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 
 // ListUsers retrieves user information concurrently
 func (a *App) GetListAccounts() (string, error) {
-	return controllers.GetUsersConcurrently(a.DB)
+	return profile.GetUsersConcurrently(a.DB)
 }
 
 // GetVersion returns the version of the application. Example 1.0.1

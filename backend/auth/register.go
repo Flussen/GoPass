@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"GoPass/backend/controllers"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/response"
@@ -14,12 +13,12 @@ import (
 
 func Register(db *bbolt.DB, account, email, password string, configs models.Config) (response.Register, error) {
 
-	err := controllers.RegistryChecker(db, account, email, password)
+	err := RegistryChecker(db, account, email, password)
 	if err != nil {
 		return response.Register{}, err
 	}
 
-	hashedPassword, UserKey, err := controllers.RegistrySecurer(password)
+	hashedPassword, UserKey, err := RegistrySecurer(password)
 	if err != nil {
 		return response.Register{}, err
 	}
@@ -41,7 +40,7 @@ func Register(db *bbolt.DB, account, email, password string, configs models.Conf
 		return response.Register{}, eh.ErrInternalServer
 	}
 
-	if err := controllers.CreateUser(db, newUser); err != nil {
+	if err := CreateUser(db, newUser); err != nil {
 		return response.Register{}, err
 	}
 	rsp := response.Register{

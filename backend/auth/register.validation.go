@@ -1,4 +1,4 @@
-package controllers
+package auth
 
 import (
 	eh "GoPass/backend/errorHandler"
