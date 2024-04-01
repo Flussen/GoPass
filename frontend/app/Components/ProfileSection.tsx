@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 import Image from "next/image"
-import { GetUserInfo } from "@/wailsjs/wailsjs/go/app/App";
+import { GetAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
 import { DoChangeAccountPassword } from "@/wailsjs/wailsjs/go/app/App";
 import SettingOverlay from "./SettingOverlay"
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
@@ -25,7 +25,7 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
 
     async function GetInfo() {
         try {
-            const result = await GetUserInfo(userName);
+            const result = await GetAccountInfo(userName);
             const data = JSON.parse(result);
             setEmail(data.email);
         } catch {

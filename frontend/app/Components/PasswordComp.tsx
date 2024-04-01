@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
-import { GetUserPasswords } from "@/wailsjs/wailsjs/go/app/App";
+import { GetAllPasswords } from "@/wailsjs/wailsjs/go/app/App";
 import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
 import EditOverlay from './EditOverlay';
@@ -10,7 +10,8 @@ import Box from '@mui/material/Box';
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
-import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { PasswordDecrypt } from "@/wailsjs/wailsjs/go/app/App";
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 
 
 //Click to copy se buguea cuando se mantiene y a la vez hago scroll.
@@ -95,7 +96,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     async function getPass() {
         try {
-            const decryptedPass = await ShowPassword(userName, id, userKey)
+            const decryptedPass = await PasswordDecrypt (userName, id, userKey)
         } catch {
 
         }
@@ -103,30 +104,31 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     async function getPasswords() {
         try {
-            const response = await GetUserPasswords(userName);
-            console.log('Get passwords' + response)
-            const data = JSON.parse(response);
+            const response = await GetAllPasswords(userName);
             setArePasswords(true)
-            if (data && data.passwords) {
+            const data = JSON.stringify(response)
+            console.log('ladata: ' + JSON.stringify(data));
 
-                const decryptedPasswords = await Promise.all(data.passwords.map(async (password: PasswordsProps) => {
+            // if (data && data.passwords) {
 
-                    const decryptedPwd = await ShowPassword(userName, password.id, userKey);
-                    return { ...password, pwd: decryptedPwd };
+            //     const decryptedPasswords = await Promise.all(data.passwords.map(async (password: request.Password) => {
 
-                }));
-                setPasswords(decryptedPasswords);
+            //         const decryptedPwd = await PasswordDecrypt (userName, password.id, userKey);
+            //         return { ...password, pwd: decryptedPwd };
 
-                setArePasswords(true)
+            //     }));
+            //     setPasswords(decryptedPasswords);
+
+            //     setArePasswords(true)
 
 
 
 
 
-            } else {
-                console.error("Passwords not found in response:", data);
-                setArePasswords(false)
-            }
+            // } else {
+            //     console.error("Passwords not found in response:", data);
+            //     setArePasswords(false)
+            // }
 
         } catch (error) {
             console.error("Error fetching passwords:", error, userName);

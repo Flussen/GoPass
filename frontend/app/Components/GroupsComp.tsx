@@ -19,9 +19,7 @@ import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
-import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
 import PasswordComp from "./PasswordComp"
-import { GetUserPasswords } from "@/wailsjs/wailsjs/go/app/App";
 import SearchIcon from "../../Public/search.svg"
 import Image from "next/image"
 import AddIcon from "../../Public/add.svg"

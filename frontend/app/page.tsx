@@ -6,7 +6,7 @@ import SignupComp from "./Components/Signup";
 import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
-import SignupResult from './Components/SignupResult';
+import SignupResult from './Components/RegisResult';
 import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"

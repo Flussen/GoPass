@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightToBracket, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
-import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoNewPassword } from "@/wailsjs/wailsjs/go/app/App";
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import TitleRoundedIcon from '@mui/icons-material/TitleRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+
 
 interface AddOverlayProps {
     isOpen: boolean;
@@ -47,6 +49,8 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
     const [status, setStatus] = useState('');
+    const [group, setGroup]= useState('');
+
 
     useEffect(() => {
         const findIcon = () => {
@@ -68,11 +72,24 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
         }
     }, [pass])
 
-    async function pullPasswords() {
+    const PasswordData = new request.Password({
+        title: title,
+        username: usermail,
+        pwd: pass,
+        settings: new models.Settings({
+            favorite: false,
+            group: group,
+            icon: item,
+            status: ''
+        })
+
+    })
+
+    async function pullPasswords(PasswordData: request.Password) {
 
 
         try {
-            await DoSaveUserPassword(userName, usermail, title, pass, item, status, userKey);
+            await DoNewPassword(userName, userKey, PasswordData);
             setTitle('');
             setUsermail('');
             setPass('');
@@ -90,7 +107,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
         onClose()
-        await pullPasswords(); // Llama a la función pullRegister
+        await pullPasswords(PasswordData); // Llama a la función pullRegister
     };
     return (
         <>

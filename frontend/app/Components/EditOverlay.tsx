@@ -4,12 +4,15 @@ import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { useState } from "react";
-import { DoUpdateUserPassword } from "@/wailsjs/wailsjs/go/app/App";
-import { DoDeleteUserPassword } from "@/wailsjs/wailsjs/go/app/App";
-import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoUpdatePassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoDeletePassword } from "@/wailsjs/wailsjs/go/app/App";
+import { PasswordDecrypt } from "@/wailsjs/wailsjs/go/app/App";
 import TitleRoundedIcon from '@mui/icons-material/TitleRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+
+
 
 interface OverlayProfileProps {
     isOpen: boolean;
@@ -28,7 +31,9 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     const [pass, setPass] = useState(password);
     const [titlee, setTitlee] = useState(title);
     const [decrypted, setDecrypted] = useState('');
-
+    const [favorite, setFavorite] = useState(false)
+ const[group, setGroup] = useState('');
+ const[item, setItem]= useState('');
 
     const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(event.target.value);
@@ -41,25 +46,37 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     };
     async function DeletePassword() {
         try {
-            const response = await DoDeleteUserPassword(userNames, id)
+            const response = await DoDeletePassword(userNames, id)
         } catch {
 
         }
     }
     async function getDecryptedPass() {
         try {
-            const decrypted = await ShowPassword(userNames, id, userKey)
+            const decrypted = await PasswordDecrypt(userNames, id, userKey)
             setDecrypted(decrypted)
         } catch {
 
         }
     }
 
+    const passwordData = new request.Password({
+        id: id,
+        title: titlee,
+        username: email,
+        pwd: pass,
+        configs: new models.Settings({
+            favorite: favorite,
+            groups: group,
+            icon: item,
+            status: ''
+        }),
+        created_at:''
+    });
 
-
-    async function UpdatePasswords() {
+    async function UpdatePasswords(passwordData: request.Password) {
         try {
-            const response = await DoUpdateUserPassword(userNames, userKey, id, titlee, email, pass)
+            const response = await DoUpdatePassword(userNames, id, userKey, passwordData )
             console.log('mark' + response)
         } catch {
 
@@ -73,7 +90,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
-        await UpdatePasswords(); // Llama a la función pullLogin
+        await UpdatePasswords(passwordData); // Llama a la función pullLogin
         onClose();
     };
     const handlePasword = async (event: React.FormEvent) => {
