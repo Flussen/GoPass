@@ -6,7 +6,7 @@ import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg";
 import Mener from "../../Public/men.svg"
-import SignupResult from './SignupResult';
+import SignupResult from './RegisResult';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
@@ -14,6 +14,7 @@ import Candau from "../../Public/lock-dynamic-gradient.svg"
 import LoadingComp from './Loading';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 
 interface SignupProps {
   setShowSignup: (value: boolean) => void;
@@ -31,26 +32,34 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEnabled, setIsEnabled] = useState(true);
-  const [passwordIncorrect, setPasswordIncorrect]= useState(false);
+  const [passwordIncorrect, setPasswordIncorrect] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
-  async function pullRegister() {
+  const registerData = new request.Register({
+    account: name,
+    email: email,
+    password: password,
+    configs: new models.Config({
+        ui: '',
+        groups: [],
+        language: ''
+    })
+});
+
+  async function pullRegister(registerData: request.Register) {
     setIsLoading(true);
 
-    if(name==''|| email=='' || password == ''){
+    if (name == '' || email == '' || password == '') {
       setIsLoading(false);
       setPasswordIncorrect(true)
-    }else{
+    } else {
+      
       try {
-  
-        await DoRegister(name, email, password);
-  
-        console.log('despues: ' + isSignupResultOpen)
-  
+
+        const response = await DoRegister(registerData);
+        console.log('respuesta pa: ' + response)
         setShowSignup(false)
-  
-  
-  
+
       } catch (error) {
         console.error('Error fetching version:', error);
       } finally {
@@ -58,12 +67,12 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
 
       }
     }
-    
+
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Previene la recarga de la página
-    await pullRegister(); // Llama a la función pullRegister
+    await pullRegister(registerData); // Llama a la función pullRegister
 
   };
 
@@ -126,7 +135,7 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
               </div>
             </div>
             <div className='flex items-center w-full 2xl:px-40 xl:px-24 ' >
-            <div className=' flex  w-full rounded-lg p-0.5 mb-4'>
+              <div className=' flex  w-full rounded-lg p-0.5 mb-4'>
                 <button onClick={handleSubmit} className='flex items-center justify-center w-full h-14 bg-primary text-blaack rounded-lg group hover:bg-darkprimary'>
                   Login
                 </button>
@@ -144,7 +153,6 @@ const Signup: React.FC<SignupProps> = ({ setShowSignup, version, setIsLoading })
             <h3 className='flex justify-center items-center text-whitegray text-xs select-none'>{version}</h3>
           </div>
 
-          <SignupResult isOpen={isSignupResultOpen} onClose={() => setIsSignupResultOpen(!isSignupResultOpen)} />
           <div className='hidden xl:flex justify-center rounded-lg bg-primary items-center xl:opacity-100'>
 
           </div>
