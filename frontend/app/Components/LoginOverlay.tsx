@@ -26,7 +26,7 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
                 isOpen ? (
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen '>
                         <div onClick={onClose} className='absolute bg-[#000000] opacity-80 h-screen w-screen '></div>
-                        <div className='flex flex-col justify-center bg-darkgray  w-full m-80 h-[75%] rounded-lg z-10 text-whitebg  font-semibold'>
+                        <div className='flex flex-col justify-center bg-darkgray  w-[57rem] h-[75%] rounded-lg z-10 text-whitebg  font-semibold'>
                             <div className="  text-whitebg w-full flex justify-end items-start  pr-5 pt-5">
                                 <div onClick={onClose}>
                                 <CloseRoundedIcon className="cursor-pointer" />

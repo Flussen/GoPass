@@ -52,7 +52,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
   const [showSeed, setShowSeed] = useState(false);
   const [seedList, setSeedList] = useState(['']);
   const [showRecover, setShowRecover] = useState(false);
-
+ const[startTemp, setSartTemp] = useState(false)
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   const LoginData = new request.Login({
@@ -106,8 +106,17 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
       </div>
       {/* Login Box */}
       <div className=' flex justify-center items-center h-[83%] pb-[3%]  mt-10'>
-        <div className='xl:grid xl:grid-cols-2 flex justify-center w-[90%] h-full rounded-lg bg-darkgray  max-xl:py-20  '>
-          <div className='hidden xl:flex bg-primary justify-center items-center rounded-lg xl:opacity-100'>
+        <div className='xl:grid xl:grid-cols-2 flex flex-col justify-center  w-[90%] h-full rounded-lg bg-darkgray  max-xl:py-20  '>
+          <div className='flex flex-col justify-center max-xl:items-center rounded-lg text-whitebg xl:pl-[15%] '>
+            <div className='text-whitegray text-2xl font-semibold'>
+              Welcome to
+            </div>
+            <div className='text-7xl font-bold mb-5'>
+              <span className='text-primary'>Go</span> Pass
+            </div>
+            <div className='max-xl:hidden  text-2xl text-whitegray'>
+              Your Open Source password manager with local storage. Security and privacity in your control.
+            </div>
           </div>
           <div className='flex flex-col justify-center items-center h-full  font-semibold text-lg space-y-3 '>
 
@@ -134,13 +143,13 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
         </div>
 
       </div>
-      <RegisterOverlay setIsLoading={setIsLoading} isOpen={showRegister} onClose={() => setShowRegister(!showRegister)} setShowSeed={setShowSeed} setSeedList={setSeedList}>
+      <RegisterOverlay setIsLoading={setIsLoading} isOpen={showRegister} onClose={() => setShowRegister(!showRegister)} setShowSeed={setShowSeed} setSeedList={setSeedList} setStartTemp={setSartTemp}>
         <></>
       </RegisterOverlay>
       <LoginOverlay isOpen={showLogin} onClose={() => setShowLogin(!showLogin)} setShowRecover={setShowRecover}>
         <></>
       </LoginOverlay>
-      <RegiResult isOpen={showSeed} onClose={() => setShowSeed(!showSeed)} seedList={seedList} />
+      <RegiResult isOpen={showSeed} onClose={() => setShowSeed(!showSeed)} seedList={seedList} startTemp={startTemp} setStartTemp={setSartTemp}/>
       <RecoverOverlay isOpen={showRecover} onClose={() => setShowRecover(!showRecover)} />
 
     </div>

@@ -1,6 +1,6 @@
 
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Celebration from "../../Public/undraw_celebrating_rtuv.svg"
 import Image from "next/image";
 import foursquare from "../../Public/foursquare.svg"
@@ -8,12 +8,57 @@ interface ResultProps {
     isOpen: boolean;
     onClose: () => void;
     seedList: Array<string>;
+    startTemp: boolean;
+    setStartTemp: (start: boolean) => void;
+
 }
 
 
 
-const SignupResult: React.FC<ResultProps> = ({ isOpen, onClose, seedList }) => {
+const SignupResult: React.FC<ResultProps> = ({ isOpen, onClose, seedList, startTemp, setStartTemp }) => {
 
+    const [allowClick, setAllowClick] = useState(5);
+
+
+    useEffect(() => {
+        if (startTemp) {
+            setAllowClick(5)
+
+            const temp = setInterval(() => {
+
+                setAllowClick(prevAllowClick => {
+                    console.log('allowe: ' + prevAllowClick + ' ' + allowClick)
+
+                    if (prevAllowClick > 0) {
+                        return prevAllowClick - 1;
+
+                    }else{
+                        clearInterval(temp);
+                        return 0;
+                    }
+                    
+                })
+            }, 1000);
+            return () => clearInterval(temp);
+        }
+
+
+    }, [startTemp]);
+    const handleRestart =() =>{
+        setStartTemp(false)
+        setTimeout(() => {
+            setStartTemp(true);
+        }, 10);    };
+    const handleClick = () => {
+        // Si han pasado 5 segundos, ejecuta onClose
+        if (allowClick === 0) {
+            onClose()
+            setStartTemp(false)
+            
+        }
+    };
+
+  
     seedList.map((seed, index) => `${index + 1}. ${seed}`).join(' ')
 
     return (
@@ -47,9 +92,11 @@ const SignupResult: React.FC<ResultProps> = ({ isOpen, onClose, seedList }) => {
                             </div>
 
                             <div className="w-full px-24">
-                                <button onClick={onClose} className="bg-primary text-black h-12 w-full rounded-full font-semibold">
-                                    Continue
+                                <button onClick={handleClick} className={`${allowClick === 0 ? 'bg-primary' : 'bg-whitegray'}  text-black h-12 w-full rounded-full font-semibold`}>
+                                    {allowClick === 0 ? 'Continue' : allowClick}
+
                                 </button>
+                                
                             </div>
                         </div>
                     </div>
