@@ -50,6 +50,10 @@ const config: Config = {
       boxShadow:{
         shadow: ' 2px 6px 20px -10px rgba(0, 0, 0, 0.25)',
       },
+      fontSize: {
+        'responsivo': 'clamp(1.75rem, 2.8vw, 2.25rem)',
+
+      },
     },
   },
   variants: {

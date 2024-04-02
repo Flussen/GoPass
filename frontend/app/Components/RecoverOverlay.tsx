@@ -24,7 +24,7 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
     const [recoverList, setRecoverList] = useState(Array(15).fill(''));
     const [userCorrect, setUserCorrect] = useState('');
     const [userName, setUserName] = useState('');
-    const [userIncorrect, setUserIncorrect]= useState(false);
+    const [userIncorrect, setUserIncorrect] = useState(false);
     const handleInputChange = (value: string, index: number) => {
         // Actualizar el estado con el nuevo valor en la posición correcta
         setRecoverList(currentList => {
@@ -36,39 +36,35 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
 
 
     async function userVerification() {
-        try{
+        try {
             const response = await GetAccountInfo(userName);
-            const data = JSON.parse(response) as { id: string };
-            if(data.id!==''){
-                setUserCorrect('seed')
-            }else{
-                setUserIncorrect(true);
-                setTimeout(() => {
-                    setUserIncorrect(false);
-                  }, 2500);
-            }
+
+
+
+            setUserCorrect('seed')
+
             console.log(response)
-        }catch(error){
+        } catch (error) {
             setUserIncorrect(true);
             setTimeout(() => {
                 setUserIncorrect(false);
-              }, 4000);
+            }, 4000);
         }
     }
 
- const seedData = new request.SeedsCheck({
-    account: userName,
-    seeds: recoverList
+    const seedData = new request.SeedsCheck({
+        account: userName,
+        seeds: recoverList
 
- })
+    })
 
-    async function seedVerification(seedData: request.SeedsCheck){
-        try{
+    async function seedVerification(seedData: request.SeedsCheck) {
+        try {
             const response = await DoCheckSeeds(seedData)
-            console.log('response '+response)
-        }catch(e){
-            console.log('error: '+e)
-            console.log('seeds: '+recoverList)
+            console.log('response ' + response)
+        } catch (e) {
+            console.log('error: ' + e)
+            console.log('seeds: ' + recoverList)
         }
 
     }
@@ -78,14 +74,14 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
         event.preventDefault(); // Previene la recarga de la página
         await userVerification(); // Llama a la función pullLogin
         // Simula una carga o espera por una operación asíncrona
-    
-      };
-      const seedSubmit = async (event: React.FormEvent) => {
+
+    };
+    const seedSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
         await seedVerification(seedData); // Llama a la función pullLogin
         // Simula una carga o espera por una operación asíncrona
-    
-      };
+
+    };
 
     return (
         <>
@@ -94,27 +90,28 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen  z-50 '>
                         <div className="bg-darkgray text-whitebg w-full h-full flex flex-col justify-center rounded-lg items-center p-10 space-y-5">
                             <div className="w-full flex justify-start">
-                                <div onClick={()=>{
+                                <div onClick={() => {
                                     setUserName('');
-                                    if(userCorrect)
-                                    {setUserCorrect('')
+                                    if (userCorrect) {
+                                        setUserCorrect('')
                                         setRecoverList(Array(15).fill(''));
                                     }
-                                    
-                                    else{
+
+                                    else {
                                         onClose()
-                                    }}} className="h-12 w-12 rounded-lg border-2 border-gray text-gray hover:bg-gray hover:text-darkgray flex justify-center items-center cursor-pointer">
-                                    < ArrowBackIosRoundedIcon/>
+                                    }
+                                }} className="h-12 w-12 rounded-lg border-2 border-gray text-gray hover:bg-gray hover:text-darkgray flex justify-center items-center cursor-pointer">
+                                    < ArrowBackIosRoundedIcon />
                                 </div>
                             </div>
 
-                            {userCorrect=='seed' ? (
+                            {userCorrect == 'seed' ? (
                                 <div className="w-full h-full flex flex-col justify-center items-center space-y-5">
                                     <div className="font-bold text-2xl">
                                         Enter All Words!
                                     </div>
                                     <div className="text-whitegray">
-                                    Enter the words we gave you when you registered in the same order.
+                                        Enter the words we gave you when you registered in the same order.
                                     </div>
 
                                     <div className="grid grid-cols-5 gap-4 p-5 bg-whitegray rounded-lg">
@@ -139,7 +136,7 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
                                         </button>
                                     </div>
                                 </div>
-                            ): userCorrect=='password'?
+                            ) : userCorrect == 'password' ?
                                 (
                                     <div className="w-full h-full flex flex-col justify-center items-center space-y-5">
                                         <div className="font-bold text-2xl">
@@ -155,16 +152,16 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
                                                 Continue
                                             </button>
                                         </div>
-                                        {userIncorrect?(
+                                        {userIncorrect ? (
                                             <div className="absolute bottom-20 bg-primary p-2 rounded-lg text-darkgray font-medium">
                                                 Sorry, we cant find your account.
                                             </div>
-                                        ):
-                                        <>
-                                        </>}
+                                        ) :
+                                            <>
+                                            </>}
                                     </div>
-                                ):(
-<div className="w-full h-full flex flex-col justify-center items-center space-y-5">
+                                ) : (
+                                    <div className="w-full h-full flex flex-col justify-center items-center space-y-5">
                                         <div className="font-bold text-2xl">
                                             Enter your username
                                         </div>
@@ -178,13 +175,13 @@ const RecoverOverlay: React.FC<RecoverProps> = ({ isOpen, onClose }) => {
                                                 Continue
                                             </button>
                                         </div>
-                                        {userIncorrect?(
+                                        {userIncorrect ? (
                                             <div className="absolute bottom-20 bg-primary p-2 rounded-lg text-darkgray font-medium">
                                                 Sorry, we cant find your account.
                                             </div>
-                                        ):
-                                        <>
-                                        </>}
+                                        ) :
+                                            <>
+                                            </>}
                                     </div>
                                 )
                             }

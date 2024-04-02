@@ -24,13 +24,13 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [tokenVerificated, setTokenVerificated] = useState(false)
   const [token, setToken] = useState('')
-  const [showProfile, setShowProfile]=useState(false);
- const [optionName, setOptionName] = useState('')
+  const [showProfile, setShowProfile] = useState(false);
+  const [optionName, setOptionName] = useState('')
 
 
-  
+
   async function GetToken() {
-    
+
     try {
       setVersion(await GetVersion())
       const result = await GetLastSession();
@@ -38,18 +38,18 @@ export default function Home() {
       setUserName(data.username)
       setToken(data.token)
       setUserKey(data.userKey)
-      console.log('Data Get Last: '+data.username)
-      
+      console.log('Data Get Last: ' + data.username)
+
       if (data.token !== null && data.username !== null) {
 
         const resultado = await VerifyToken(data.token);
-        if(resultado){
+        if (resultado) {
           setShowDashboard(true)
         }
       }
-    } catch(error) {
-      console.log('Not a saved session'+ error)
-    }finally{
+    } catch (error) {
+      console.log('Not a saved session' + error)
+    } finally {
       setIsLoading(false)
     }
   }
@@ -69,48 +69,48 @@ export default function Home() {
   if (isLoading) {
     return <LoadingComp />;
 
-  } else if(showProfile) {
-    return(
-      <ProfileSection setShowProfile={setShowProfile}  setIsLoading={setIsLoading} userName={userName}/>
+  } else if (showProfile) {
+    return (
+      <ProfileSection setShowProfile={setShowProfile} setIsLoading={setIsLoading} userName={userName} />
     )
-  }else if(showDashboard ) {
+  } else if (showDashboard) {
     return (
       <div className='h-screen'>
-      
-{
-  optionName == 'Generator'? 
-  (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} />):
-  optionName == 'Groups'?
-  (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />):
-  optionName == 'Cards'?
- ( <CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
-  :
-  (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
 
-}
+        {
+          optionName == 'Generator' ?
+            (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} />) :
+            optionName == 'Groups' ?
+              (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />) :
+              optionName == 'Cards' ?
+                (<CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+                :
+                (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+
+        }
 
 
-        
+
       </div>
     )
   }
 
   return (
     <>
-    {
-      isLoading?
-      <LoadingComp/>
-      :
-<div className=' h-screen'>
-      {showSignup ? (
-        <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
-      ) : (
-        <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
-      )}
-    </div>
-    }
+      {
+        isLoading ?
+          <LoadingComp />
+          :
+          <div className=' h-screen'>
+            {showSignup ? (
+              <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
+            ) : (
+              <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
+            )}
+          </div>
+      }
     </>
-    
-    
+
+
   );
 };

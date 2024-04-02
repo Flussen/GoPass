@@ -5,20 +5,59 @@ import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
+import LoadingComp from "./Loading";
 
 interface RegisterProps {
     isOpen: boolean;
     onClose: () => void;
     children: React.ReactNode;
     setShowRecover: (show:boolean) => void;
+    setUserKey: (userKey: string) => void;
+    setUserName: (userKey: string) => void;
+    setShowDashboard: (show: boolean) => void;
+
 }
 
 
-const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setShowRecover }) => {
-    const [title, setTitle] = useState("");
-    const [usermail, setUsermail] = useState("");
-    const [pass, setPass] = useState("");
+const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setShowRecover, setShowDashboard, setUserKey, setUserName }) => {
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordIncorrect, setPasswordIncorrect] = useState(false);
+    const [loadingIsOpen, setLoadingIsOpen] = useState(false);
+    const LoginData = new request.Login({
+        account: name,
+        password: password
+      })
+    
+    async function pullLogin(LoginData: request.Login) {
 
+        setLoadingIsOpen(true)
+        try {
+          const result = await DoLogin(LoginData);
+          console.log(result)
+          if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
+            setUserKey(result.userKey);
+            setShowDashboard(true);
+            console.log('Token Saved:' + result.token)
+            setUserName(name)
+          }
+        } catch (error) {
+          console.log(error)
+          setPasswordIncorrect(true)
+        } finally {
+          setLoadingIsOpen(false)
+        }
+      }
+    
+    
+      const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault(); // Previene la recarga de la página
+        await pullLogin(LoginData); // Llama a la función pullLogin
+        // Simula una carga o espera por una operación asíncrona
+    
+      };
 
     return (
         <>
@@ -39,18 +78,18 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
                                 </div>
                                 <div className="w-full flex items-center">
                                     <PersonRoundedIcon className="absolute ml-4 text-primary" />
-                                    <input type="text" className="bg-black rounded-full h-12 w-full pl-12 outline-none placeholder:text-gray " placeholder="Username" />
+                                    <input type="text" className="bg-black rounded-full h-12 w-full pl-12 outline-none placeholder:text-gray " placeholder="Username" value={name} onChange={(e) => setName(e.target.value)} />
 
                                 </div>
                                 
                                 <div className="w-full flex items-center">
                                     <KeyRoundedIcon className="absolute ml-4 text-primary" />
-                                    <input type="password" className="bg-black rounded-full h-12 w-full pl-12 outline-none placeholder:text-gray " placeholder="Password" />
+                                    <input type="password" className="bg-black rounded-full h-12 w-full pl-12 outline-none placeholder:text-gray " placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
                                 </div>
-                                <div className="w-full">
+                                <div onClick={handleSubmit} className="w-full">
                                     <button className="bg-primary w-full h-12 rounded-full text-black ">
-                                        Register
+                                        Login
                                     </button>
                                 </div>
                                 <div className="w-full flex justify-center text-gray font-medium">
@@ -59,6 +98,9 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
                             </div>
  
                         </div>
+                        {loadingIsOpen ?
+            <LoadingComp /> :
+            <></>}
                     </div>
                 )
                     : null

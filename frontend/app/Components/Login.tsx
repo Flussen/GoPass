@@ -53,45 +53,15 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
   const [seedList, setSeedList] = useState(['']);
   const [showRecover, setShowRecover] = useState(false);
  const[startTemp, setSartTemp] = useState(false)
-  const toggleSwitch = () => setIsEnabled(!isEnabled);
 
-  const LoginData = new request.Login({
-    account: name,
-    password: password
-  })
+  
 
 
-  useEffect(() => {
-    console.log('showRegister: ' + showRegister)
-  }, [showRegister]);
-
-  async function pullLogin(LoginData: request.Login) {
-
-    setLoadingIsOpen(true)
-    try {
-      const result = await DoLogin(LoginData);
-      console.log(result)
-      if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
-        setUserKey(result.userKey);
-        setShowDashboard(true);
-        console.log('Token Saved:' + result.token)
-        setUserName(name)
-      }
-    } catch (error) {
-      console.log(error)
-      setPasswordIncorrect(true)
-    } finally {
-      setLoadingIsOpen(false)
-    }
-  }
 
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // Previene la recarga de la página
-    await pullLogin(LoginData); // Llama a la función pullLogin
-    // Simula una carga o espera por una operación asíncrona
 
-  };
+
+  
   return (
     <div id='login' className=' h-screen'>
       {/* Header */}
@@ -146,7 +116,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
       <RegisterOverlay setIsLoading={setIsLoading} isOpen={showRegister} onClose={() => setShowRegister(!showRegister)} setShowSeed={setShowSeed} setSeedList={setSeedList} setStartTemp={setSartTemp}>
         <></>
       </RegisterOverlay>
-      <LoginOverlay isOpen={showLogin} onClose={() => setShowLogin(!showLogin)} setShowRecover={setShowRecover}>
+      <LoginOverlay isOpen={showLogin} onClose={() => setShowLogin(!showLogin)} setShowRecover={setShowRecover} setUserKey={setUserKey}  setUserName={setUserName}  setShowDashboard={setShowDashboard}>
         <></>
       </LoginOverlay>
       <RegiResult isOpen={showSeed} onClose={() => setShowSeed(!showSeed)} seedList={seedList} startTemp={startTemp} setStartTemp={setSartTemp}/>
