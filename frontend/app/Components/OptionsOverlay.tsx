@@ -56,7 +56,7 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setOp
   return (
 
 
-    <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[16%] w-[100px]  bg-darkgray  py-[2.5%]   h-full ">
+    <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[16%] w-[100px]  bg-darkgray  py-12   h-full ">
       <div className="flex-col justify-center w-full  ">
 
 
@@ -65,45 +65,45 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setOp
         </div>
 
         <div className="">
-          <div onClick={() => { setOptionName('') }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == '' ? ' bg-black  border-primary' : ' hover:text-blackwhite border-darkgray'}`}>
+          <div onClick={() => { setOptionName('') }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${optionName == '' ? ' bg-black  border-primary' : ' hover:text-blackwhite border-darkgray'}`}>
 
             <GridViewRoundedIcon sx={{ fontSize: 32 }} />
 
             <div className={`2xl:flex hidden `}>Dashboard</div>
           </div>
-          <div onClick={() => { setOptionName('Groups') }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Groups' ? 'bg-black border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
+          <div onClick={() => { setOptionName('Groups') }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${optionName == 'Groups' ? 'bg-black border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
 
             <WysiwygRoundedIcon sx={{ fontSize: 32 }} />
 
 
             <div className=" 2xl:flex hidden">My Groups</div>
           </div>
-          <div onClick={() => { setOptionName('Cards') }} className={`flex items-center 2xl:justify-start justify-center w-full border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Cards' ? 'bg-black  border-primary' : 'hover:text-blackwhite border-darkgray '}`}>
+          <div onClick={() => { setOptionName('Cards') }} className={`flex items-center 2xl:justify-start justify-center w-full border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${optionName == 'Cards' ? 'bg-black  border-primary' : 'hover:text-blackwhite border-darkgray '}`}>
 
             <CreditCardRoundedIcon sx={{ fontSize: 32 }} />
 
 
             <div className=" 2xl:flex hidden">My Cards</div>
           </div>
-          <div onClick={() => { setOptionName('Generator') }} className={`flex items-center 2xl:justify-start justify-center w-full   border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${optionName == 'Generator' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
+          <div onClick={() => { setOptionName('Generator') }} className={`flex items-center 2xl:justify-start justify-center w-full   border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${optionName == 'Generator' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
 
             <PasswordRoundedIcon sx={{ fontSize: 32 }} />
 
 
             <div className=" 2xl:flex hidden">Pass Generator</div>
           </div>
-          <div onClick={() => { setShowSecureFiles(false) }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
+          <div onClick={() => { setShowSecureFiles(false) }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
             <FolderRoundedIcon sx={{ fontSize: 32 }} />
             <div className=" 2xl:flex hidden">Secure Files</div>
           </div>
         </div>
       </div>
       <div className="flex flex-col justify-between w-full      mt-[5.5rem]  ">
-        <div onClick={() => { setShowProfile(true) }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
+        <div onClick={() => { setShowProfile(true) }} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
           <SettingsRoundedIcon sx={{ fontSize: 32 }} />
           <div className=" 2xl:flex hidden">Settings</div>
         </div>
-        <div onClick={handleSubmit} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl pl-5 hover:text-whitebg  border-darkgray`}>
+        <div onClick={handleSubmit} className={`flex items-center 2xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold 2xl:text-xl 2xl:pl-5 hover:text-whitebg  border-darkgray`}>
           <ExitToAppRoundedIcon sx={{ fontSize: 32 }} />
           <div className=" 2xl:flex hidden">Log Out</div>
         </div>

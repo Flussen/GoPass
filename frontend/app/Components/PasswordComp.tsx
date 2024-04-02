@@ -57,14 +57,15 @@ const SvgLogos: { [key: string]: any } = {
 
 
 const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, isAddOverlayOpen, search, setArePasswords, arePasswords, setIsAddOverlayOpen }) => {
-    const [passwords, setPasswords] = useState<PasswordsProps[]>([]);
+    const [container, setContainer] = useState(['']);
+    const [passwords, setPasswords] = useState<models.Password[]>([]);
     const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
     const [openEditOverlayId, setOpenEditOverlayId] = useState<string | null>(null);
     const [icon, setIcon] = useState('');
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
     const [id, setId] = useState('');
-
+    
     const getFontAwesomeIcon = (iconName: string) => {
         const search = iconName.toLowerCase();
         const matchingKey: any = Object.keys(SvgLogos).find(key => key.startsWith(search));
@@ -94,26 +95,32 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
     };
 
 
-    async function getPass() {
-        try {
-            const decryptedPass = await PasswordDecrypt (userName, id, userKey)
-        } catch {
+  
 
+   
+    async function showPassword(){
+        try{
+           const response= await PasswordDecrypt(userName, id, userKey)
+            console.log('pass: '+response)
+        }catch(e){
+            console.log('error al pillar pass: '+e)
         }
     }
 
     async function getPasswords() {
         try {
-            const response = await GetAllPasswords(userName);
+            const response = await GetAllPasswords(userName) ;
             setArePasswords(true)
-            const data = JSON.stringify(response)
-            console.log('ladata: ' + JSON.stringify(data));
+            setPasswords(response)
+            console.log('ladata: ' + response);
 
-            // if (data && data.passwords) {
+         
 
-            //     const decryptedPasswords = await Promise.all(data.passwords.map(async (password: request.Password) => {
+            // if (arePasswords) {
 
-            //         const decryptedPwd = await PasswordDecrypt (userName, password.id, userKey);
+            //     const decryptedPasswords = await Promise.all(passwords.map(async (password: request.Password) => {
+
+            //         const decryptedPwd = await PasswordDecrypt (userName, passwords.id, userKey);
             //         return { ...password, pwd: decryptedPwd };
 
             //     }));
@@ -149,7 +156,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
-        await getPass(); // Llama a la función pullLogin
+        await showPassword(); // Llama a la función pullLogin
 
     };
 
@@ -175,10 +182,10 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                 {searchPasswords.map((password, index) => (
 
                     <div key={index} className="w-full ">
-                        <div onChange={() => { setIcon(password.icon) }} onClick={() => { setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id) }} className="flex w-full h-[5.74rem]  p-5 rounded-lg  cursor-pointer">
+                        <div onChange={() => { setIcon(password.settings.icon) }} onClick={() => { setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id) }} className="flex w-full h-[5.74rem]  p-5 rounded-lg  cursor-pointer">
                             <div className="flex items-center basis-3/6 space-x-5">
-                                <div className="rounded-lg bg-black shadow-shadow text-whitebg w-20 h-full flex items-center justify-center text-2xl">
-                                    <FontAwesomeIcon icon={getFontAwesomeIcon(password.icon)}  />
+                                <div onClick ={handleSubmit} className="rounded-lg bg-black shadow-shadow text-whitebg w-20 h-full flex items-center justify-center text-2xl">
+                                    <FontAwesomeIcon icon={getFontAwesomeIcon(password.settings.icon)}  />
                                 </div>
                                 <div className="flex-col text-lg">
                                     <div className="font-bold text-primary">
@@ -205,10 +212,10 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                             </div>
                             <div className="flex items-center  xl:basis-1/6">
                                 <div ref={areaRef}
-                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.status == 'Strong' ? '  text-primary' : password.status == 'Medium' ? ' text-primary' : 'text-red '} `}>
-                                    {password.status == 'Strong' ? <GppGoodRoundedIcon /> : password.status == 'Medium' ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
+                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.settings.status == 'Strong' ? '  text-primary' : password.settings.status == 'Medium' ? ' text-primary' : 'text-red '} `}>
+                                    {password.settings.status == 'Strong' ? <GppGoodRoundedIcon /> : password.settings.status == 'Medium' ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
                                     <div className="hidden xl:flex">
-                                        {password.status == 'Strong' ? 'Strong' : password.status == 'Strong' ? 'Medium' : 'Weak'}
+                                        {password.settings.status == 'Strong' ? 'Strong' : password.settings.status == 'Strong' ? 'Medium' : 'Weak'}
                                     </div>
                                 </div>
                             </div>

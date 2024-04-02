@@ -9,6 +9,9 @@ import SettingOverlay from "./SettingOverlay"
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonIcon from '@mui/icons-material/PersonRounded';
 import KeyIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+
+
 interface ProfileProps {
     userName: string;
     setIsLoading: (show: boolean) => void;
@@ -26,8 +29,8 @@ const ProfileSection: React.FC<ProfileProps> = ({ setShowProfile, userName, setI
     async function GetInfo() {
         try {
             const result = await GetAccountInfo(userName);
-            const data = JSON.parse(result);
-            setEmail(data.email);
+            //agregar el setEmail
+            console.log(result)
         } catch {
 
         }
