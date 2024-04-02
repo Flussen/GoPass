@@ -165,17 +165,8 @@ func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) 
 	return profile.UpdateProfile(a.DB, username, newModel)
 }
 
-func (a *App) GetAccountInfo(username string) (string, error) {
-	model, err := profile.GetAccountInfo(a.DB, username)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
-
-	byteModel, err := json.Marshal(model)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
-	return string(byteModel), nil
+func (a *App) GetAccountInfo(account string) (models.User, error) {
+	return profile.GetAccountInfo(a.DB, account)
 }
 
 /*

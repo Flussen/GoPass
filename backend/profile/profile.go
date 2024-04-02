@@ -165,6 +165,10 @@ func GetUsersConcurrently(db *bbolt.DB) ([]models.User, error) {
 // GetUserInfo retrieves user information from the database
 func GetAccountInfo(db *bbolt.DB, account string) (models.User, error) {
 
+	if account == "" {
+		return models.User{}, eh.ErrEmptyParameter
+	}
+
 	var storedUser models.User
 	err := db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte("Users"))
@@ -181,6 +185,10 @@ func GetAccountInfo(db *bbolt.DB, account string) (models.User, error) {
 	})
 	if err != nil {
 		return models.User{}, err
+	}
+
+	if storedUser.ID == "" {
+		return models.User{}, eh.ErrNotFound
 	}
 
 	return storedUser, nil

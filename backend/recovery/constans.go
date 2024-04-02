@@ -8,7 +8,7 @@ var words = []string{
 	"quenepa", "rosehip", "soursop", "tomato", "ube", "voavanga", "walnut", "ximenia", "yucca", "ziziphus",
 	"acerola", "bilberry", "currant", "dewberry", "elder", "fingerlime", "gooseberry", "hackberry", "jaboticaba", "kei apple",
 	"lychee", "marionberry", "navel", "oat", "persimmon", "quinoa", "rowan", "sapote", "thimbleberry", "ulluco",
-	"velvet apple", "wineberry", "xenia", "yellow plum", "zapote", "almond", "beet", "carrot", "daikon", "endive",
+	"velvet apple", "wineberry", "xenia", "yellow", "zapote", "almond", "beet", "carrot", "daikon", "endive",
 	"fennel", "ginger", "horseradish", "iceberg", "jicama", "kale", "leek", "mustard", "nopales", "okra",
 	"parsley", "quail", "rutabaga", "spinach", "turnip", "upland cress", "vanilla", "wasabi", "xoconostle", "yautia",
 	"zedoary", "margarita", "flussen", "busta",
