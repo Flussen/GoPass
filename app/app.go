@@ -24,8 +24,6 @@ import (
 	"GoPass/backend/sessiontoken"
 	"context"
 
-	"encoding/json"
-
 	"go.etcd.io/bbolt"
 )
 
@@ -237,38 +235,8 @@ func (a *App) GetLastSession() (string, error) {
 */
 
 // Shows the password by the userKey decryption method
-func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
-
-	var dataPassword models.Password
-
-	err := a.DB.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(username))
-		if userBucket == nil {
-			return eh.ErrUserNotFound
-		}
-
-		encryptedPasswordBytes := userBucket.Get([]byte(id))
-		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s", id)
-		}
-		// encryptedPassword = string(encryptedPasswordBytes)
-		err := json.Unmarshal(encryptedPasswordBytes, &dataPassword)
-		if err != nil {
-			return eh.NewGoPassErrorf("error unmarshal in ShowPassword %v", err)
-		}
-		return nil
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	decrypted, err := encryption.RevealPassword(dataPassword.Pwd, userKey)
-	if err != nil {
-		return "", err
-	}
-
-	return decrypted, nil
+func (a *App) PasswordDecrypt(account, userKey, id string) (string, error) {
+	return encryption.RevealPassword(a.DB, account, userKey, id)
 }
 
 /*
