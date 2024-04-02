@@ -6,6 +6,8 @@ import {response} from '../models';
 
 export function DeleteCard(arg1:string,arg2:string):Promise<void>;
 
+export function DeleteGroup(arg1:string,arg2:string):Promise<void>;
+
 export function DoChangeAccountInfo(arg1:string,arg2:models.UserRequest):Promise<void>;
 
 export function DoChangeAccountPassword(arg1:string,arg2:string,arg3:string):Promise<void>;
@@ -20,15 +22,17 @@ export function DoLogout():Promise<void>;
 
 export function DoNewCard(arg1:string,arg2:request.Card):Promise<string>;
 
+export function DoNewGroup(arg1:string,arg2:Array<string>):Promise<void>;
+
+export function DoNewPassword(arg1:string,arg2:string,arg3:request.Password):Promise<string>;
+
 export function DoRecovery(arg1:request.Recovery):Promise<void>;
 
 export function DoRegister(arg1:request.Register):Promise<response.Register>;
 
-export function DoSavePassword(arg1:string,arg2:request.Password):Promise<string>;
-
 export function DoSetPasswordSettings(arg1:string,arg2:string,arg3:models.Settings):Promise<void>;
 
-export function DoUpdatePassword(arg1:string,arg2:string,arg3:request.SimplePassword):Promise<void>;
+export function DoUpdatePassword(arg1:string,arg2:string,arg3:string,arg4:request.Password):Promise<void>;
 
 export function GetAccountInfo(arg1:string):Promise<string>;
 
@@ -38,9 +42,11 @@ export function GetAllPasswords(arg1:string):Promise<Array<models.Password>>;
 
 export function GetCardById(arg1:string,arg2:string):Promise<models.Card>;
 
+export function GetGroups(arg1:string):Promise<Array<string>>;
+
 export function GetLastSession():Promise<string>;
 
-export function GetListAccounts():Promise<string>;
+export function GetListAccounts():Promise<Array<models.User>>;
 
 export function GetPasswordById(arg1:string,arg2:string):Promise<models.Password>;
 

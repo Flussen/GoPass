@@ -10,10 +10,7 @@
 package app
 
 import (
-	// Package imports
-
 	"GoPass/backend/auth"
-	"GoPass/backend/controllers"
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
@@ -22,6 +19,7 @@ import (
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
+	"GoPass/backend/profile"
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 	"context"
@@ -128,7 +126,7 @@ func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
 
 /*
    -------------------Cards--------------------
-
+	Cards functions
    ------------------------------------------------
 */
 
@@ -160,24 +158,33 @@ func (a *App) DeleteCard(account, id string) error {
 
 // Change password for the user ACCOUNT!!
 func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
-	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+	return profile.ChangeAccountPassword(a.DB, username, originalPwd, newPwd)
 }
 
 func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) error {
-	return controllers.UpdateProfile(a.DB, username, newModel)
+	return profile.UpdateProfile(a.DB, username, newModel)
 }
 
-func (a *App) GetAccountInfo(username string) (string, error) {
-	model, err := controllers.GetUserInfo(a.DB, username)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
+func (a *App) GetAccountInfo(account string) (models.User, error) {
+	return profile.GetAccountInfo(a.DB, account)
+}
 
-	byteModel, err := json.Marshal(model)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
-	return string(byteModel), nil
+/*
+   -------------------Groups--------------------
+	Groups
+   ------------------------------------------------
+*/
+
+func (a *App) DoNewGroup(account string, groups []string) error {
+	return profile.NewGroup(a.DB, account, groups)
+}
+
+func (a *App) DeleteGroup(account, group string) error {
+	return profile.DeleteGroup(a.DB, account, group)
+}
+
+func (a *App) GetGroups(account string) ([]string, error) {
+	return profile.GetGroups(a.DB, account)
 }
 
 /*
@@ -272,8 +279,8 @@ func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 */
 
 // ListUsers retrieves user information concurrently
-func (a *App) GetListAccounts() (string, error) {
-	return controllers.GetUsersConcurrently(a.DB)
+func (a *App) GetListAccounts() ([]models.User, error) {
+	return profile.GetUsersConcurrently(a.DB)
 }
 
 // GetVersion returns the version of the application. Example 1.0.1

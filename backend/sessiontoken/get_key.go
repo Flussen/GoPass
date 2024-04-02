@@ -1,5 +1,21 @@
 package sessiontoken
 
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
 func getKey() (string, error) {
-	return "EuEbLKCg9ja9Pv3KYubomZJBPrFMux5V6I0v0ZZoIZFjOb2PEX", nil
+	err := godotenv.Load()
+	if err != nil {
+		panic("cannot get secret key")
+	}
+
+	secretKey := os.Getenv("SECRETKEY")
+	if secretKey == "" {
+		panic("cannot get secret key")
+	}
+
+	return secretKey, err
 }

@@ -30,12 +30,12 @@ func CheckSeeds(db *bbolt.DB, account string, seeds []string) error {
 		}
 
 		if len(seeds) != len(user.Seeds) {
-			return eh.NewGoPassError(eh.ErrInvalidCredentils)
+			return eh.ErrInvalidCredentils
 		}
 
 		for i, seed := range seeds {
 			if seed != user.Seeds[i] {
-				return eh.NewGoPassError(eh.ErrInvalidCredentils)
+				return eh.ErrInvalidCredentils
 			}
 		}
 

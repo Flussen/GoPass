@@ -1,12 +1,12 @@
 package passwords
 
 import (
-	"GoPass/backend/controllers"
 	database "GoPass/backend/db"
 	"GoPass/backend/encryption"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
+	"GoPass/backend/profile"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -108,7 +108,7 @@ func UpdatePassword(db *bbolt.DB, account, id, userKey string, rqst request.Pass
 		return eh.ErrEmptyParameter
 	}
 
-	data, err := controllers.GetUserInfo(db, account)
+	data, err := profile.GetAccountInfo(db, account)
 	if err != nil {
 		return err
 	}
