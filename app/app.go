@@ -57,10 +57,6 @@ func (a *App) Startup(ctx context.Context) {
 
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(request request.Register) (response.Register, error) {
-	if request.Account == "" || request.Email == "" ||
-		request.Password == "" {
-		return response.Register{}, eh.NewGoPassError(eh.ErrEmptyParameters)
-	}
 	return auth.Register(a.DB, request.Account, request.Email, request.Password, request.Configs)
 }
 
@@ -195,16 +191,7 @@ func (a *App) GetGroups(account string) ([]string, error) {
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 func (a *App) VerifyToken(token string) (bool, error) {
-	valid, err := sessiontoken.VerifyToken(token)
-	if err != nil {
-		return false, err
-	}
-
-	if !valid {
-		sessiontoken.CleanSessionToken(a.DB)
-	}
-
-	return valid, nil
+	return sessiontoken.VerifyToken(a.DB, token)
 }
 
 func (a *App) GetLastSession() (string, error) {

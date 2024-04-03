@@ -85,7 +85,7 @@ func GetSession(db *bbolt.DB) (models.LastSession, error) {
 		return models.LastSession{}, err
 	}
 
-	ok, err := VerifyToken(lastSession.Token)
+	ok, err := VerifyToken(db, lastSession.Token)
 	if err != nil || !ok {
 		err := CleanSessionToken(db)
 		if err != nil {
