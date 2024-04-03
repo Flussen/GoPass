@@ -14,8 +14,7 @@ import (
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
-	"GoPass/backend/encryption"
-	eh "GoPass/backend/errorHandler" // Error handler
+	"GoPass/backend/encryption"  // Error handler
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
@@ -194,25 +193,8 @@ func (a *App) VerifyToken(token string) (bool, error) {
 	return sessiontoken.VerifyToken(a.DB, token)
 }
 
-func (a *App) GetLastSession() (string, error) {
-
-	var sessionBytes []byte
-
-	a.DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("LastSessionSaved"))
-		if b == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		sessionBytes = b.Get([]byte("lastsession"))
-		if sessionBytes == nil {
-			return eh.NewGoPassError("the last session is empty or was deleted, login again")
-		}
-
-		return nil
-	})
-
-	return string(sessionBytes), nil
+func (a *App) GetLastSession() (models.LastSession, error) {
+	return sessiontoken.GetSession(a.DB)
 }
 
 /*
