@@ -61,11 +61,11 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
         setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-start  w-[84%] ml-[16%] p-12 h-full ">
+      <div className="flex flex-col justify-start items-start  2xl:w-[84%] w-full 2xl:ml-[16%] ml-[100px] p-12 h-full ">
         <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
           <div className='flex items-center   '>
             <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
-            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-full text-whitebg  pl-14 w-[34rem] h-12 bg-darkgray font-medium focus:outline-none placeholder-gray' placeholder='Buscar' />
+            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-full text-whitebg  pl-14 min-w-[25rem] w-[65%] h-12 bg-darkgray font-medium focus:outline-none placeholder-gray' placeholder='Buscar' />
           </div>
           <div className="flex items-center space-x-6 ">
             <div className="flex items-center">
@@ -94,10 +94,10 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
           </div>
         </div>
         <div className=" flex w-full space-x-12 h-full ">
-          <div className="w-[65%] h-full  ">
+          <div className="2xl:w-[65%] w-[70%] h-full  ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
-                <div className="text-4xl text-whitebg font-bold">
+                <div className="text-responsivo text-whitebg font-bold">
                   My <span className="  text-primary">Password</span>
                 </div>
                 <div className="flex items-center space-x-6">
@@ -139,7 +139,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
           </div>
           <div className=" flex flex-col justify-start items-center  h-full w-[35%] ">
             <div className="flex justify-between items-end w-full ">
-              <div className="text-4xl text-whitebg  font-bold">
+              <div className="text-responsivo text-whitebg  font-bold">
                 My <span className="  text-primary">Groups</span>
               </div>
               

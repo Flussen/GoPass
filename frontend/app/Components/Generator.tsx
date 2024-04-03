@@ -140,7 +140,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
 
     return (
 
-        <div id="Generator" className='flex justify-between  h-screen '>
+        <div id="Generator" className='flex justify-between  h-full'>
 
             <OptionsOverlay
                 setOptionName={setOptionName}
@@ -150,9 +150,11 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                 setShowProfile={setShowProfile}      >
                 <></>
             </OptionsOverlay>
-            <div className="flex flex-col justify-start items-start  w-[84%] ml-[16%] p-12 h-full">
-                <div id="HEADER" className="flex justify-end w-full rounded-lg text-base mb-16 ">
-                    
+            <div className="flex flex-col justify-start items-start  2xl:w-[84%] w-full 2xl:ml-[16%] ml-[100px] p-12 h-full ">
+                <div id="HEADER" className="flex justify-between items-center w-full rounded-lg text-base mb-16 ">
+                    <div className='text-4xl font-bold text-whitebg'>
+                        Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>
+                    </div>
                     <div className="flex items-center space-x-6 h-12">
                         <div className="flex items-center">
                             <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
@@ -180,12 +182,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                     </div>
                 </div>
                 <div className="flex-col justify-center w-full items-start">
-                    <div className='flex justify-start mb-10'>
-                        <div className='text-4xl font-bold text-whitebg'>
-                            Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>
-                        </div>
-
-                    </div>
+                    
                     <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
                         <div className="flex-col items-start justify-center bg-darkgray rounded-lg  xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">

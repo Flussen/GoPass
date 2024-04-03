@@ -11,7 +11,7 @@ import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/ProfileSection"
 import GroupsComp from "./Components/GroupsComp"
-import CardsComp from "./Components/CardsComp"
+import CardsComp from "./Components/CardsPage"
 
 
 export default function Home() {
