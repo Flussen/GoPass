@@ -44,7 +44,7 @@ export function GetCardById(arg1:string,arg2:string):Promise<models.Card>;
 
 export function GetGroups(arg1:string):Promise<Array<string>>;
 
-export function GetLastSession():Promise<string>;
+export function GetLastSession():Promise<models.LastSession>;
 
 export function GetListAccounts():Promise<Array<models.User>>;
 

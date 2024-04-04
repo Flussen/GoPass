@@ -80,6 +80,22 @@ export namespace models {
 	        this.language = source["language"];
 	    }
 	}
+	export class LastSession {
+	    username: string;
+	    token: string;
+	    userKey: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new LastSession(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.username = source["username"];
+	        this.token = source["token"];
+	        this.userKey = source["userKey"];
+	    }
+	}
 	export class Password {
 	    id: string;
 	    title: string;
@@ -213,7 +229,7 @@ export namespace request {
 	    number: number;
 	    security_code: number;
 	    month: number;
-	    day: number;
+	    year: number;
 	    settings: models.Settings;
 	
 	    static createFrom(source: any = {}) {
@@ -227,7 +243,7 @@ export namespace request {
 	        this.number = source["number"];
 	        this.security_code = source["security_code"];
 	        this.month = source["month"];
-	        this.day = source["day"];
+	        this.year = source["year"];
 	        this.settings = this.convertValues(source["settings"], models.Settings);
 	    }
 	
