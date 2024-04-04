@@ -32,6 +32,7 @@ import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import useTranslation from 'next-translate/useTranslation';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import CardsComp from "./CardsComp";
+import AddCards from "./AddCard";
 
 
 interface CardsProps{
@@ -49,7 +50,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
   const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setTitlee(event.target.value);
   };
-  const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
+  const [isAddCardOpen, setIsAddCardOpen] = useState(false);
   const [areCards, setAreCards] = useState(false)
 
     return(
@@ -63,9 +64,9 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
         setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-start  2xl:w-[84%] w-full 2xl:ml-[16%] ml-[100px] p-12 h-full ">
+      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[100px] p-12 h-full ">
         <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
-          <div className='flex items-center   '>
+          <div className='flex items-center  w-full '>
             <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
             <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-full text-whitebg  pl-14 min-w-[25rem] w-[65%] h-12 bg-darkgray font-medium focus:outline-none placeholder-gray' placeholder='Buscar' />
           </div>
@@ -112,7 +113,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
 
                   </div>
                   
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
+                  <div onClick={() => setIsAddCardOpen(!isAddCardOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
 
                     <AddCardRoundedIcon sx={{ fontSize: 24 }} />
                     <div >
@@ -120,7 +121,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                     </div>
                   </div>
                 </div>
-                  
+                  <AddCards userName={userName} isOpen={isAddCardOpen} onClose= {()=>setIsAddCardOpen(!isAddCardOpen)} />
               </div>
             </div>
             {
@@ -131,7 +132,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                   <div className="text-2xl">
                     Add your first password!
                   </div>
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex items-center  bg-primary rounded-lg h-12 group hover:bg-darkprimary">
+                  <div onClick={() => setIsAddCardOpen(!isAddCardOpen)} className="flex items-center  bg-primary rounded-lg h-12 group hover:bg-darkprimary">
                     <button className=" px-7 text-black rounded-md font-medium ">
                       Add Password
                     </button>

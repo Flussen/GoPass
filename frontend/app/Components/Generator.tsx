@@ -150,7 +150,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                 setShowProfile={setShowProfile}      >
                 <></>
             </OptionsOverlay>
-            <div className="flex flex-col justify-start items-start  2xl:w-[84%] w-full 2xl:ml-[16%] ml-[100px] p-12 h-full ">
+            <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[100px] p-12 h-full ">
                 <div id="HEADER" className="flex justify-between items-center w-full rounded-lg text-base mb-16 ">
                     <div className='text-4xl font-bold text-whitebg'>
                         Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>

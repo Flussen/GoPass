@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
         setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-start  2xl:w-[84%] w-full 2xl:ml-[16%] ml-[100px] p-12 h-full ">
+      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[100px] p-12 h-full ">
         <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
           <div className='flex items-center w-full   '>
             <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
@@ -102,7 +102,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
           </div>
         </div>
         <div className=" flex w-full space-x-6 h-full ">
-          <div className="2xl:w-[65%] w-[70%] h-full  ">
+          <div className="xl:w-[65%] w-[70%] h-full  ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
                 <div className=" text-responsivo  text-whitebg font-bold">
@@ -149,7 +149,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
                 </div>
             }
           </div>
-          <div className=" flex flex-col justify-start items-center  h-full 2xl:w-[35%] w-[30%]">
+          <div className=" flex flex-col justify-start items-center  h-full xl:w-[35%] w-[30%]">
             <div className="flex justify-between items-end w-full ">
               <div className="text-responsivo text-whitebg  font-bold">
                 My <span className="  text-primary">Groups</span>
