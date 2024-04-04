@@ -29,7 +29,7 @@ func NewCard(db *bbolt.DB, account string, rqst request.Card) (string, error) {
 		return "", eh.NewGoPassError("card is maybe expired")
 	}
 
-	if len(strconv.FormatUint(uint64(rqst.Number), 10)) < 16 {
+	if len(strconv.FormatUint(uint64(rqst.Number), 10)) < 15 {
 		return "", eh.NewGoPassError("the card number cannot be less than 16")
 	}
 

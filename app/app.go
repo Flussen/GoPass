@@ -14,8 +14,7 @@ import (
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
-	"GoPass/backend/encryption"
-	eh "GoPass/backend/errorHandler" // Error handler
+	"GoPass/backend/encryption"  // Error handler
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
@@ -23,8 +22,6 @@ import (
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 	"context"
-
-	"encoding/json"
 
 	"go.etcd.io/bbolt"
 )
@@ -59,10 +56,6 @@ func (a *App) Startup(ctx context.Context) {
 
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(request request.Register) (response.Register, error) {
-	if request.Account == "" || request.Email == "" ||
-		request.Password == "" {
-		return response.Register{}, eh.NewGoPassError(eh.ErrEmptyParameters)
-	}
 	return auth.Register(a.DB, request.Account, request.Email, request.Password, request.Configs)
 }
 
@@ -197,37 +190,11 @@ func (a *App) GetGroups(account string) ([]string, error) {
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 func (a *App) VerifyToken(token string) (bool, error) {
-	valid, err := sessiontoken.VerifyToken(token)
-	if err != nil {
-		return false, err
-	}
-
-	if !valid {
-		sessiontoken.CleanSessionToken(a.DB)
-	}
-
-	return valid, nil
+	return sessiontoken.VerifyToken(a.DB, token)
 }
 
-func (a *App) GetLastSession() (string, error) {
-
-	var sessionBytes []byte
-
-	a.DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("LastSessionSaved"))
-		if b == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		sessionBytes = b.Get([]byte("lastsession"))
-		if sessionBytes == nil {
-			return eh.NewGoPassError("the last session is empty or was deleted, login again")
-		}
-
-		return nil
-	})
-
-	return string(sessionBytes), nil
+func (a *App) GetLastSession() (models.LastSession, error) {
+	return sessiontoken.GetSession(a.DB)
 }
 
 /*
@@ -237,38 +204,8 @@ func (a *App) GetLastSession() (string, error) {
 */
 
 // Shows the password by the userKey decryption method
-func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
-
-	var dataPassword models.Password
-
-	err := a.DB.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(username))
-		if userBucket == nil {
-			return eh.ErrUserNotFound
-		}
-
-		encryptedPasswordBytes := userBucket.Get([]byte(id))
-		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s", id)
-		}
-		// encryptedPassword = string(encryptedPasswordBytes)
-		err := json.Unmarshal(encryptedPasswordBytes, &dataPassword)
-		if err != nil {
-			return eh.NewGoPassErrorf("error unmarshal in ShowPassword %v", err)
-		}
-		return nil
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	decrypted, err := encryption.RevealPassword(dataPassword.Pwd, userKey)
-	if err != nil {
-		return "", err
-	}
-
-	return decrypted, nil
+func (a *App) PasswordDecrypt(account, userKey, id string) (string, error) {
+	return encryption.RevealPassword(a.DB, account, userKey, id)
 }
 
 /*
