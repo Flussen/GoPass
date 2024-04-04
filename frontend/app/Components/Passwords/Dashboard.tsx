@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import ProfileOverlay from './ProfileOverlay';
+import ProfileOverlay from '../ProfileOverlay';
 import AddOverlay from './AddPass';
-import OptionsOverlay from "./OptionsOverlay";
+import OptionsOverlay from "../OptionsOverlay";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
@@ -55,7 +55,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
   };
   const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
   const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
-  const [arePasswords, setArePasswords] = useState(true)
+  const [arePasswords, setArePasswords] = useState(false)
 
 
   return (

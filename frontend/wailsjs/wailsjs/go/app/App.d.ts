@@ -34,7 +34,7 @@ export function DoSetPasswordSettings(arg1:string,arg2:string,arg3:models.Settin
 
 export function DoUpdatePassword(arg1:string,arg2:string,arg3:string,arg4:request.Password):Promise<void>;
 
-export function GetAccountInfo(arg1:string):Promise<string>;
+export function GetAccountInfo(arg1:string):Promise<models.User>;
 
 export function GetAllCards(arg1:string):Promise<Array<models.Card>>;
 

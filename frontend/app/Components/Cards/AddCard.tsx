@@ -8,10 +8,10 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import { DoNewCard } from "@/wailsjs/wailsjs/go/app/App";
 import Image from "next/image";
-import Visa from "../../public/visa.svg"
-import MasterCard from "../../public/mastercard.svg"
-import Defaulte from "../../public/key.svg"
-import American from "../../public/American.svg"
+import Visa from "../../../public/visa.svg"
+import MasterCard from "../../../public/mastercard.svg"
+import Defaulte from "../../../public/key.svg"
+import American from "../../../public/American.svg"
 
 
 interface AddCardProps {

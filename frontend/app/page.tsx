@@ -1,17 +1,17 @@
 "use client"
 import React, { useState, useEffect, use } from 'react';
-import Dashboard from './Components/Dashboard';
-import LoginComp from "./Components/Login";
+import Dashboard from './Components/Passwords/Dashboard';
+import LoginComp from "./Components/Login and Signup/Login";
 import SignupComp from "./Components/Signup";
 import { GetVersion } from '@/wailsjs/wailsjs/go/app/App';
 import Generator from './Components/Generator';
 import LoadingComp from './Components/Loading'
-import SignupResult from './Components/RegisResult';
+import SignupResult from './Components/Login and Signup/RegisResult';
 import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
-import ProfileSection from "./Components/ProfileSection"
-import GroupsComp from "./Components/GroupsComp"
-import CardsComp from "./Components/CardsPage"
+import ProfileSection from "./Components/Settings/ProfileSection"
+import GroupsComp from "./Components/Groups/GroupsPage"
+import CardsComp from "./Components/Cards/CardsPage"
 
 
 export default function Home() {

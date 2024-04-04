@@ -9,7 +9,7 @@ import KeyIcon from '../../Public/key.svg';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg"
 import Shield from "../../Public/sheild-dynamic-gradient.svg"
-import LoadingComp from "./Loading"
+import LoadingComp from "../Loading"
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import World from "../../Public/world.svg"

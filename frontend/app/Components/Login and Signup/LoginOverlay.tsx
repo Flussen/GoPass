@@ -7,7 +7,7 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
-import LoadingComp from "./Loading";
+import LoadingComp from "../Loading";
 
 interface RegisterProps {
     isOpen: boolean;

@@ -8,7 +8,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import RegiResult from "./RegisResult"
-import LoadingComp from "./Loading"
+import LoadingComp from "../Loading"
 
 
 interface RegisterProps {
