@@ -3,7 +3,7 @@ import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
 import { GetAllPasswords } from "@/wailsjs/wailsjs/go/app/App";
 import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
-import EditOverlay from './EditOverlay';
+import EditOverlay from './EditPass';
 import Tooltip from '@mui/material/Tooltip';
 import { Instance } from '@popperjs/core';
 import Box from '@mui/material/Box';
@@ -165,7 +165,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     return (
         <>
-            <div className="flex w-full text-lg font-semibold pl-5 mb-5 text-gray">
+            <div className="flex w-full text-BASE font-semibold pl-5 mb-5 text-gray">
 
                 <div className="basis-3/6">
                     Name

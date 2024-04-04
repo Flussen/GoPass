@@ -7,7 +7,7 @@ import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import ProfileOverlay from './ProfileOverlay';
-import AddOverlay from './AddOverlay';
+import AddOverlay from './AddPass';
 import OptionsOverlay from "./OptionsOverlay";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';

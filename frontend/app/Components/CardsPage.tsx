@@ -7,7 +7,7 @@ import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import ProfileOverlay from './ProfileOverlay';
-import AddOverlay from './AddOverlay';
+import AddOverlay from './AddPass';
 import OptionsOverlay from "./OptionsOverlay";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
@@ -30,6 +30,8 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import useTranslation from 'next-translate/useTranslation';
+import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
+import CardsComp from "./CardsComp";
 
 
 interface CardsProps{
@@ -93,12 +95,12 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
 
           </div>
         </div>
-        <div className=" flex w-full space-x-12 h-full ">
+        <div className=" flex w-full space-x-6 h-full ">
           <div className="2xl:w-[65%] w-[70%] h-full  ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
                 <div className="text-responsivo text-whitebg font-bold">
-                  My <span className="  text-primary">Password</span>
+                  My <span className="  text-primary">Cards</span>
                 </div>
                 <div className="flex items-center space-x-6">
                   <div className="flex justify-center items-center text-base space-x-2 text-gray hover:text-whitebg h-12 bg-darkgray rounded-full w-24 cursor-pointer">
@@ -112,7 +114,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                   
                   <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
 
-                    <AddRoundedIcon sx={{ fontSize: 24 }} />
+                    <AddCardRoundedIcon sx={{ fontSize: 24 }} />
                     <div >
                       New Pass
                     </div>
@@ -122,8 +124,8 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
               </div>
             </div>
             {
-              areCards ?
-              <></>
+              true ?
+              <CardsComp/>
                 :
                 <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
                   <div className="text-2xl">
@@ -137,10 +139,10 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                 </div>
             }
           </div>
-          <div className=" flex flex-col justify-start items-center  h-full w-[35%] ">
+          <div className=" flex flex-col justify-start items-center   bg-primary h-full  2xl:w-[35%] w-[30%] ">
             <div className="flex justify-between items-end w-full ">
               <div className="text-responsivo text-whitebg  font-bold">
-                My <span className="  text-primary">Groups</span>
+                Fav <span className="  text-primary">Cards</span>
               </div>
               
             </div>

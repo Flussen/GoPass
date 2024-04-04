@@ -38,7 +38,10 @@ const config: Config = {
         'whitebg':'#E1EEFD',
         'white':'#F6FAFF',
         'red':'#FF2E2E',
-        'orange':'#FFC328'
+        'orange':'#FFC328',
+        'visa':'#00579F',
+        'american':'#016FD0',
+        
 
       },
       borderRadius: {
