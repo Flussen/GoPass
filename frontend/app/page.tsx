@@ -12,6 +12,7 @@ import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
 import ProfileSection from "./Components/Settings/ProfileSection"
 import GroupsComp from "./Components/Groups/GroupsPage"
 import CardsComp from "./Components/Cards/CardsPage"
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 
 
 export default function Home() {
@@ -27,22 +28,23 @@ export default function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const [optionName, setOptionName] = useState('')
 
+  const [lastSession, setLastSession] = useState<models.LastSession[]>([]);
 
 
   async function GetToken() {
 
     try {
       setVersion(await GetVersion())
-      const result = await GetLastSession();
-      const data = JSON.parse(result);
-      setUserName(data.username)
-      setToken(data.token)
-      setUserKey(data.userKey)
-      console.log('Data Get Last: ' + data.username)
+      const response = await GetLastSession();
+      console.log('Last sesion'+response)
+      setUserKey(response.userKey)
 
-      if (data.token !== null && data.username !== null) {
+      setUserName(response.username)
+      setToken(response.token)
 
-        const resultado = await VerifyToken(data.token);
+      if (response.token !== null && response.username !== null) {
+
+        const resultado = await VerifyToken(response.token);
         if (resultado) {
           setShowDashboard(true)
         }
