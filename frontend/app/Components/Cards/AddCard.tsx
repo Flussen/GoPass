@@ -12,7 +12,8 @@ import Visa from "../../../public/visa.svg"
 import MasterCard from "../../../public/mastercard.svg"
 import Defaulte from "../../../public/key.svg"
 import American from "../../../public/American.svg"
-
+import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 
 interface AddCardProps {
     isOpen: boolean;
@@ -25,11 +26,12 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
     const [title, setTitle] = useState("");
     const [cardNumber, setCardNumber] = useState('');
     const [cvv, setCvv] = useState("");
-    const [month, setMonth] = useState('');
+    const [month, setMonth] = useState('1');
     const [year, setYear] = useState('');
+    const [favorite, setFavorite] = useState(false);
 
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 12 }, (v, i) => currentYear + i);
+    const years = Array.from({ length: 11 }, (v, i) => currentYear + i);
 
     const months = Array.from({ length: 12 }, (v, i) => {
         const month = (i + 1).toString().padStart(2, '0');
@@ -51,11 +53,11 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
         card: card,
         holder: title,
         number: parseInt(cardNumber.replace(/\s+/g, '')),
-        security_Code: parseInt(cvv, 10),
+        security_code: parseInt(cvv, 10),
         month: parseInt(month, 10),
-        yeah: parseInt(year, 10),
+        year: parseInt(year, 10),
         settings: new models.Settings({
-            favorite: false,
+            favorite: favorite,
             group: '',
             icon: '',
             status: ''
@@ -67,8 +69,12 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
         try {
             const response = await DoNewCard(userName, CardData)
             console.log('Responde Cards: ' + response)
+          
+
+            
         } catch (e) {
             console.log('error sending cards: ' + e)
+            console.log(CardData)
         }
     }
     const handleSubmit = async (event: React.FormEvent) => {
@@ -106,13 +112,17 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
                         <div className='flex flex-col justify-center bg-darkgray p-5  rounded-lg  z-10'>
 
                             <form onSubmit={handleSubmit} >
-                                <div className="flex justify-between ">
-                                    <div className='flex justify-between items-center mb-4'>
+                                <div className="flex justify-between h-full items-center mb-4">
+                                    <div className='flex justify-between items-center '>
                                         <TitleRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-2 text-primary" />
                                         <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[22rem] outline-none placeholder:text-gray text-whitebg ' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} required />
                                     </div>
+                                    <div onClick={()=>setFavorite(!favorite)} className={`${favorite?'text-orange':'text-gray'} cursor-pointer`} >
+                                       { favorite? <StarRoundedIcon/>:
+                                       <StarBorderRoundedIcon/>}
+                                    </div>
                                     <div className="w-[6rem]  h-12 rounded-lg flex justify-center items-center">
-                                        <Image src={card == 'Visa' ? Visa : card == 'MasterCard' ? MasterCard : card == 'American' ? American : Visa} alt="card" className=" h-12"/>
+                                        <Image src={card == 'Visa' ? Visa : card == 'MasterCard' ? MasterCard : card == 'American' ? American : Visa} alt="card" className=" h-12" />
                                     </div>
                                 </div>
 
