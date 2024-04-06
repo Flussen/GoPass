@@ -114,7 +114,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
             {
                 isOpen ? (
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen '>
-                        <div onClick={onClose} className='absolute bg-black opacity-75 h-screen w-screen '></div>
+                        <div onClick={onClose} className='absolute bg-[#000000]  opacity-75 h-screen w-screen '></div>
                         <div className=' flex-col justify-center bg-darkgray  p-5  rounded-lg space-y-4 z-10'>
 
                             <form >
