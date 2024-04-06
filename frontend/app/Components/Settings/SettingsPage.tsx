@@ -10,7 +10,8 @@ import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonIcon from '@mui/icons-material/PersonRounded';
 import KeyIcon from '@mui/icons-material/KeyRounded';
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
-import ProfileSection from "./ProfileSettings";
+import ProfileSection from "./ProfileSection";
+import ApparenceSection from "./ApparenceSection";
 
 interface ProfileProps {
     userName: string;
@@ -67,6 +68,7 @@ const OptionPage: React.FC<ProfileProps> = ({ setShowProfile, userName, setIsLoa
             <SettingOverlay setShowProfile={setShowProfile} setOptionName={setOptionName} optionName={optionName} />
             {optionName == '' ?
                 <ProfileSection userName={userName} setIsLoading={setIsLoading} />
+                :optionName=='Apparence'?                 <ApparenceSection userName={userName} setIsLoading={setIsLoading} />
                 :
                 <></>}
 

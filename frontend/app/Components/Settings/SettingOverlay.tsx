@@ -30,21 +30,21 @@ const SettingsComp: React.FC<SettingsProps> = ({ setShowProfile, setOptionName, 
               <ManageAccountsRoundedIcon sx={{ fontSize: 32 }} />
   
   
-              <div className=" xl:flex hidden">My Groups</div>
+              <div className=" xl:flex hidden">My Profile</div>
             </div>
-            <div onClick={() => { setOptionName('Cards') }} className={`flex items-center xl:justify-start justify-center w-full border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold xl:text-xl xl:pl-5 ${optionName == 'Cards' ? 'bg-black  border-primary' : 'hover:text-blackwhite border-darkgray '}`}>
+            <div onClick={() => { setOptionName('Apparence') }} className={`flex items-center xl:justify-start justify-center w-full border-l-2  h-16 space-x-2 cursor-pointer text-whitegray  font-semibold xl:text-xl xl:pl-5 ${optionName == 'Apparence' ? 'bg-black  border-primary' : 'hover:text-blackwhite border-darkgray '}`}>
   
               <MonitorRoundedIcon sx={{ fontSize: 32 }} />
   
   
-              <div className=" xl:flex hidden">My Cards</div>
+              <div className=" xl:flex hidden">Apparence</div>
             </div>
-            <div onClick={() => { setOptionName('Generator') }} className={`flex items-center xl:justify-start justify-center w-full   border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold xl:text-xl xl:pl-5 ${optionName == 'Generator' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
+            <div onClick={() => { setOptionName('Help') }} className={`flex items-center xl:justify-start justify-center w-full   border-l-2 h-16 space-x-2 cursor-pointer text-whitegray  font-semibold xl:text-xl xl:pl-5 ${optionName == 'Help' ? 'bg-black border-l-2 border-primary' : 'hover:text-blackwhite border-darkgray'}`}>
   
               <HelpRoundedIcon sx={{ fontSize: 32 }} />
   
   
-              <div className=" xl:flex hidden"> <span className="2xl:flex hidden">Pass&nbsp;</span>Generator</div>
+              <div className=" xl:flex hidden"> Help</div>
             </div>
             
           </div>
