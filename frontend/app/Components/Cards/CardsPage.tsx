@@ -2,34 +2,15 @@
 
 import React, { useState } from "react";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faBars, faEllipsis, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import ProfileOverlay from '../ProfileOverlay';
-import AddOverlay from '../Passwords/AddPass';
+
 import OptionsOverlay from "../OptionsOverlay";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
-import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
+import FavCardComp from "./FavCardComp"
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
-import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingRounded';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import GppGoodRoundedIcon from '@mui/icons-material/GppGoodRounded';
-import PasswordComp from "../Passwords/PasswordComp"
-import SearchIcon from "../../Public/search.svg"
-import Image from "next/image"
-import AddIcon from "../../Public/add.svg"
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import useTranslation from 'next-translate/useTranslation';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import CardsComp from "./CardsComp";
 import AddCards from "./AddCard";
@@ -64,7 +45,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
         setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[100px] p-12 h-full ">
+      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
         <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
           <div className='flex items-center  w-full '>
             <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
@@ -126,7 +107,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
             </div>
             {
               true ?
-              <CardsComp/>
+              <CardsComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey}/>
                 :
                 <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
                   <div className="text-2xl">
@@ -140,13 +121,14 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                 </div>
             }
           </div>
-          <div className=" flex flex-col justify-start items-center   bg-primary h-full  2xl:w-[35%] w-[30%] ">
-            <div className="flex justify-between items-end w-full ">
+          <div className=" flex flex-col justify-start items-center  h-full  2xl:w-[35%] w-[30%] ">
+            <div className="flex justify-between items-end w-full mb-12">
               <div className="text-responsivo text-whitebg  font-bold">
                 Fav <span className="  text-primary">Cards</span>
               </div>
-              
             </div>
+            <FavCardComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey}/>
+
           </div>
 
         </div>

@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
         setShowProfile={setShowProfile}      >
         <></>
       </OptionsOverlay>
-      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[100px] p-12 h-full ">
+      <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
         <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
           <div className='flex items-center w-full   '>
             <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
