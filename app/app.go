@@ -11,7 +11,8 @@ package app
 
 import (
 	"GoPass/backend/auth"
-	"GoPass/backend/credentials/actions/export"
+	"GoPass/backend/credentials/actions/exportation"
+	"GoPass/backend/credentials/actions/importation"
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
@@ -227,7 +228,11 @@ func (a *App) GetVersion() string {
 }
 
 func (a *App) DoExport(account string, rqst request.Export) error {
-	return export.Export(a.DB, account, rqst)
+	return exportation.Export(a.DB, account, rqst)
+}
+
+func (a *App) DoImport(rqst request.Import) error {
+	return importation.Import(a.DB, rqst)
 }
 
 // -----------------> TEST's <-----------------

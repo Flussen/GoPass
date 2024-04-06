@@ -1,4 +1,4 @@
-package export
+package exportation
 
 import (
 	"GoPass/backend/credentials/cards"
@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"reflect"
+	"time"
 
 	"go.etcd.io/bbolt"
 )
@@ -105,9 +106,11 @@ func csvExport(account, typeExport string, container any) error {
 
 	if rv.Len() > 0 {
 		elemType := rv.Index(0).Type()
-		header := make([]string, elemType.NumField())
+		header := []string{}
 		for i := 0; i < elemType.NumField(); i++ {
-			header[i] = elemType.Field(i).Name
+			if elemType.Field(i).PkgPath == "" { // PkgPath is empty for exported fields
+				header = append(header, elemType.Field(i).Name)
+			}
 		}
 		if err := writer.Write(header); err != nil {
 			log.Println("ERROR writing header:", err)
@@ -117,9 +120,30 @@ func csvExport(account, typeExport string, container any) error {
 
 	for i := 0; i < rv.Len(); i++ {
 		elem := rv.Index(i)
-		record := make([]string, elem.NumField())
+		record := []string{}
 		for j := 0; j < elem.NumField(); j++ {
-			record[j] = fmt.Sprintf("%v", elem.Field(j).Interface())
+			field := elem.Field(j)
+			if elem.Type().Field(j).PkgPath != "" { // Skip unexported fields
+				continue
+			}
+
+			var value string
+			switch field.Kind() {
+			case reflect.String:
+				value = field.String()
+			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+				value = fmt.Sprintf("%d", field.Uint())
+			case reflect.Struct:
+				if t, ok := field.Interface().(time.Time); ok {
+					value = t.Format(time.RFC3339)
+				} else {
+					value = fmt.Sprintf("%v", field.Interface())
+				}
+			default:
+				value = fmt.Sprintf("%v", field.Interface())
+			}
+
+			record = append(record, value)
 		}
 		if err := writer.Write(record); err != nil {
 			log.Println("ERROR writing record:", err)

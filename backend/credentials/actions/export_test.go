@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"GoPass/backend/credentials/actions/export"
+	"GoPass/backend/credentials/actions/exportation"
 	"GoPass/backend/pkg/request"
 	"testing"
 
@@ -21,7 +21,7 @@ func TestExport(t *testing.T) {
 		ExportType:      "json",
 	}
 
-	err := export.Export(db, rqstR.Account, rqstI)
+	err := exportation.Export(db, rqstR.Account, rqstI)
 	c.NoError(err)
 
 }
