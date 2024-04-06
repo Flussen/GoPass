@@ -165,3 +165,18 @@ html{
   animation: moveCircle 10s linear infinite;
 
 }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Oculta las flechas para Firefox */
+input[type="number"]::-moz-focus-inner {
+  border: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: none; /* Resto de navegadores */
+}
