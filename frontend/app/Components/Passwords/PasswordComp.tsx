@@ -86,13 +86,13 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
     const popperRef = React.useRef<Instance>(null);
     const areaRef = React.useRef<HTMLDivElement>(null);
 
-    const handleMouseMove = (event: React.MouseEvent) => {
-        positionRef.current = { x: event.clientX, y: event.clientY };
+    // const handleMouseMove = (event: React.MouseEvent) => {
+    //     positionRef.current = { x: event.clientX, y: event.clientY };
 
-        if (popperRef.current != null) {
-            popperRef.current.update();
-        }
-    };
+    //     if (popperRef.current != null) {
+    //         popperRef.current.update();
+    //     }
+    // };
 
 
   
@@ -199,7 +199,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                             <div className="flex items-center  basis-2/6 ">
 
                                 <div ref={areaRef}
-                                    onMouseMove={handleMouseMove} className="group " >
+                                     className="group " >
                                     <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-whitebg bg-transparent focus:outline-none cursor-pointer  inline-block  " />
                                     <div className="hidden absolute group-hover:flex justify-center items-end mt-[-3.5rem]">
 
@@ -212,7 +212,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                             </div>
                             <div className="flex items-center  xl:basis-1/6">
                                 <div ref={areaRef}
-                                    onMouseMove={handleMouseMove} className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.settings.status == 'Strong' ? '  text-primary' : password.settings.status == 'Medium' ? ' text-primary' : 'text-red '} `}>
+                                   className={`flex items-center justify-center h-10  max-xl:px-2 font-semibold ${password.settings.status == 'Strong' ? '  text-primary' : password.settings.status == 'Medium' ? ' text-primary' : 'text-red '} `}>
                                     {password.settings.status == 'Strong' ? <GppGoodRoundedIcon /> : password.settings.status == 'Medium' ? <ShieldRoundedIcon /> : <GppMaybeRoundedIcon />}
                                     <div className="hidden xl:flex">
                                         {password.settings.status == 'Strong' ? 'Strong' : password.settings.status == 'Strong' ? 'Medium' : 'Weak'}
