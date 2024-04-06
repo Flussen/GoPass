@@ -14,30 +14,31 @@ import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import CardsComp from "./CardsComp";
 import AddCards from "./AddCard";
+import HeaderComp from "../HeaderComp";
 
 
-interface CardsProps{
-    setOptionName: (show: string) => void;
-    optionName: string;
-    userKey: string;
-    userName: string;
-    setShowDashboard: (show: boolean) => void;
-    setShowProfile: (show: boolean) => void;
-    showDashboard: boolean;
+interface CardsProps {
+  setOptionName: (show: string) => void;
+  optionName: string;
+  userKey: string;
+  userName: string;
+  setShowDashboard: (show: boolean) => void;
+  setShowProfile: (show: boolean) => void;
+  showDashboard: boolean;
 }
 
-const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName}) =>{
-    const [titlee, setTitlee] = useState('')
+const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName }) => {
+  const [titlee, setTitlee] = useState('')
   const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setTitlee(event.target.value);
   };
   const [isAddCardOpen, setIsAddCardOpen] = useState(false);
   const [areCards, setAreCards] = useState(false)
 
-    return(
-        <div id="Dashboard" className='flex justify-between h-full '>
+  return (
+    <div id="Dashboard" className='flex justify-between h-full '>
 
-<OptionsOverlay
+      <OptionsOverlay
         setOptionName={setOptionName}
         optionName={optionName}
         userName={userName}
@@ -46,39 +47,10 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-        <div id="HEADER" className="flex justify-between w-full rounded-lg text-base mb-16 ">
-          <div className='flex items-center  w-full '>
-            <SearchRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-5 text-primary" />
-            <input value={titlee} onChange={titlesearch} type="text" className='flex rounded-full text-whitebg  pl-14 min-w-[25rem] w-[65%] h-12 bg-darkgray font-medium focus:outline-none placeholder-gray' placeholder='Buscar' />
-          </div>
-          <div className="flex items-center space-x-6 ">
-            <div className="flex items-center">
-              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
+      <HeaderComp optionName={optionName} userName={userName}/>
 
-                <DarkModeRoundedIcon sx={{ fontSize: 24 }} />
-              </div>
-              <div className="flex justify-end items-center pr-2 h-11 w-24 border-2 border-gray rounded-full text-whitebg ">
-                <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
-
-                <AccountCircleRoundedIcon sx={{ fontSize: 36 }} />
-              </div>
-              <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
-                <div>
-                BustaLover 
-                           </div>
-                <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div className=" flex w-full space-x-6 h-full ">
-          <div className="2xl:w-[65%] w-[70%] h-full  ">
+        <div className=" flex w-full space-x-6 h-5/6 ">
+          <div className="2xl:w-[65%] w-[70%]  ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
                 <div className="text-responsivo text-whitebg font-bold">
@@ -93,7 +65,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                     <SortRoundedIcon sx={{ fontSize: 24 }} />
 
                   </div>
-                  
+
                   <div onClick={() => setIsAddCardOpen(!isAddCardOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
 
                     <AddCardRoundedIcon sx={{ fontSize: 24 }} />
@@ -102,12 +74,12 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                     </div>
                   </div>
                 </div>
-                  <AddCards userName={userName} isOpen={isAddCardOpen} onClose= {()=>setIsAddCardOpen(!isAddCardOpen)} />
+                <AddCards userName={userName} isOpen={isAddCardOpen} onClose={() => setIsAddCardOpen(!isAddCardOpen)} />
               </div>
             </div>
             {
               true ?
-              <CardsComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey}/>
+                <CardsComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey} />
                 :
                 <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
                   <div className="text-2xl">
@@ -121,13 +93,13 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
                 </div>
             }
           </div>
-          <div className=" flex flex-col justify-start items-center  h-full  2xl:w-[35%] w-[30%] ">
+          <div className=" flex flex-col justify-start items-center   2xl:w-[35%] w-[30%] ">
             <div className="flex justify-between items-end w-full mb-12">
               <div className="text-responsivo text-whitebg  font-bold">
                 Fav <span className="  text-primary">Cards</span>
               </div>
             </div>
-            <FavCardComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey}/>
+            <FavCardComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey} />
 
           </div>
 
@@ -139,7 +111,7 @@ const Cards: React.FC<CardsProps> = ({showDashboard, setShowProfile, setShowDash
 
 
     </div>
-    )
+  )
 }
 
 export default Cards;

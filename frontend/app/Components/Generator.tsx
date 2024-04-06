@@ -19,6 +19,7 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import HeaderComp from "./HeaderComp";
 
 
 
@@ -151,36 +152,8 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                 <></>
             </OptionsOverlay>
             <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-                <div id="HEADER" className="flex justify-between items-center w-full rounded-lg text-base mb-16 ">
-                    <div className='text-4xl font-bold text-whitebg'>
-                        Password <span className="bg-primary bg-clip-text text-transparent">Generator</span>
-                    </div>
-                    <div className="flex items-center space-x-6 h-12">
-                        <div className="flex items-center">
-                            <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
+                     <HeaderComp optionName={optionName} userName={userName}/>
 
-                                <DarkModeRoundedIcon sx={{ fontSize: 24 }} />
-                            </div>
-                            <div className="flex justify-end items-center pr-2 h-11 w-24 border-2 border-gray rounded-full text-whitebg ">
-                                <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2">
-
-                                <AccountCircleRoundedIcon sx={{ fontSize: 36 }} />
-                            </div>
-                            <div className="h-11 w-48 border-2 rounded-full border-gray text-white flex justify-between items-center text-base pl-14 pr-3">
-                                <div>
-                                    BustaLover
-                                </div>
-                                <ExpandMoreRoundedIcon sx={{ fontSize: 24 }} />
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
                 <div className="flex-col justify-center w-full items-start">
                     
                     <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
