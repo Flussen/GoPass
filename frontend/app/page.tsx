@@ -9,7 +9,7 @@ import LoadingComp from './Components/Loading'
 import SignupResult from './Components/Login and Signup/RegisResult';
 import { VerifyToken } from '@/wailsjs/wailsjs/go/app/App';
 import { GetLastSession } from '@/wailsjs/wailsjs/go/app/App';
-import ProfileSection from "./Components/Settings/ProfileSection"
+import SettingsPage from "./Components/Settings/SettingsPage"
 import GroupsComp from "./Components/Groups/GroupsPage"
 import CardsComp from "./Components/Cards/CardsPage"
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
@@ -73,7 +73,7 @@ export default function Home() {
 
   } else if (showProfile) {
     return (
-      <ProfileSection setShowProfile={setShowProfile} setIsLoading={setIsLoading} userName={userName} />
+      <SettingsPage setShowProfile={setShowProfile} setIsLoading={setIsLoading} userName={userName} />
     )
   } else if (showDashboard) {
     return (
