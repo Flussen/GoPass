@@ -11,6 +11,7 @@ package app
 
 import (
 	"GoPass/backend/auth"
+	"GoPass/backend/credentials/actions/export"
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
@@ -222,7 +223,11 @@ func (a *App) GetListAccounts() ([]models.User, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.1.1 BETA - Rejewski"
+	return "0.1.3 BETA - Rejewski"
+}
+
+func (a *App) DoExport(account string, rqst request.Export) error {
+	return export.Export(a.DB, account, rqst)
 }
 
 // -----------------> TEST's <-----------------
