@@ -201,13 +201,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                                 <div ref={areaRef}
                                      className="group " >
                                     <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-whitebg bg-transparent focus:outline-none cursor-pointer  inline-block  " />
-                                    <div className="hidden absolute group-hover:flex justify-center items-end mt-[-3.5rem]">
-
-                                        <div className=" bg-gray px-2 py-1 rounded-lg text-sm z-30">
-                                            Click to Copy
-                                        </div>
-                                        <div className="absolute bg-gray h-5 w-5 rotate-45 " />
-                                    </div>
+                                   
                                 </div>
                             </div>
                             <div className="flex items-center  xl:basis-1/6">
