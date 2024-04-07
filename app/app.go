@@ -24,6 +24,7 @@ import (
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 	"context"
+	"time"
 
 	"go.etcd.io/bbolt"
 )
@@ -180,6 +181,20 @@ func (a *App) DeleteGroup(account, group string) error {
 
 func (a *App) GetGroups(account string) ([]string, error) {
 	return profile.GetGroups(a.DB, account)
+}
+
+func (a *App) GetAllCredentialsByGroup() map[string][]models.Password {
+	groups := make(map[string][]models.Password)
+	passwords := []models.Password{{ID: "test",
+		Title:     "x",
+		Username:  "a",
+		Pwd:       "xd",
+		Settings:  models.Settings{},
+		CreatedAt: time.Now(),
+	},
+	}
+	groups["hola"] = passwords
+	return groups
 }
 
 /*

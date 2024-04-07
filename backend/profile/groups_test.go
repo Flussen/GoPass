@@ -136,7 +136,7 @@ func TestGetGroups(t *testing.T) {
 
 	assert := assert.New(t)
 
-	err := NewGroup(db, account.Account, []string{"group1", "group2"})
+	err := NewGroup(db, account.Account, []string{"group1"})
 	assert.NoError(err)
 
 	tests := []struct {
