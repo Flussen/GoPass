@@ -18,7 +18,7 @@ import DashboardCustomizeRoundedIcon from '@mui/icons-material/DashboardCustomiz
 import AddGroup from "./AddGroup";
 import EditGroup from "./EditGroup";
 import HeaderComp from "../HeaderComp";
-
+import GroupComp from "./GroupsComp";
 
 interface GroupProps {
   setOptionName: (show: string) => void;
@@ -74,7 +74,7 @@ const Groups: React.FC<GroupProps> = ({ showDashboard, setShowProfile, setShowDa
                 <div onClick={()=>setTwoColum(true)} className={`flex justify-center items-center text-base space-x-2 ${twoColum? 'text-black  bg-primary':'text-gray hover:text-whitebg bg-darkgray'}  h-12  rounded-full w-12 cursor-pointer`}>
                   <GridViewRoundedIcon sx={{ fontSize: 24 }} />
                 </div>
-                <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-48 text-xl space-x-2.5 ">
+                <div onClick={() => setIsAddOverlayOpen(true)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-48 text-xl space-x-2.5 ">
 
                   <DashboardCustomizeRoundedIcon sx={{ fontSize: 24 }} />
                   <div >
@@ -82,9 +82,11 @@ const Groups: React.FC<GroupProps> = ({ showDashboard, setShowProfile, setShowDa
                   </div>
                 </div>
               </div>
-              <AddGroup/>
+              <AddGroup onClose={()=>setIsAddOverlayOpen(!isAddOverlayOpen)}  isOpen={isAddOverlayOpen} userName={userName}/>
 
             </div>
+            <GroupComp userName={userName} search={titlee} />
+
           </div>
 
         </div>
