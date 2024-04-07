@@ -11,10 +11,13 @@ package app
 
 import (
 	"GoPass/backend/auth"
+	"GoPass/backend/credentials/actions/exportation"
+	"GoPass/backend/credentials/actions/importation"
 	"GoPass/backend/credentials/cards"
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"  // Error handler
+	"GoPass/backend/groups"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
@@ -168,16 +171,20 @@ func (a *App) GetAccountInfo(account string) (models.User, error) {
    ------------------------------------------------
 */
 
-func (a *App) DoNewGroup(account string, groups []string) error {
-	return profile.NewGroup(a.DB, account, groups)
+func (a *App) DoNewGroup(account string, grps []string) error {
+	return groups.NewGroup(a.DB, account, grps)
 }
 
 func (a *App) DeleteGroup(account, group string) error {
-	return profile.DeleteGroup(a.DB, account, group)
+	return groups.DeleteGroup(a.DB, account, group)
 }
 
 func (a *App) GetGroups(account string) ([]string, error) {
-	return profile.GetGroups(a.DB, account)
+	return groups.GetGroups(a.DB, account)
+}
+
+func (a *App) GetAllCredentialsByGroup(account string, grps []string) (map[string][]models.Password, error) {
+	return groups.GetAllCredentialsByGroup(a.DB, account, grps)
 }
 
 /*
@@ -222,7 +229,15 @@ func (a *App) GetListAccounts() ([]models.User, error) {
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.1.1 BETA - Rejewski"
+	return "0.1.3 BETA - Rejewski"
+}
+
+func (a *App) DoExport(account string, rqst request.Export) error {
+	return exportation.Export(a.DB, account, rqst)
+}
+
+func (a *App) DoImport(rqst request.Import) error {
+	return importation.Import(a.DB, rqst)
 }
 
 // -----------------> TEST's <-----------------

@@ -9,7 +9,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func initTestProfile() (*bbolt.DB, request.Register, func()) {
+func InitTestProfile() (*bbolt.DB, request.Register, func()) {
 	db, cleanup := test.CreateTestDB()
 
 	// Register process

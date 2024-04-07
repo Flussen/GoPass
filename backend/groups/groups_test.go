@@ -1,13 +1,14 @@
-package profile
+package groups
 
 import (
+	"GoPass/backend/profile"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGroup(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -53,7 +54,7 @@ func TestNewGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := GetAccountInfo(db, tt.account)
+				user, err := profile.GetAccountInfo(db, tt.account)
 				assert.NoError(err)
 
 				assert.Equal(tt.groups, user.Config.Groups)
@@ -63,7 +64,7 @@ func TestNewGroup(t *testing.T) {
 }
 
 func TestDeleteGroup(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -112,7 +113,7 @@ func TestDeleteGroup(t *testing.T) {
 			} else {
 				assert.NoError(err)
 
-				user, err := GetAccountInfo(db, tt.account)
+				user, err := profile.GetAccountInfo(db, tt.account)
 				assert.NoError(err)
 				assert.Len(user.Config.Groups, 1)
 
@@ -131,12 +132,12 @@ func TestDeleteGroup(t *testing.T) {
 }
 
 func TestGetGroups(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
 
-	err := NewGroup(db, account.Account, []string{"group1", "group2"})
+	err := NewGroup(db, account.Account, []string{"group1"})
 	assert.NoError(err)
 
 	tests := []struct {

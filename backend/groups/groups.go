@@ -1,11 +1,13 @@
-package profile
+package groups
 
 import (
+	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db"
 	eh "GoPass/backend/errorHandler"
 	"GoPass/backend/models"
 	"encoding/json"
 	"log"
+	"sync"
 
 	"go.etcd.io/bbolt"
 )
@@ -121,6 +123,7 @@ func GetGroups(db *bbolt.DB, account string) ([]string, error) {
 	})
 	if err != nil {
 		log.Println("ERROR:", err)
+
 		return nil, eh.ErrInternalServer
 	}
 
@@ -128,4 +131,31 @@ func GetGroups(db *bbolt.DB, account string) ([]string, error) {
 		return nil, eh.NewGoPassError("apparently there are no groups in this user")
 	}
 	return groups, nil
+}
+
+func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (map[string][]models.Password, error) {
+	groupsMapped := make(map[string][]models.Password)
+	mutex := &sync.Mutex{}
+	passwords, err := passwords.GetAllPasswords(db, account)
+	if err != nil {
+		return nil, err
+	}
+
+	var wg sync.WaitGroup
+	for _, group := range groups {
+		wg.Add(1)
+		go func(group string) {
+			defer wg.Done()
+			for _, password := range passwords {
+				if password.Settings.Group == group {
+					mutex.Lock()
+					groupsMapped[group] = append(groupsMapped[group], password)
+					mutex.Unlock()
+				}
+			}
+		}(group)
+	}
+	wg.Wait()
+
+	return groupsMapped, nil
 }
