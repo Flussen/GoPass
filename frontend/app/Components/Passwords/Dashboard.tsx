@@ -90,7 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
                 <PasswordComp
                   isAddOverlayOpen={isAddOverlayOpen} showDashboard={showDashboard} userName={userName} userKey={userKey} search={titlee} arePasswords={arePasswords} setArePasswords={setArePasswords} setIsAddOverlayOpen={setIsAddOverlayOpen} />
                 :
-                <div className="text-white w-full flex-col flex justify-center items-center space-y-7 ">
+                <div className="text-whitebg font-semibold w-full flex-col flex justify-center items-center space-y-7 ">
                   <div className="text-2xl">
                     Add your first password!
                   </div>
