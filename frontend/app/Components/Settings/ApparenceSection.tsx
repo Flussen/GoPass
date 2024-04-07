@@ -63,7 +63,7 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
         await UpdatePassword();
     }
     return (
-        <div className="flex  items-start  w-[100%]  2xl:ml-[19%] ml-[75px]  h-screen p-12">
+        <div className="flex-col  items-start  w-[100%]  2xl:ml-[19%] ml-[75px]  h-screen p-12 space-y-6">
 
             <div onClick={() => setShowThemes(!showThemes)} className='bg-darkgray w-full  rounded-lg text-whitebg group cursor-pointer p-6'>
                 <div className='flex justify-between w-full font-semibold'>
@@ -128,6 +128,27 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
                         </div>
                     ) : null
                 }
+            </div>
+            <div className='bg-darkgray w-full  rounded-lg text-whitebg  p-6 font-semibold flex justify-between items-center'>
+
+                <div>
+                    Principal Color
+                </div>
+                <div className='flex space-x-6'>
+                    <div className='h-10 w-10 bg-primary rounded-full cursor-pointer'>
+
+                    </div>
+                    <div className='h-10 w-10 bg-primary rounded-full cursor-pointer'>
+
+                    </div>
+                    <div className='h-10 w-10 bg-primary rounded-full cursor-pointer'>
+
+                    </div>
+                    <div className='h-10 w-10 bg-primary rounded-full cursor-pointer'>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
