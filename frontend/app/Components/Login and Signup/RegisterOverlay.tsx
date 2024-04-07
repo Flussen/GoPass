@@ -53,7 +53,7 @@ const RegisterOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, s
                 const response = await DoRegister(registerData);
                 console.log('respuesta pa: ' + JSON.stringify(response))
                 const seeds = response.seeds; // Obtenemos el array de 'seeds' de la respuesta
-                const formattedSeeds = seeds.map((seed, index) => `${index + 1}. ${seed}`).join(' '); // Formateamos
+
                 setSeedList(response.seeds);
                 setStartTemp(true)
                 setShowSeed(true)
@@ -83,7 +83,7 @@ const RegisterOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, s
                         <div onClick={onClose} className='absolute bg-[#000000] opacity-80 h-screen w-screen '></div>
                         <div className='flex flex-col justify-center bg-darkgray w-[57rem]  h-[75%] rounded-lg z-10 text-whitebg  font-semibold'>
                             <div className="  text-whitebg w-full flex justify-end items-start  pr-5 pt-5">
-                                <div onClick={onClose}>
+                                <div onClick={onClose} className="z-20">
                                     <CloseRoundedIcon className="cursor-pointer" />
 
                                 </div>
