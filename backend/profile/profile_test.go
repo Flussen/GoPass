@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetAccountInfo(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -50,7 +50,7 @@ func TestGetAccountInfo(t *testing.T) {
 }
 
 func TestGetUsersConcurrently(t *testing.T) {
-	db, _, cleanup := initTestProfile()
+	db, _, cleanup := InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -67,7 +67,7 @@ func TestGetUsersConcurrently(t *testing.T) {
 }
 
 func TestUpdateProfile(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -137,7 +137,7 @@ func TestUpdateProfile(t *testing.T) {
 }
 
 func TestChangeAccountPassword(t *testing.T) {
-	db, account, cleanup := initTestProfile()
+	db, account, cleanup := InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)

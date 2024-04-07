@@ -17,6 +17,7 @@ import (
 	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
 	"GoPass/backend/encryption"  // Error handler
+	"GoPass/backend/groups"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
@@ -24,7 +25,6 @@ import (
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
 	"context"
-	"time"
 
 	"go.etcd.io/bbolt"
 )
@@ -171,30 +171,20 @@ func (a *App) GetAccountInfo(account string) (models.User, error) {
    ------------------------------------------------
 */
 
-func (a *App) DoNewGroup(account string, groups []string) error {
-	return profile.NewGroup(a.DB, account, groups)
+func (a *App) DoNewGroup(account string, grps []string) error {
+	return groups.NewGroup(a.DB, account, grps)
 }
 
 func (a *App) DeleteGroup(account, group string) error {
-	return profile.DeleteGroup(a.DB, account, group)
+	return groups.DeleteGroup(a.DB, account, group)
 }
 
 func (a *App) GetGroups(account string) ([]string, error) {
-	return profile.GetGroups(a.DB, account)
+	return groups.GetGroups(a.DB, account)
 }
 
-func (a *App) GetAllCredentialsByGroup() map[string][]models.Password {
-	groups := make(map[string][]models.Password)
-	passwords := []models.Password{{ID: "test",
-		Title:     "x",
-		Username:  "a",
-		Pwd:       "xd",
-		Settings:  models.Settings{},
-		CreatedAt: time.Now(),
-	},
-	}
-	groups["hola"] = passwords
-	return groups
+func (a *App) GetAllCredentialsByGroup(account string, grps []string) (map[string][]models.Password, error) {
+	return groups.GetAllCredentialsByGroup(a.DB, account, grps)
 }
 
 /*
