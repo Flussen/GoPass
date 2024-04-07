@@ -19,9 +19,10 @@ interface AddCardProps {
     isOpen: boolean;
     onClose: () => void;
     userName: string;
+    setAreFavCards:(fav:boolean)=>void;
 }
 
-const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
+const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFavCards}) => {
     const [card, setCard] = useState('')
     const [title, setTitle] = useState("");
     const [cardNumber, setCardNumber] = useState('');
@@ -67,6 +68,9 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName }) => {
 
     async function pullCards(CardData: request.Card) {
         try {
+            setAreFavCards(false)
+            console.log('Se cambio a False en AddCard')
+
             const response = await DoNewCard(userName, CardData)
             console.log('Responde Cards: ' + response)
           

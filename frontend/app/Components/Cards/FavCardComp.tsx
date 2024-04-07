@@ -17,9 +17,11 @@ interface CardsProps {
     search: string;
     isOpen: boolean;
     userKey: string;
+    setAreFavCards:(fav:boolean)=>void;
+
 }
 
-const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) => {
+const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, setAreFavCards }) => {
     const [allCards, setAllCards] = useState<models.Card[]>([])
     const [openEditOverlayId, setOpenEditOverlayId] = useState<string | null>(null);
     const [id, setId] = useState('');
@@ -37,16 +39,12 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
     }
     const formatCardNumber = (number?: number) => {
         if (typeof number !== 'number') {
-            // Devuelve un valor por defecto si el número no es válido
             return '';
         }
 
-        // Convertir el número a string y agregar espacios cada 4 dígitos
         let formattedNumber = number.toString().replace(/\B(?=(\d{4})+(?!\d))/g, " ");
 
-        // Si no queremos mostrar el número completo, reemplazamos los primeros 12 dígitos con puntos
         if (!showFullNumber) {
-            // Tomar los últimos 4 dígitos y precederlos con puntos y espacios como se requiera
             formattedNumber = '•••• •••• •••• ' + formattedNumber.slice(-4);
         }
 
@@ -74,14 +72,23 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
             [cardId]: !prev[cardId]
         }));
     };
+    const totalCount = allCards.reduce((count, card) => card.settings.favorite ? count + 1 : count, 0);
+    
+    if(totalCount>=1){
+        setAreFavCards(true)
+        console.log('Se cambio a true en if totalcoun FavCardComp')
+    }else{
+        setAreFavCards(false)
+        console.log('Se cambio a False en if totalcoun FavCardComp')
 
+    }
     return (
         <>
             {
                 true ? (
-                    <div className="h-full w-full    grid grid-flow-row gap-2 overflow-y-auto">
+                    <div className={`h-full w-full ${totalCount<3?'space-y-2 ':'grid grid-flow-row gap-2'}   overflow-y-auto`}>
                         {favCards.map((card, index) => (
-                            <div key={card.id} className=" flex flex-col justify-center w-full h-full bg-darkgray rounded-lg font-semibold  text-whitebg px-2 py-3 space-y-3 ">
+                            <div key={card.id} className={` flex flex-col justify-center w-full ${totalCount<3?'h-1/3':'h-full'}  bg-darkgray rounded-lg font-semibold  text-whitebg px-2 py-3 space-y-3 `}>
                                 <div className="flex justify-between w-full items-center h-4">
                                     <div className="w-full max-w-40 truncate">
                                         {card.holder}

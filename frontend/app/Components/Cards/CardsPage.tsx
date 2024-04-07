@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 
 import OptionsOverlay from "../OptionsOverlay";
@@ -29,12 +29,16 @@ interface CardsProps {
 
 const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName }) => {
   const [titlee, setTitlee] = useState('')
+
+  const [areFavCards, setAreFavCards] = useState(true)
   const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setTitlee(event.target.value);
   };
   const [isAddCardOpen, setIsAddCardOpen] = useState(false);
   const [areCards, setAreCards] = useState(false)
-
+  useEffect(() => {
+    console.log('Se cambio el AreFav')
+  }, [areFavCards])
   return (
     <div id="Dashboard" className='flex justify-between h-full '>
 
@@ -47,10 +51,10 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-      <HeaderComp optionName={optionName} userName={userName}/>
+        <HeaderComp optionName={optionName} userName={userName} />
 
         <div className=" flex w-full space-x-6 h-5/6 ">
-          <div className="2xl:w-[65%] w-[70%]  ">
+          <div className={`${areFavCards ? '2xl:w-[65%] w-[70%]' : ' w-full'}  `}>
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
                 <div className="text-responsivo text-whitebg font-bold">
@@ -74,7 +78,7 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
                     </div>
                   </div>
                 </div>
-                <AddCards userName={userName} isOpen={isAddCardOpen} onClose={() => setIsAddCardOpen(!isAddCardOpen)} />
+                <AddCards userName={userName} isOpen={isAddCardOpen} onClose={() => setIsAddCardOpen(!isAddCardOpen)} setAreFavCards={setAreFavCards} />
               </div>
             </div>
             {
@@ -93,13 +97,13 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
                 </div>
             }
           </div>
-          <div className=" flex flex-col justify-start items-center   2xl:w-[35%] w-[30%] ">
+          <div className={`${areFavCards ? 'flex flex-col justify-start items-center   2xl:w-[35%] w-[30%]' : 'hidden'}  `}>
             <div className="flex justify-between items-end w-full mb-12">
               <div className="text-responsivo text-whitebg  font-bold">
                 Fav <span className="  text-primary">Cards</span>
               </div>
             </div>
-            <FavCardComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey} />
+            <FavCardComp search={titlee} userName={userName} isOpen={isAddCardOpen} userKey={userKey} setAreFavCards={setAreFavCards} />
 
           </div>
 
