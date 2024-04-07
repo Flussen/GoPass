@@ -134,9 +134,19 @@ func GetGroups(db *bbolt.DB, account string) ([]string, error) {
 }
 
 func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (map[string][]models.Password, error) {
+
+	if groups == nil || account == "" {
+		return nil, eh.ErrEmptyParameter
+	}
+
 	groupsMapped := make(map[string][]models.Password)
 	mutex := &sync.Mutex{}
 	passwords, err := passwords.GetAllPasswords(db, account)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = GetGroups(db, account)
 	if err != nil {
 		return nil, err
 	}
@@ -156,6 +166,12 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (ma
 		}(group)
 	}
 	wg.Wait()
+
+	for _, group := range groups {
+		if groupsMapped[group] == nil {
+			return nil, eh.NewGoPassError("no group corresponds to the user's groups")
+		}
+	}
 
 	return groupsMapped, nil
 }

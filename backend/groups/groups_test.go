@@ -1,14 +1,18 @@
 package groups
 
 import (
+	"GoPass/backend/credentials/passwords"
+	"GoPass/backend/models"
+	"GoPass/backend/pkg/request"
 	"GoPass/backend/profile"
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGroup(t *testing.T) {
-	db, account, cleanup := profile.InitTestProfile()
+	db, account, _, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -64,7 +68,7 @@ func TestNewGroup(t *testing.T) {
 }
 
 func TestDeleteGroup(t *testing.T) {
-	db, account, cleanup := profile.InitTestProfile()
+	db, account, _, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -132,7 +136,7 @@ func TestDeleteGroup(t *testing.T) {
 }
 
 func TestGetGroups(t *testing.T) {
-	db, account, cleanup := profile.InitTestProfile()
+	db, account, _, cleanup := profile.InitTestProfile()
 	defer cleanup()
 
 	assert := assert.New(t)
@@ -177,6 +181,89 @@ func TestGetGroups(t *testing.T) {
 				assert.NoError(err)
 				assert.NotNil(groups)
 				assert.Len(groups, tt.expectCount)
+			}
+		})
+	}
+}
+
+func TestGetAllCredentialsByGroup(t *testing.T) {
+	db, account, rspL, cleanup := profile.InitTestProfile()
+	defer cleanup()
+	c := assert.New(t)
+
+	grps := []string{"secured", "google"}
+	grps2 := []string{"nogroups", "here to match"}
+
+	passwords.NewPassword(db, account.Account, rspL.UserKey, request.Password{
+		Title:    "passwords",
+		Username: "xd",
+		Pwd:      "test",
+		Settings: models.Settings{Group: "google"},
+	})
+
+	passwords.NewPassword(db, account.Account, rspL.UserKey, request.Password{
+		Title:    "password2",
+		Username: "asd",
+		Pwd:      "as",
+		Settings: models.Settings{Group: "google"},
+	})
+
+	passwords.NewPassword(db, account.Account, rspL.UserKey, request.Password{
+		Title:    "password3",
+		Username: "asd3",
+		Pwd:      "as3",
+		Settings: models.Settings{Group: "secured"},
+	})
+
+	tests := []struct {
+		name      string
+		account   string
+		groups    []string
+		expectErr bool
+	}{
+		{
+			name:      "passed test",
+			account:   account.Account,
+			groups:    grps,
+			expectErr: false,
+		},
+		{
+			name:      "fail account",
+			account:   "fakeaccount",
+			groups:    grps,
+			expectErr: true,
+		},
+		{
+			name:      "no group in the requiere",
+			account:   account.Account,
+			groups:    nil,
+			expectErr: true,
+		},
+		{
+			name:      "no group corresponds to the user's groups",
+			account:   account.Account,
+			groups:    grps2,
+			expectErr: true,
+		},
+		// {
+		// 	name: "the account don't have groups assigned",
+		// 	account: account.Account,
+		// 	groups:  nil,
+		// 	expectErr: true,
+		// },
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			groupsMap, err := GetAllCredentialsByGroup(db, tt.account, tt.groups)
+
+			if tt.expectErr {
+				c.Error(err)
+				c.Nil(groupsMap)
+			} else {
+				log.Println(err)
+				c.NoError(err)
+				c.NotNil(groupsMap)
 			}
 		})
 	}
