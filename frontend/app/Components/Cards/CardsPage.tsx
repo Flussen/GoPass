@@ -57,11 +57,11 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
           <div className={`${areFavCards ? '2xl:w-[65%] w-[70%]' : ' w-full'}  `}>
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
-                <div className="text-responsivo text-whitebg font-bold">
+                <div className="text-responsivo dark:text-whitebg text-darkgray font-bold">
                   My <span className="  text-primary">Cards</span>
                 </div>
                 <div className="flex items-center space-x-6">
-                  <div className="flex justify-center items-center text-base space-x-2 text-gray hover:text-whitebg h-12 bg-darkgray rounded-full w-24 cursor-pointer">
+                  <div className="flex justify-center items-center text-base space-x-2 text-blackwhite hover:text-gray dark:text-gray dark:hover:text-whitebg h-12 dark:bg-darkgray bg-white rounded-full w-24 cursor-pointer">
 
                     <div>
                       Sort
@@ -99,7 +99,7 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
           </div>
           <div className={`${areFavCards ? 'flex flex-col justify-start items-center   2xl:w-[35%] w-[30%]' : 'hidden'}  `}>
             <div className="flex justify-between items-end w-full mb-12">
-              <div className="text-responsivo text-whitebg  font-bold">
+              <div className="text-responsivo dark:text-whitebg text-darkgray font-bold">
                 Fav <span className="  text-primary">Cards</span>
               </div>
             </div>

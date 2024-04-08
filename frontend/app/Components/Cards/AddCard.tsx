@@ -113,13 +113,13 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFa
                 isOpen ? (
                     <div className="absolute flex justify-center items-center right-0 top-0 h-screen w-screen">
                         <div onClick={onClose} className='absolute bg-[#000000] opacity-80 h-screen w-screen '></div>
-                        <div className='flex flex-col justify-center bg-darkgray p-5  rounded-lg  z-10'>
+                        <div className='flex flex-col justify-center dark:bg-darkgray bg-white p-5  rounded-lg  z-10'>
 
                             <form onSubmit={handleSubmit} >
                                 <div className="flex justify-between h-full items-center mb-4">
                                     <div className='flex justify-between items-center '>
                                         <TitleRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-2 text-primary" />
-                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[22rem] outline-none placeholder:text-gray text-whitebg ' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} required />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg  pl-10 h-12 w-[22rem] outline-none dark:placeholder:text-gray dark:text-whitebg placeholder:text-blackwhite text-darkgray dark:bg-black bg-whitebg ' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} required />
                                     </div>
                                     <div onClick={()=>setFavorite(!favorite)} className={`${favorite?'text-orange':'text-gray'} cursor-pointer`} >
                                        { favorite? <StarRoundedIcon/>:
@@ -133,12 +133,12 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFa
 
                                 <div className='flex justify-between items-center mb-2 '>
                                     <CreditCardRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-2 text-primary" />
-                                    <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-gray text-whitebg ' placeholder='1234 5678 9012 3456' value={cardNumber} maxLength={19} pattern="\d{4} \d{4} \d{4} \d{4}" onChange={handleCardInput} required />
+                                    <input autoComplete="nope" type="text" className=' rounded-lg   pl-10 h-12 w-[30rem] outline-none dark:placeholder:text-gray dark:text-whitebg placeholder:text-blackwhite text-darkgray dark:bg-black bg-whitebg ' placeholder='1234 5678 9012 3456' value={cardNumber} maxLength={19} pattern="\d{4} \d{4} \d{4} \d{4}" onChange={handleCardInput} required />
                                 </div>
                                 <div className="flex justify-between">
                                     <div className="flex space-x-2">
                                         <div className="relative inline-block group ">
-                                            <select id="exp-month" name="exp_month " onChange={(e) => setMonth(e.target.value)} value={month} className="h-12 rounded-lg bg-black text-whitebg w-16 leading-tight  pl-4 block appearance-none  focus:outline-none  focus:border-gray-500 cursor-pointer">
+                                            <select id="exp-month" name="exp_month " onChange={(e) => setMonth(e.target.value)} value={month} className="h-12 rounded-lg dark:bg-black bg-whitebg dark:text-whitebg text-darkgray w-16 leading-tight  pl-4 block appearance-none  focus:outline-none  focus:border-gray-500 cursor-pointer">
                                                 {months.map(month => (
                                                     <option key={month} value={month}>
                                                         {month}
@@ -146,13 +146,13 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFa
                                                 ))}
                                             </select>
                                             <div
-                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center  text-gray h-12 group-hover:text-whitebg  mr-1"
+                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center  dark:text-gray text-blackwhite h-12 dark:group-hover:text-whitebg group-hover:text-gray  mr-1"
                                             >
                                                 <ExpandMoreRoundedIcon />
                                             </div>
                                         </div>
                                         <div className="relative inline-block group">
-                                            <select id="exp-year" name="exp_year" value={year} onChange={(e) => setYear(e.target.value)} className="h-12 rounded-lg bg-black text-whitebg w-24 leading-tight  pl-4 block appearance-none  focus:outline-none  focus:border-gray-500 cursor-pointer">
+                                            <select id="exp-year" name="exp_year" value={year} onChange={(e) => setYear(e.target.value)} className="h-12 rounded-lg dark:bg-black bg-whitebg dark:text-whitebg text-darkgray w-24 leading-tight  pl-4 block appearance-none  focus:outline-none  focus:border-gray-500 cursor-pointer">
                                                 {years.map(year => (
                                                     <option key={year} value={year}>
                                                         {year}
@@ -160,7 +160,7 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFa
                                                 ))}
                                             </select>
                                             <div
-                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center  text-gray h-12 group-hover:text-whitebg  mr-1 "
+                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center  dark:text-gray text-blackwhite h-12 dark:group-hover:text-whitebg group-hover:text-gray  mr-1 "
                                             >
                                                 <ExpandMoreRoundedIcon />
                                             </div>
@@ -171,13 +171,13 @@ const AddCards: React.FC<AddCardProps> = ({ isOpen, onClose, userName , setAreFa
                                     <div className='flex justify-between items-center mb-4 '>
                                         <KeyRoundedIcon sx={{ fontSize: 24 }} className="absolute ml-2 text-primary" />
 
-                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[5rem] outline-none placeholder:text-gray text-whitebg ' placeholder='123' value={cvv} maxLength={3} onChange={(e) => setCvv(e.target.value)} required />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg dark:bg-black bg-whitebg  pl-10 h-12 w-[5rem] outline-none dark:placeholder:text-gray placeholder:text-blackwhite dark:text-whitebg text-darkgray' placeholder='123' value={cvv} maxLength={3} onChange={(e) => setCvv(e.target.value)} required />
                                     </div>
                                 </div>
 
 
                                 <div className="flex justify-center ">
-                                    <button type="submit" className="flex justify-center items-center w-full h-12  rounded-lg text-blaack cursor-pointer bg-primary hover:bg-darkprimary font-semibold">
+                                    <button type="submit" className="flex justify-center items-center w-full h-12  rounded-lg dark:text-black text-whitebg cursor-pointer bg-primary  font-semibold">
                                         Add Now
                                     </button>
                                 </div>

@@ -63,14 +63,14 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
         await UpdatePassword();
     }
     return (
-        <div className="flex-col  items-start  w-[100%]  2xl:ml-[19%] ml-[75px]  h-screen p-12 space-y-6">
+        <div className="flex-col  items-start  w-[100%]  2xl:ml-[19%] ml-[75px] bg-whitebg dark:bg-black  h-screen p-12 space-y-6">
 
-            <div onClick={() => setShowThemes(!showThemes)} className='bg-darkgray w-full  rounded-lg text-whitebg group cursor-pointer p-6'>
+            <div onClick={() => setShowThemes(!showThemes)} className='dark:bg-darkgray bg-white w-full  rounded-lg dark:text-whitebg group text-darkgray cursor-pointer p-6'>
                 <div className='flex justify-between w-full font-semibold'>
                     <div>
                         App Theme
                     </div>
-                    <div className='flex items-center text-whitegray group-hover:text-whitebg '>
+                    <div className='flex items-center dark:text-whitegray text-blackwhite dark:group-hover:text-whitebg group-hover:text-darkgray'>
                         {!showThemes ?
                             (
                                 <>
@@ -90,14 +90,14 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
                     showThemes ? (
                         <div className='flex-col flex justify-between items-center mt-6'>
                             <div className='flex justify-center w-full mb-6'>
-                                <div className='h-0.5 w-11/12 bg-gray rounded-full' />
+                                <div className='h-0.5 w-11/12 dark:bg-gray bg-blackwhite rounded-full' />
 
                             </div>
                             <div className='flex w-full justify-between'>
-                                <div className=' border-2 w-64 border-gray rounded-lg flex items-center justify-start font-semibold '>
+                                <div className=' border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start font-semibold '>
 
-                                    <div className='flex items-center rounded-l-lg bg-black w-1/2 h-full' >
-                                        <div className='rounded-full h-6 w-6 border-2 border-gray bg-darkgray m-3'>
+                                    <div className='flex items-center rounded-l-lg bg-black w-1/2 h-full text-whitebg' >
+                                        <div className='rounded-full h-6 w-6 border-2 dark:border-gray border-blackwhite dark:bg-darkgray bg-white m-3'>
 
                                         </div>
                                         <div>
@@ -108,16 +108,16 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
 
 
                                 </div>
-                                <div className='p-3 border-2 w-64 border-gray rounded-lg flex items-center justify-start space-x-2 bg-whitebg text-black font-semibold'>
-                                    <div className='rounded-full h-6 w-6 border-2 border-gray bg-darkgray'>
+                                <div className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-whitebg text-black font-semibold'>
+                                    <div className='rounded-full h-6 w-6 border-2 dark:border-gray border-blackwhite dark:bg-darkgray bg-white'>
 
                                     </div>
                                     <div>
                                         Light Mode
                                     </div>
                                 </div>
-                                <div className='p-3 border-2 w-64 border-gray rounded-lg flex items-center justify-start space-x-2 bg-black font-semibold '>
-                                    <div className='rounded-full h-6 w-6 border-2 border-gray bg-darkgray'>
+                                <div className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-black font-semibold text-whitebg'>
+                                    <div className='rounded-full h-6 w-6 border-2 dark:border-gray border-blackwhite dark:bg-darkgray bg-white'>
 
                                     </div>
                                     <div>

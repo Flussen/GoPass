@@ -88,10 +88,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
     const [sliderValue, setSliderValue] = useState<number>(25);
     const [password, setPassword] = useState<string>("");
     const calculateBarWidth = (value: number) => {
-        setBarColor1(value > 1 ? 'bg-primary' : 'bg-gray');
-        setBarColor2(value > 5 ? 'bg-primary' : 'bg-gray');
-        setBarColor3(value > 10 ? 'bg-primary' : 'bg-gray');
-        setBarColor4(value > 25 ? 'bg-primary' : 'bg-gray');
+        setBarColor1(value > 1 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor2(value > 5 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor3(value > 10 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor4(value > 25 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
     };
 
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
@@ -157,14 +157,14 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                 <div className="flex-col justify-center w-full items-start">
                     
                     <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
-                        <div className="flex-col items-start justify-center bg-darkgray rounded-lg  xl:basis-4/5 basis-3/4 p-3">
+                        <div className="flex-col items-start justify-center dark:bg-darkgray bg-white rounded-lg  xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">
                                 <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
-                                    <div className="flex justify-between items-center mb-3 px-4 bg-black rounded-lg  w-full">
-                                        <input type="text" readOnly value={password} className="select-all w-full text-whitebg flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
+                                    <div className="flex justify-between items-center mb-3 px-4 dark:bg-black bg-whitebg rounded-lg  w-full">
+                                        <input type="text" readOnly value={password} className="select-all w-full dark:text-whitebg text-darkgray flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
                                         <div
                                             onClick={() => generatePassword(sliderValue)}
-                                            className='ml-4 text-whitegray cursor-pointer hover:text-primary'
+                                            className='ml-4 dark:text-whitegray text-blackwhite cursor-pointer hover:text-primary'
                                         >
                                             <AutorenewRoundedIcon sx={{ fontSize: 28 }} className="" />
                                         </div>
@@ -178,7 +178,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                                             <div className={`${barColor3} h-2 basis-1/4 rounded-full`} />
                                             <div className={`${barColor4} h-2 basis-1/4 rounded-full`} />
                                         </div>
-                                        <div className="flex justify-between items-center text-whitegray  ">
+                                        <div className="flex justify-between items-center dark:text-whitegray text-gray ">
                                             <div>Weak</div>
                                             <div>Strong</div>
                                         </div>
@@ -193,10 +193,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
 
                                     </div>
                                     <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">
-                                        <div className="font-semibold text-2xl basis-1/4 text-whitebg">
+                                        <div className="font-semibold text-2xl basis-1/4 dark:text-whitebg text-darkgray">
                                             Password Length
                                         </div>
-                                        <div className="flex space-x-4 items-center basis-3/4 text-primary">
+                                        <div className="flex space-x-4 items-center basis-3/4 text-gray dark:text-whitegray">
                                             <div>
                                                 1
                                             </div>
@@ -226,7 +226,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                                     </div>
 
                                 </div>
-                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-primary rounded-lg text-darkgray text-xl font-semibold   cursor-pointer  ">
+                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-primary rounded-lg dark:text-darkgray text-whitebg text-xl font-semibold   cursor-pointer  ">
                                     <div className="flex items-center justify-center w-full rounded-md space-x-2 bg-blackbox h-12  ">
                                         <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
                                         <div>
@@ -244,8 +244,8 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
 
 
                         </div>
-                        <div className="flex items-center justify-center bg-darkgray rounded-lg  lg:basis-1/5 ">
-                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-whitebg max-xl:space-x-6 max-xl:py-10">
+                        <div className="flex items-center justify-center dark:bg-darkgray bg-white rounded-lg  lg:basis-1/5 ">
+                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl dark:text-whitebg text-darkgray max-xl:space-x-6 max-xl:py-10">
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}
 

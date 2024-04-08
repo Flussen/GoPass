@@ -165,7 +165,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
     return (
         <>
-            <div className="flex w-full text-BASE font-semibold pl-5 mb-5 text-gray">
+            <div className="flex w-full text-BASE font-semibold pl-5 mb-5 dark:text-gray text-blackwhite">
 
                 <div className="basis-3/6">
                     Name
@@ -177,21 +177,21 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                     Status
                 </div>
             </div>
-            <div className="  flex-col w-full overflow-y-auto  max-2xl:max-h-[80%]  h-[29.35rem]  max-h-[29.35rem] bg-darkgray rounded-lg ">
+            <div className="  flex-col w-full overflow-y-auto  max-2xl:max-h-[80%]  h-[29.35rem]  max-h-[29.35rem] bg-white dark:bg-darkgray rounded-lg ">
 
                 {searchPasswords.map((password, index) => (
 
                     <div key={index} className="w-full ">
                         <div onChange={() => { setIcon(password.settings.icon) }} onClick={() => { setOpenEditOverlayId(openEditOverlayId === password.id ? null : password.id), setId(password.id) }} className="flex w-full h-[5.74rem]  p-5 rounded-lg  cursor-pointer">
                             <div className="flex items-center basis-3/6 space-x-5">
-                                <div onClick ={handleSubmit} className="rounded-lg bg-black shadow-shadow text-whitebg w-20 h-full flex items-center justify-center text-2xl">
+                                <div onClick ={handleSubmit} className="rounded-lg bg-whitebg dark:bg-black dark:text-whitebg text-darkgray w-20 h-full flex items-center justify-center text-2xl">
                                     <FontAwesomeIcon icon={getFontAwesomeIcon(password.settings.icon)}  />
                                 </div>
                                 <div className="flex-col text-lg">
                                     <div className="font-bold text-primary">
                                         {password.title}
                                     </div>
-                                    <div className="text-gray text-base font-medium hover:text-whitegray">
+                                    <div className="dark:text-gray text-blackwhite text-base font-medium hover:text-whitegray">
                                         {password.username}
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
 
                                 <div ref={areaRef}
                                      className="group " >
-                                    <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" text-whitebg bg-transparent focus:outline-none cursor-pointer  inline-block  " />
+                                    <input onClick={() => copyToClipboard(password.pwd)} readOnly type="password" value={59238798432} maxLength={20} className=" dark:text-whitebg text-darkgray bg-transparent focus:outline-none cursor-pointer  inline-block  " />
                                    
                                 </div>
                             </div>
@@ -215,7 +215,7 @@ const PasswordComp: React.FC<PassProps> = ({ showDashboard, userName, userKey, i
                             </div>
                         </div>
                         <div className="flex justify-center">
-                            <div className="h-0.5 w-[90%] bg-gray rounded-full" />
+                            <div className="h-0.5 w-[90%] dark:bg-gray bg-blackwhite rounded-full" />
 
                         </div>
                         <EditOverlay isOpen={openEditOverlayId === password.id} onClose={() => setOpenEditOverlayId(null)} userNames={userName} userKey={userKey} password={password.pwd} title={password.title} username={password.username} id={password.id}>

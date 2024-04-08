@@ -64,7 +64,7 @@ const ProfileSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
     return (
         <div className="flex  items-start  w-[100%]  2xl:ml-[19%] ml-[75px]  h-screen">
 
-            <div className="w-full  rounded-lg bg-black flex flex-col justify-start items-center h-full ">
+            <div className="w-full  rounded-lg dark:bg-black bg-whitebg flex flex-col justify-start items-center h-full ">
 
                 <AccountCircleRoundedIcon sx={{ fontSize: 124 }} className="mb-5 mt-20 text-primary" />
 
@@ -73,12 +73,12 @@ const ProfileSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
 
                     <div className='flex items-center w-[30rem]   '>
                         <PersonIcon className='absolute ml-4 text-primary' />
-                        <input type="text" className='flex rounded-lg  text-whitebg  pl-12 w-full h-12 py-2 focus:outline-none bg-darkgray placeholder:text-gray cursor-default' placeholder='Username' value={userName} readOnly />
+                        <input type="text" className='flex rounded-lg   pl-12 w-full h-12 py-2 focus:outline-none dark:text-whitebg  dark:bg-darkgray dark:placeholder:text-gray text-darkgray bg-white placeholder:text-blackwhite cursor-default' placeholder='Username' value={userName} readOnly />
 
                     </div>
                     <div className='flex items-center w-[30rem]    '>
                         <EmailRoundedIcon className='absolute ml-4 text-primary' />
-                        <input type="text" className='flex rounded-lg  text-whitebg  pl-12 w-full h-12 py-2 focus:outline-none bg-darkgray placeholder:text-gray cursor-default' placeholder='Email' value={email} readOnly />
+                        <input type="text" className='flex rounded-lg   pl-12 w-full h-12 py-2 focus:outline-none dark:text-whitebg  dark:bg-darkgray dark:placeholder:text-gray text-darkgray bg-white placeholder:text-blackwhite cursor-default' placeholder='Email' value={email} readOnly />
 
                     </div>
                     
@@ -86,22 +86,22 @@ const ProfileSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
                             <form onSubmit={handleSubmit} className='space-y-5'>
                                 {newPasswordOpen ? (<><div className='flex items-center w-[30rem]    '>
                                     <KeyIcon className='absolute ml-4 text-primary' />
-                                    <input type="password" className='flex rounded-lg  text-whitebg pl-12 w-full h-12 py-2 focus:outline-none bg-darkgray placeholder:text-gray cursor-default' placeholder='Actual Password' onChange={(e) => setActualPass(e.target.value)} />
+                                    <input type="password" className='flex rounded-lg  pl-12 w-full h-12 py-2 focus:outline-none dark:text-whitebg  dark:bg-darkgray dark:placeholder:text-gray text-darkgray bg-white placeholder:text-blackwhite cursor-default' placeholder='Actual Password' onChange={(e) => setActualPass(e.target.value)} />
 
                                 </div>
                                 <div className='flex items-center w-[30rem]    '>
                                     <KeyIcon className='absolute ml-4 text-primary' />
-                                    <input type="password" className='flex rounded-lg  text-whitebg pl-12 w-full h-12 py-2 focus:outline-none bg-darkgray placeholder:text-gray cursor-default' placeholder='New Password' onChange={(e) => setNewPass(e.target.value)} />
+                                    <input type="password" className='flex rounded-lg   pl-12 w-full h-12 py-2 focus:outline-none dark:text-whitebg  dark:bg-darkgray dark:placeholder:text-gray text-darkgray bg-white placeholder:text-blackwhite cursor-default' placeholder='New Password' onChange={(e) => setNewPass(e.target.value)} />
 
                                 </div>
                                 <div className='flex items-center w-[30rem]    '>
                                     <KeyIcon className='absolute ml-4 text-primary' />
-                                    <input type="password" className='flex rounded-lg  text-white  pl-12 w-full h-12 py-2 focus:outline-none bg-darkgray placeholder:text-gray cursor-default' placeholder='Confirm Password' onChange={(e) => setConfirmPass(e.target.value)} />
+                                    <input type="password" className='flex rounded-lg  pl-12 w-full h-12 py-2 focus:outline-none dark:text-whitebg  dark:bg-darkgray dark:placeholder:text-gray text-darkgray bg-white placeholder:text-blackwhite cursor-default' placeholder='Confirm Password' onChange={(e) => setConfirmPass(e.target.value)} />
 
                                 </div>
                                 </>):null}
                                 <div onClick={() => setNewPasswordOpen(!newPasswordOpen)} className='flex bg-primary justify-center items-center w-[30rem] text-blaack  rounded-lg   '>
-                                    <button className=" w-full h-12 rounded-lg font-semibold">
+                                    <button className=" w-full h-12 rounded-lg font-semibold text-whitebg dark:text-black">
                                        {newPasswordOpen? 'Update Password':'Change Password'}
                                     </button>
 
@@ -110,8 +110,11 @@ const ProfileSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
 
                             </form>
 
-                            {newPasswordOpen?( <div className='w-full flex justify-center text-whitegray hover:text-whitebg cursor-pointer' onClick={() => setNewPasswordOpen(!newPasswordOpen)}>
+                            {newPasswordOpen?( <div className='w-full flex justify-center ' >
+                                <div onClick={() => setNewPasswordOpen(!newPasswordOpen)} className='dark:text-whitegray dark:hover:text-red text-gray hover:text-red cursor-pointer'>
                                 Cancel
+
+                                </div>
                             </div>):null}
                        
                    

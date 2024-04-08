@@ -44,7 +44,7 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
 
     return (
         <>
-            {allCards? (<> <div className="flex w-full text-base font-semibold  mb- text-gray">
+            {allCards? (<> <div className="flex w-full text-base font-semibold  mb- dark:text-gray text-blackwhite">
                 <div className="  w-24  pl-7 ">
                     Card
                 </div >
@@ -62,12 +62,12 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
                 </div>
 
             </div>
-                <div className="flex flex-col items-center w-full h-5/6 bg-darkgray rounded-lg overflow-y-auto">
+                <div className="flex flex-col items-center w-full h-5/6 dark:bg-darkgray bg-white rounded-lg overflow-y-auto">
                     {searchCards.map((card, index) => (
                         <div onClick={() => { setOpenEditOverlayId(openEditOverlayId === card.id ? null : card.id), setId(card.id) }} key={index} className="w-full flex-col ">
-                            <div className="w-full h-20 flex items-center py-6 text-whitebg cursor-pointer">
+                            <div className="w-full h-20 flex items-center py-6 dark:text-whitebg text-darkgray cursor-pointer">
                                 <div className="w-24 h-full ">
-                                    <div className={`${card.card == 'Visa' ? 'bg-visa p-1.5' : card.card == 'MasterCard' ? 'bg-black p-1.5' : 'bg-visa p-1.5'} w-12 h-full rounded-md ml-6 flex justif-center items-center `}>
+                                    <div className={`${card.card == 'Visa' ? 'bg-visa p-1.5' : card.card == 'MasterCard' ? 'dark:bg-black bg-whitebg p-1.5' : 'bg-visa p-1.5'} w-12 h-full rounded-md ml-6 flex justif-center items-center `}>
                                         <Image src={card.card == 'Visa' ? Visa : card.card == 'MasterCard' ? MasterCard : card.card == 'American' ? American : Visa} alt="card" className=" h-12" />
                                     </div>
                                 </div>
@@ -79,30 +79,30 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
                                 </div>
                                 <div className="flex items-center space-x-4 max-xl:basis-2/5 basis-1/3  ">
                                     <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-
-                                    </div>
-                                    <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
                                     </div>
                                     <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
+
+                                    </div>
+                                    <div className="flex space-x-1">
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
+
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
+
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
                                     </div>
                                     <div className=" font-semibold text-base ">
@@ -130,7 +130,7 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
 
                             </div>
                             <div className="w-full flex justify-center">
-                                <div className="bg-gray h-0.5 rounded-full w-[85%] " />
+                                <div className="dark:bg-gray bg-blackwhite h-0.5 rounded-full w-[85%] " />
 
                             </div>
                             <EditCard isOpen={openEditOverlayId === card.id} onClose={() => setOpenEditOverlayId(null)} userName={userName} userKey={userKey} originCardType={card.card} originHolder={card.holder} originCardNumber={card.number} originMonth={(new Date(card.expiry)

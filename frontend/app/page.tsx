@@ -77,7 +77,7 @@ export default function Home() {
     )
   } else if (showDashboard) {
     return (
-      <div className='h-screen'>
+      <div className='h-screen dark:bg-black bg-whitebg'>
 
         {
           optionName == 'Generator' ?
@@ -103,7 +103,7 @@ export default function Home() {
         isLoading ?
           <LoadingComp />
           :
-          <div className=' h-screen'>
+          <div className=' h-screen dark:bg-black bg-whitebg'>
             {showSignup ? (
               <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
             ) : (

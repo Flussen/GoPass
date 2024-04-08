@@ -58,11 +58,11 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
           <div className="xl:w-[65%] w-[70%]   ">
             <div id="MyPasswords" className="flex flex-col justify-start  w-full font-semibold space-y-5 text mb-5">
               <div className="flex justify-between  items-center">
-                <div className=" text-responsivo  text-whitebg font-bold">
+                <div className=" text-responsivo  text-darkgray font-bold dark:text-whitebg">
                   My <span className="  text-primary">Password</span>
                 </div>
                 <div className="flex items-center space-x-6">
-                  <div className="flex justify-center items-center text-base space-x-2 text-gray hover:text-whitebg h-12 bg-darkgray rounded-full w-24 cursor-pointer">
+                  <div className="flex justify-center items-center text-base space-x-2 text-blackwhite hover:text-gray dark:text-gray dark:hover:text-whitebg h-12 dark:bg-darkgray bg-white rounded-full w-24 cursor-pointer ">
 
                     <div>
                       Sort
@@ -71,7 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
 
                   </div>
                   
-                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 ">
+                  <div onClick={() => setIsAddOverlayOpen(!isAddOverlayOpen)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-44 text-xl space-x-2 text-whitebg dark:text-black ">
 
                     <AddRoundedIcon sx={{ fontSize: 24 }} />
                     <div >
@@ -107,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
               <div className="text-responsivo text-whitebg  font-bold">
                 My <span className="  text-primary">Groups</span>
               </div>
-              <div onClick={() => setOptionName('Groups')} className="flex text-gray items-center hover:text-whitegray cursor-pointer mb-2">
+              <div onClick={() => setOptionName('Groups')} className="flex dark:text-gray text-whitegray hover:text-gray items-center dark:hover:text-whitegray cursor-pointer mb-2">
                 <div>
                    <span className="hidden">See&nbsp;</span>More
                 </div>

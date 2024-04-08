@@ -88,7 +88,7 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, se
                 true ? (
                     <div className={`h-full w-full ${totalCount<3?'space-y-2 ':'grid grid-flow-row gap-2'}   overflow-y-auto`}>
                         {favCards.map((card, index) => (
-                            <div key={card.id} className={` flex flex-col justify-center w-full ${totalCount<3?'h-1/3':'h-full'}  bg-darkgray rounded-lg font-semibold  text-whitebg px-2 py-3 space-y-3 `}>
+                            <div key={card.id} className={` flex flex-col justify-center w-full ${totalCount<3?'h-1/3':'h-full'}  dark:bg-darkgray bg-white rounded-lg font-semibold  dark:text-whitebg text-darkgray px-2 py-3 space-y-3 `}>
                                 <div className="flex justify-between w-full items-center h-4">
                                     <div className="w-full max-w-40 truncate">
                                         {card.holder}
@@ -97,38 +97,38 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, se
                                         <Image src={card.card == 'Visa' ? Visa : card.card == 'MasterCard' ? MasterCard : card.card == 'American' ? American : Visa} alt="card" className=" h-12" />
                                     </div>
                                 </div>
-                                <div className='flex justify-between items-center  bg-black w-full py-1.5 px-2 rounded-lg'>
+                                <div className='flex justify-between items-center  dark:bg-black bg-whitebg w-full py-1.5 px-2 rounded-lg'>
                                     <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
                                     </div>
                                     <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
                                     </div>
                                     <div className="flex space-x-1">
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
-                                        <div className="bg-gray rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
-                                        <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                        <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
 
                                     </div>
                                     <div>
                                         {card.number.toString().slice(-4)}
                                     </div>
-                                    <div onClick={() => copyToClipboard(card.number)} className="text-gray hover:text-whitebg cursor-pointer">
+                                    <div onClick={() => copyToClipboard(card.number)} className="dark:text-gray dark:hover:text-whitebg text-blackwhite hover:text-gray cursor-pointer">
                                         <ContentCopyRoundedIcon />
                                     </div>
 
@@ -147,17 +147,17 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, se
                                                 .slice(-2)
                                         }
                                     </div>
-                                    <div className=" flex justify-between bg-black   items-center py-1.5 px-2  w-20 rounded-lg ">
+                                    <div className=" flex justify-between dark:bg-black bg-whitebg  items-center py-1.5 px-2  w-20 rounded-lg ">
                                         {!showCvv[card.id] ? (<div className="flex space-x-1">
-                                            <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-                                            <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
-                                            <div className="bg-gray rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                            <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                            <div className="dark:bg-gray bg-blackwhite rounded-full  h-[0.4rem] w-[0.4rem]" />
+                                            <div className="dark:bg-gray bg-blackwhite  rounded-full  h-[0.4rem] w-[0.4rem]" />
                                         </div>) :
                                             <div>
                                                 {card.security_code}
                                             </div>
                                         }
-                                        <div onClick={() => toggleCvvVisibility(card.id)} className="text-gray hover:text-white cursor-pointer">
+                                        <div onClick={() => toggleCvvVisibility(card.id)} className="dark:text-gray dark:hover:text-whitebg text-blackwhite hover:text-gray  cursor-pointer">
                                             {showCvv[card.id] ? <VisibilityOffRoundedIcon /> : <RemoveRedEyeRoundedIcon />}
                                         </div>
                                     </div>
