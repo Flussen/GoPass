@@ -4,12 +4,15 @@ import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { useState } from "react";
-import { DoUpdateUserPassword } from "@/wailsjs/wailsjs/go/app/App";
-import { DoDeleteUserPassword } from "@/wailsjs/wailsjs/go/app/App";
-import { ShowPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoUpdatePassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoDeletePassword } from "@/wailsjs/wailsjs/go/app/App";
+import { PasswordDecrypt } from "@/wailsjs/wailsjs/go/app/App";
 import TitleRoundedIcon from '@mui/icons-material/TitleRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+
+
 
 interface OverlayProfileProps {
     isOpen: boolean;
@@ -28,7 +31,9 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     const [pass, setPass] = useState(password);
     const [titlee, setTitlee] = useState(title);
     const [decrypted, setDecrypted] = useState('');
-
+    const [favorite, setFavorite] = useState(false)
+ const[group, setGroup] = useState('');
+ const[item, setItem]= useState('');
 
     const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(event.target.value);
@@ -41,25 +46,37 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     };
     async function DeletePassword() {
         try {
-            const response = await DoDeleteUserPassword(userNames, id)
+            const response = await DoDeletePassword(userNames, id)
         } catch {
 
         }
     }
     async function getDecryptedPass() {
         try {
-            const decrypted = await ShowPassword(userNames, id, userKey)
+            const decrypted = await PasswordDecrypt(userNames, id, userKey)
             setDecrypted(decrypted)
         } catch {
 
         }
     }
 
+    const passwordData = new request.Password({
+        id: id,
+        title: titlee,
+        username: email,
+        pwd: pass,
+        configs: new models.Settings({
+            favorite: favorite,
+            groups: group,
+            icon: item,
+            status: ''
+        }),
+        created_at:''
+    });
 
-
-    async function UpdatePasswords() {
+    async function UpdatePasswords(passwordData: request.Password) {
         try {
-            const response = await DoUpdateUserPassword(userNames, userKey, id, titlee, email, pass)
+            const response = await DoUpdatePassword(userNames, id, userKey, passwordData )
             console.log('mark' + response)
         } catch {
 
@@ -73,7 +90,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
     }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
-        await UpdatePasswords(); // Llama a la función pullLogin
+        await UpdatePasswords(passwordData); // Llama a la función pullLogin
         onClose();
     };
     const handlePasword = async (event: React.FormEvent) => {
@@ -97,7 +114,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
             {
                 isOpen ? (
                     <div className='absolute flex justify-center items-center right-0 top-0 h-screen w-screen '>
-                        <div onClick={onClose} className='absolute bg-black opacity-75 h-screen w-screen '></div>
+                        <div onClick={onClose} className='absolute bg-[#000000]  opacity-75 h-screen w-screen '></div>
                         <div className=' flex-col justify-center bg-darkgray  p-5  rounded-lg space-y-4 z-10'>
 
                             <form >
@@ -107,7 +124,7 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
                                         Title
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input type="text" className='rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' value={titlee} onChange={titlechange} />
                                     </div>
                                     <div className='pl-4 font-medium'>
@@ -115,22 +132,22 @@ export function OverlayProfile({ isOpen, onClose, children, password, title, use
                                     </div>
 
                                     <div className='flex justify-between items-center mb-2  '>
-                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input type="text" className='rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' value={email} onChange={emailchange} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between items-center mb-5'>
-                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
+                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
                                         <input type="password" className='rounded-lg bg-blaack   pl-10 h-12 w-[25rem] outline-none placeholder:text-whitegray text-white ' value={pass} onChange={passchange} />
-                                        <button onClick={() => copyToClipboard(pass)} className="bg-green text-blaack w-[4rem] py-2 rounded-lg hover:bg-darkgreen font-semibold"> Copy</button>
+                                        <button onClick={() => copyToClipboard(pass)} className="bg-primary text-blaack w-[4rem] py-2 rounded-lg hover:bg-darkprimary font-semibold"> Copy</button>
                                     </div>
                                     <div className="flex justify-center space-x-10">
                                         <button onClick={hanldeDelete} className="flex justify-center text-back items-center w-40 h-12 bg-gray rounded-lg cursor-pointer hover:bg-whitegray hover:text-black  font-semibold">
                                             Delete
                                         </button>
-                                        <button onClick={handleSubmit} className="flex justify-center text-blaack items-center w-40 h-12  rounded-lg cursor-pointer bg-green hover:bg-darkgreen hover:text-blackbox font-semibold">
+                                        <button onClick={handleSubmit} className="flex justify-center text-blaack items-center w-40 h-12  rounded-lg cursor-pointer bg-primary hover:bg-darkprimary hover:text-blackbox font-semibold">
                                             Update
                                         </button>
                                     </div>

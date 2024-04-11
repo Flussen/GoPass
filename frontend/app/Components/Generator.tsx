@@ -15,9 +15,17 @@ import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import FormatLineSpacingRoundedIcon from '@mui/icons-material/FormatLineSpacingRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import HeaderComp from "./HeaderComp";
+
+
+
 interface GeneratorProps {
-    setShowGenerator: (show: boolean) => void;
-    showGenerator: boolean
+    setOptionName: (show: string) => void;
+    optionName: string;
     userName: string;
     setShowDashboard: (show: boolean) => void;
     setShowProfile: (show: boolean) => void;
@@ -63,7 +71,7 @@ const PrettoSlider = styled(Slider)({
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard, setShowGenerator, showGenerator, userName }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard, setOptionName, optionName, userName }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -73,14 +81,17 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
     const [barColor3, setBarColor3] = useState('bg-black');
     const [barColor4, setBarColor4] = useState('bg-black');
 
-
+    const [titlee, setTitlee] = useState('')
+    const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setTitlee(event.target.value);
+    };
     const [sliderValue, setSliderValue] = useState<number>(25);
     const [password, setPassword] = useState<string>("");
     const calculateBarWidth = (value: number) => {
-        setBarColor1(value > 1 ? 'bg-green' : 'bg-gray');
-        setBarColor2(value > 5 ? 'bg-green' : 'bg-gray');
-        setBarColor3(value > 10 ? 'bg-green' : 'bg-gray');
-        setBarColor4(value > 25 ? 'bg-green' : 'bg-gray');
+        setBarColor1(value > 1 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor2(value > 5 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor3(value > 10 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
+        setBarColor4(value > 25 ? 'bg-primary' : 'dark:bg-gray bg-blackwhite');
     };
 
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
@@ -130,34 +141,30 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
     return (
 
-        <div id="Generator" className='flex justify-between  h-screen '>
+        <div id="Generator" className='flex justify-between  h-full'>
 
             <OptionsOverlay
-                setShowGenerator={setShowGenerator}
-                showGenerator={showGenerator}
+                setOptionName={setOptionName}
+                optionName={optionName}
                 userName={userName}
                 setShowDashboard={setShowDashboard}
-                setShowProfile={setShowProfile}            >
+                setShowProfile={setShowProfile}      >
                 <></>
             </OptionsOverlay>
-            <div className="flex flex-col justify-start items-center  w-[100%] px-16 pt-24 space-y-24 2xl:ml-[20%] ml-[8.5%]">
-            
-                <div className="flex-col justify-center w-full items-start">
-                    <div className='flex justify-start mb-10'>
-                        <div className='text-5xl font-bold text-white'>
-                            Password <span className="bg-green bg-clip-text text-transparent">Generator</span>
-                        </div>
+            <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
+                     <HeaderComp optionName={optionName} userName={userName}/>
 
-                    </div>
+                <div className="flex-col justify-center w-full items-start">
+                    
                     <div className='xl:flex max-xl:flex-col w-full xl:space-x-5 max-xl:space-y-5'>
-                        <div className="flex-col items-start justify-center bg-darkgray rounded-lg  xl:basis-4/5 basis-3/4 p-3">
+                        <div className="flex-col items-start justify-center dark:bg-darkgray bg-white rounded-lg  xl:basis-4/5 basis-3/4 p-3">
                             <div className="flex items-start w-full space-x-3 ">
                                 <div className='flex-col justify-center items-center xl:basis-5/6 w-full '>
-                                    <div className="flex justify-between items-center mb-3 px-4 bg-[#DEEFFF] rounded-lg  w-full">
-                                        <input type="text" readOnly value={password} className="select-all w-full text-white flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
+                                    <div className="flex justify-between items-center mb-3 px-4 dark:bg-black bg-whitebg rounded-lg  w-full">
+                                        <input type="text" readOnly value={password} className="select-all w-full dark:text-whitebg text-darkgray flex justify-center items-center bg-transparent  focus:outline-none h-12  " />
                                         <div
                                             onClick={() => generatePassword(sliderValue)}
-                                            className='ml-4 text-whitegray cursor-pointer hover:text-green'
+                                            className='ml-4 dark:text-whitegray text-blackwhite cursor-pointer hover:text-primary'
                                         >
                                             <AutorenewRoundedIcon sx={{ fontSize: 28 }} className="" />
                                         </div>
@@ -171,7 +178,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                             <div className={`${barColor3} h-2 basis-1/4 rounded-full`} />
                                             <div className={`${barColor4} h-2 basis-1/4 rounded-full`} />
                                         </div>
-                                        <div className="flex justify-between items-center text-whitegray  ">
+                                        <div className="flex justify-between items-center dark:text-whitegray text-gray ">
                                             <div>Weak</div>
                                             <div>Strong</div>
                                         </div>
@@ -186,10 +193,10 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
                                     </div>
                                     <div className="flex items-center space-x-4 w-full px-3 mt-5 text-grey">
-                                        <div className="font-semibold text-2xl basis-1/4 text-white">
+                                        <div className="font-semibold text-2xl basis-1/4 dark:text-whitebg text-darkgray">
                                             Password Length
                                         </div>
-                                        <div className="flex space-x-4 items-center basis-3/4 text-green">
+                                        <div className="flex space-x-4 items-center basis-3/4 text-gray dark:text-whitegray">
                                             <div>
                                                 1
                                             </div>
@@ -219,7 +226,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                     </div>
 
                                 </div>
-                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-green rounded-lg text-darkgray text-xl font-semibold   cursor-pointer  ">
+                                <div onClick={copyToClipboard} className="flex justify-center items-center  xl:basis-1/6 basis-1/4 bg-primary rounded-lg dark:text-darkgray text-whitebg text-xl font-semibold   cursor-pointer  ">
                                     <div className="flex items-center justify-center w-full rounded-md space-x-2 bg-blackbox h-12  ">
                                         <ContentCopyRoundedIcon sx={{ fontSize: 28 }} />
                                         <div>
@@ -237,26 +244,26 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
 
 
                         </div>
-                        <div className="flex items-center justify-center bg-darkgray rounded-lg  lg:basis-1/5 ">
-                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl text-white max-xl:space-x-6 max-xl:py-10">
+                        <div className="flex items-center justify-center dark:bg-darkgray bg-white rounded-lg  lg:basis-1/5 ">
+                            <div className="xl:flex-col max-xl:flex justify-start items-center font-semibold text-2xl dark:text-whitebg text-darkgray max-xl:space-x-6 max-xl:py-10">
                                 <div className="flex items-center space-x-3 ">
                                     <input checked={includeUppercase}
 
-                                        onChange={() => handleCheckboxChange(setIncludeUppercase, includeUppercase)} type="checkbox" className=" accent-green  scale-150 " />
+                                        onChange={() => handleCheckboxChange(setIncludeUppercase, includeUppercase)} type="checkbox" className=" accent-primary  scale-150 " />
                                     <div>
                                         Uppercase
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <input checked={includeLowercase}
-                                        onChange={() => handleCheckboxChange(setIncludeLowercase, includeLowercase)} type="checkbox" className="accent-green  scale-150 " />
+                                        onChange={() => handleCheckboxChange(setIncludeLowercase, includeLowercase)} type="checkbox" className="accent-primary  scale-150 " />
                                     <div>
                                         Lowercase
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <input checked={includeNumbers}
-                                        onChange={() => handleCheckboxChange(setIncludeNumbers, includeNumbers)} type="checkbox" className="accent-green  scale-150" />
+                                        onChange={() => handleCheckboxChange(setIncludeNumbers, includeNumbers)} type="checkbox" className="accent-primary  scale-150" />
                                     <div>
                                         Numbers
                                     </div>
@@ -266,7 +273,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile,  setShowDashboard
                                         checked={includeSymbols}
                                         onChange={() => handleCheckboxChange(setIncludeSymbols, includeSymbols)}
                                         type="checkbox"
-                                        className="accent-green  scale-150" />
+                                        className="accent-primary  scale-150" />
                                     <div>
                                         Symbols
                                     </div>

@@ -18,35 +18,37 @@ import { DoLogout } from "@/wailsjs/wailsjs/go/app/App";
 import DashboardIconColor from "../../Public/grid_view.svg"
 import PasswordIconColor from "../../Public/password.svg"
 import FolderCopyRoundedIcon from '@mui/icons-material/FolderCopyRounded';
-
+import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import WysiwygRoundedIcon from '@mui/icons-material/WysiwygRounded';
 interface OptionsOverlayProps {
-  setShowGenerator: (show: boolean) => void;
-  showGenerator: boolean;
+  setOptionName: (show: string) => void;
+  optionName: string;
   children: React.ReactNode;
   userName: string;
-  setShowDashboard:(show: boolean)=> void;
+  setShowDashboard: (show: boolean) => void;
   setShowProfile: (show: boolean) => void;
 
 }
 
-const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setShowGenerator, showGenerator, children, userName , setShowProfile}) => {
+const OptionsOverlay: React.FC<OptionsOverlayProps> = ({ setShowDashboard, setOptionName, optionName, children, userName, setShowProfile }) => {
 
-  const[showSecureFiles, setShowSecureFiles]= useState(false);
+  const [showSecureFiles, setShowSecureFiles] = useState(false);
 
-  async function Logout(){
-    try{
+  async function Logout() {
+    try {
 
       await DoLogout();
       setShowDashboard(false);
-      
-    }catch{
+
+    } catch {
       alert('error al logout')
     }
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await Logout(); 
+    await Logout();
 
 
   };
@@ -54,51 +56,56 @@ const OptionsOverlay: React.FC<OptionsOverlayProps> = ({setShowDashboard,  setSh
   return (
 
 
-    <div id="Options" className="fixed flex flex-col justify-between 2xl:w-[20%] w-[100px]  bg-darkgray  rounded-lg  shadow-shadow ml-8 mt-8 mb-8 pt-[4.5rem] h-[92%] ">
-      <div className="flex-col justify-center w-full  2xl:px-[15%]  px-[20px]  space-y-[3rem]">
+    <div id="Options" className="fixed flex flex-col justify-between xl:w-[16%] w-[75px]  dark:bg-darkgray bg-white  py-12   h-full ">
+      <div className="flex-col justify-center w-full  ">
 
 
-        <div className='flex justify-center text-white font-bold 2xl:text-5xl text-md'>
-          <span className='bg-green bg-clip-text text-transparent'>Go</span><span >Pass</span>
+        <div className='flex justify-center bg-gray text-white h-12 w-full'>
+
         </div>
-        <div onClick={() => { setShowProfile(true) }} className="flex justify-center items-center text-xl space-x-2 text-back cursor-pointer ">
-          <AccountCircleRoundedIcon sx={{ fontSize: 50 }} className="text-green" />
-          <div className=" 2xl:flex hidden text-white font-semibold">
-            {userName}
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div onClick={() => { setShowGenerator(false) }} className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-lg  space-x-2 cursor-pointer  font-semibold 2xl:text-xl  ${!showGenerator ? ' text-green max-2xl:bg-gray' : 'text-whitegray  hover:text-whitegray opacity-75'}`}>
-          
-          <GridViewRoundedIcon sx={{ fontSize: 25}}/>
-       
-            <div className={`2xl:flex hidden `}>My Passwords</div>
-          </div>
-          <div onClick={() => { setShowGenerator(true) }} className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-lg space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${showGenerator ? 'text-green max-2xl:bg-gray' : 'text-whitegray opacity-75 hover:opacity-100 hover:text-green'}`}>
-            
-            <PasswordRoundedIcon sx={{ fontSize: 25 }} />
 
-          
-            <div className=" 2xl:flex hidden">Pass Generator</div>
+        <div className="">
+          <div onClick={() => { setOptionName('') }} className={`flex items-center xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray  font-semibold xl:text-xl xl:pl-5 ${optionName == '' ? ' dark:bg-black bg-whitebg border-primary' : ' dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white'}`}>
+
+            <GridViewRoundedIcon sx={{ fontSize: 32 }} />
+
+            <div className={`xl:flex hidden `}>Dashboard</div>
           </div>
-          <div onClick={() => { setShowSecureFiles(false) }} className={`flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl space-x-2 cursor-pointer 2xl:text-xl xl:text-base  font-semibold ${showSecureFiles ? ' text-back max-2xl:bg-gray' : 'text-whitegray opacity-75 hover:opacity-100 hover:text-green'}`}>
-            <FolderCopyRoundedIcon sx={{ fontSize: 25 }} />
-            <div className=" 2xl:flex hidden">Secure Files</div>
+          <div onClick={() => { setOptionName('Groups') }} className={`flex items-center xl:justify-start justify-center w-full  border-l-2 h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray font-semibold xl:text-xl xl:pl-5 ${optionName == 'Groups' ? 'dark:bg-black bg-whitebg border-primary' : 'dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white'}`}>
+
+            <WysiwygRoundedIcon sx={{ fontSize: 32 }} />
+
+
+            <div className=" xl:flex hidden">My Groups</div>
+          </div>
+          <div onClick={() => { setOptionName('Cards') }} className={`flex items-center xl:justify-start justify-center w-full border-l-2  h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray font-semibold xl:text-xl xl:pl-5 ${optionName == 'Cards' ? 'dark:bg-black bg-whitebg border-primary' : 'dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white '}`}>
+
+            <CreditCardRoundedIcon sx={{ fontSize: 32 }} />
+
+
+            <div className=" xl:flex hidden">My Cards</div>
+          </div>
+          <div onClick={() => { setOptionName('Generator') }} className={`flex items-center xl:justify-start justify-center w-full   border-l-2 h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray  font-semibold xl:text-xl xl:pl-5 ${optionName == 'Generator' ? 'dark:bg-black bg-whitebg border-l-2 border-primary' : 'dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white'}`}>
+
+            <PasswordRoundedIcon sx={{ fontSize: 32 }} />
+
+
+            <div className=" xl:flex hidden"> <span className="2xl:flex hidden">Pass&nbsp;</span>Generator</div>
+          </div>
+          <div onClick={() => { setShowSecureFiles(false) }} className={`flex items-center xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray font-semibold xl:text-xl xl:pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white'}`}>
+            <FolderRoundedIcon sx={{ fontSize: 32 }} />
+            <div className=" xl:flex hidden">Secure Files</div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-full 2xl:px-[15%]  px-[20px]  space-y-2 mt-[5.5rem] mb-5 ">
-        <div onClick={() => { setShowProfile(true) }} className="flex items-center 2xl:justify-start justify-center 2xl:pl-[10%]  h-14 rounded-2xl  hover:text-green space-x-2 cursor-pointer text-xl font-semibold text-whitegray opacity-75 hover:opacity-100" >
-          <SettingsRoundedIcon />
-          <div className=" 2xl:flex hidden">
-            Settings
-          </div>
+      <div className="flex flex-col justify-between w-full      mt-[5.5rem]  ">
+        <div onClick={() => { setShowProfile(true) }} className={`flex items-center xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray  font-semibold xl:text-xl xl:pl-5 ${showSecureFiles ? ' bg-black border-l-2 border-primary' : 'dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white'}`}>
+          <SettingsRoundedIcon sx={{ fontSize: 32 }} />
+          <div className=" xl:flex hidden">Settings</div>
         </div>
-        <div onClick={handleSubmit} className="flex items-center 2xl:justify-start justify-center 2xl:pl-[10%] h-14 rounded-2xl  hover:text-green space-x-2 cursor-pointer text-xl font-semibold text-whitegray opacity-75 hover:opacity-100">
-          <ExitToAppRoundedIcon />
-          <div  className=" 2xl:flex hidden">
-            Log Out
-          </div>
+        <div onClick={handleSubmit} className={`flex items-center xl:justify-start justify-center w-full  border-l-2  h-16 space-x-2 cursor-pointer dark:text-whitegray text-gray font-semibold xl:text-xl xl:pl-5 dark:hover:text-blackwhite dark:border-darkgray hover:text-darkgray border-white`}>
+          <ExitToAppRoundedIcon sx={{ fontSize: 32 }} />
+          <div className=" xl:flex hidden">Log Out</div>
         </div>
       </div>
 

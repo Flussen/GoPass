@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightToBracket, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
-import { DoSaveUserPassword } from "@/wailsjs/wailsjs/go/app/App";
+import { DoNewPassword } from "@/wailsjs/wailsjs/go/app/App";
 import { faGoogle, faFacebookF, faInstagram, faDiscord, faYoutube, faPaypal, faFigma, faBehance, faTwitch, faXTwitter, faSteam, faTiktok, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import TitleRoundedIcon from '@mui/icons-material/TitleRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
+
 
 interface AddOverlayProps {
     isOpen: boolean;
@@ -47,6 +49,8 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
     const [svgItem, setSvgItem] = useState<any>();
     const [item, setItem] = useState('');
     const [status, setStatus] = useState('');
+    const [group, setGroup]= useState('');
+
 
     useEffect(() => {
         const findIcon = () => {
@@ -68,11 +72,24 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
         }
     }, [pass])
 
-    async function pullPasswords() {
+    const PasswordData = new request.Password({
+        title: title,
+        username: usermail,
+        pwd: pass,
+        settings: new models.Settings({
+            favorite: false,
+            group: group,
+            icon: item,
+            status: ''
+        })
+
+    })
+
+    async function pullPasswords(PasswordData: request.Password) {
 
 
         try {
-            await DoSaveUserPassword(userName, usermail, title, pass, item, status, userKey);
+            await DoNewPassword(userName, userKey, PasswordData);
             setTitle('');
             setUsermail('');
             setPass('');
@@ -90,7 +107,7 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Previene la recarga de la página
         onClose()
-        await pullPasswords(); // Llama a la función pullRegister
+        await pullPasswords(PasswordData); // Llama a la función pullRegister
     };
     return (
         <>
@@ -102,42 +119,42 @@ const AddOverlay: React.FC<AddOverlayProps> = ({ isOpen, onClose, children, user
 
 
                             <div className="flex justify-center items-center space-x-5">
-                                <div className=" flex justify-center items-center rounded-lg h-28 w-28  bg-blaack">
+                                <div className=" flex justify-center items-center rounded-lg h-28 w-28  bg-black">
                                     <FontAwesomeIcon icon={svgItem} className="text-white text-4xl" />
                                 </div>
                                 <div className="flex-col jusitfy-center items-center space-y-2">
 
-                                    <div className=" flex items-center bg-green  text-blaack px-7 h-12 rounded-lg">
+                                    <div className=" flex items-center bg-primary  text-black px-7 h-12 rounded-lg">
                                         Custom
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-white ">
+                            <div className="text-whitebg ">
                                 <form onSubmit={handleSubmit} >
                                     <div className='pl-4 font-medium'>
                                         Title
                                     </div>
                                     <div className='flex justify-between items-center mb-2'>
-                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
-                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
+                                        <TitleRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Title' value={title} required onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Login
                                     </div>
                                     <div className='flex justify-between items-center mb-2 '>
-                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
-                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Username or Email' value={usermail} onChange={(e) => setUsermail(e.target.value)} />
+                                        <EmailRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
+                                        <input autoComplete="nope" type="text" className=' rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white' placeholder='Username or Email' required value={usermail} onChange={(e) => setUsermail(e.target.value)} />
                                     </div>
                                     <div className='pl-4 font-medium'>
                                         Password
                                     </div>
                                     <div className='flex justify-between items-center mb-4 '>
-                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-green" />
-                                        <input autoComplete="nope" type="password" className=' rounded-lg bg-blaack   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white ' placeholder='Password' value={pass} onChange={(e) => setPass(e.target.value)} />
+                                        <KeyRoundedIcon sx={{ fontSize: 28 }} className="absolute ml-2 text-primary" />
+                                        <input autoComplete="nope" type="password" className=' rounded-lg bg-black   pl-10 h-12 w-[30rem] outline-none placeholder:text-whitegray text-white ' placeholder='Password' required value={pass} onChange={(e) => setPass(e.target.value)} />
                                     </div>
 
                                     <div className="flex justify-center ">
-                                        <button type="submit" className="flex justify-center items-center w-40 h-12  rounded-lg text-blaack cursor-pointer bg-green hover:bg-darkgreen font-semibold">
+                                        <button type="submit" className="flex justify-center items-center w-40 h-12  rounded-lg text-blaack cursor-pointer bg-primary hover:bg-darkprimary font-semibold">
                                             Add Now
                                         </button>
                                     </div>

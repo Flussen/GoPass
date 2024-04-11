@@ -6,7 +6,7 @@ import { DoRegister } from '@/wailsjs/wailsjs/go/app/App';
 import Image from "next/image";
 import Women from "../../Public/undraw_secure_login_pdn4.svg";
 import Mener from "../../Public/men.svg"
-import SignupResult from './RegisResult';
+import SignupResult from './Login and Signup/RegisResult';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
