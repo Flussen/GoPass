@@ -1,10 +1,12 @@
 package groups
 
 import (
+	"GoPass/backend/auth"
 	"GoPass/backend/credentials/passwords"
 	"GoPass/backend/models"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/profile"
+	"fmt"
 	"log"
 	"testing"
 
@@ -191,6 +193,10 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 	defer cleanup()
 	c := assert.New(t)
 
+	_, err := auth.Register(db, "account_to_test", "mailtest@mail.com",
+		"testpassword", models.Config{})
+	c.NoError(err)
+
 	grps := []string{"secured", "google"}
 	grps2 := []string{"nogroups", "here to match"}
 
@@ -198,7 +204,7 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 		Title:    "passwords",
 		Username: "xd",
 		Pwd:      "test",
-		Settings: models.Settings{Group: "google"},
+		Settings: models.Settings{},
 	})
 
 	passwords.NewPassword(db, account.Account, rspL.UserKey, request.Password{
@@ -234,7 +240,7 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 			expectErr: true,
 		},
 		{
-			name:      "no group in the requiere",
+			name:      "none of the parameters can be empty.",
 			account:   account.Account,
 			groups:    nil,
 			expectErr: true,
@@ -245,23 +251,24 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 			groups:    grps2,
 			expectErr: true,
 		},
-		// {
-		// 	name: "the account don't have groups assigned",
-		// 	account: account.Account,
-		// 	groups:  nil,
-		// 	expectErr: true,
-		// },
+		{
+			name:      "the account don't have passwords",
+			account:   "account_to_test",
+			groups:    grps,
+			expectErr: true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			groupsMap, err := GetAllCredentialsByGroup(db, tt.account, tt.groups)
-
 			if tt.expectErr {
+				log.Println(err)
 				c.Error(err)
 				c.Nil(groupsMap)
 			} else {
-				log.Println(err)
+
+				fmt.Println(groupsMap)
 				c.NoError(err)
 				c.NotNil(groupsMap)
 			}

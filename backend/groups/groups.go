@@ -169,8 +169,12 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (ma
 
 	for _, group := range groups {
 		if groupsMapped[group] == nil {
-			return nil, eh.NewGoPassError("no group corresponds to the user's groups")
+			return nil, eh.NewGoPassError("1 - no group corresponds to the user's groups")
 		}
+	}
+
+	if groupsMapped == nil {
+		return nil, eh.NewGoPassError("2 - no group corresponds to the user's groups")
 	}
 
 	return groupsMapped, nil
