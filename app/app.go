@@ -183,8 +183,8 @@ func (a *App) GetGroups(account string) ([]string, error) {
 	return groups.GetGroups(a.DB, account)
 }
 
-func (a *App) GetAllCredentialsByGroup(account string, grps []string) (map[string][]models.Password, error) {
-	return groups.GetAllCredentialsByGroup(a.DB, account, grps)
+func (a *App) GetAllCredentialsByGroup(account string) (map[string][]models.Password, error) {
+	return groups.GetAllCredentialsByGroup(a.DB, account)
 }
 
 /*

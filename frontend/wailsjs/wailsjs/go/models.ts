@@ -265,6 +265,38 @@ export namespace request {
 		    return a;
 		}
 	}
+	export class Export {
+	    credentials_type: string[];
+	    export_type: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Export(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.credentials_type = source["credentials_type"];
+	        this.export_type = source["export_type"];
+	    }
+	}
+	export class Import {
+	    account: string;
+	    credential_type: string;
+	    file_type: string;
+	    data_url: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Import(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.account = source["account"];
+	        this.credential_type = source["credential_type"];
+	        this.file_type = source["file_type"];
+	        this.data_url = source["data_url"];
+	    }
+	}
 	export class Login {
 	    account: string;
 	    password: string;

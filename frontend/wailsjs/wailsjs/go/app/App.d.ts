@@ -16,6 +16,10 @@ export function DoCheckSeeds(arg1:request.SeedsCheck):Promise<void>;
 
 export function DoDeletePassword(arg1:string,arg2:string):Promise<void>;
 
+export function DoExport(arg1:string,arg2:request.Export):Promise<void>;
+
+export function DoImport(arg1:request.Import):Promise<void>;
+
 export function DoLogin(arg1:request.Login):Promise<response.Login>;
 
 export function DoLogout():Promise<void>;
@@ -37,6 +41,8 @@ export function DoUpdatePassword(arg1:string,arg2:string,arg3:string,arg4:reques
 export function GetAccountInfo(arg1:string):Promise<models.User>;
 
 export function GetAllCards(arg1:string):Promise<Array<models.Card>>;
+
+export function GetAllCredentialsByGroup(arg1:string,arg2:Array<string>):Promise<{[key: string]: Array<models.Password>}>;
 
 export function GetAllPasswords(arg1:string):Promise<Array<models.Password>>;
 
