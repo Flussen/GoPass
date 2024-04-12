@@ -156,16 +156,39 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string) (map[string][]models
 		wg.Add(1)
 		go func(group string) {
 			defer wg.Done()
+			if groupIsEmpty(group, passwords) {
+				mutex.Lock()
+				groupsMapped[group] = append(groupsMapped[group], models.Password{
+					Settings: models.Settings{
+						Group:  "default",
+						Icon:   "default",
+						Status: "default",
+					}})
+				mutex.Unlock()
+			}
+
 			for _, password := range passwords {
-				if password.Settings.Group == group {
+				if group == password.Settings.Group {
 					mutex.Lock()
 					groupsMapped[group] = append(groupsMapped[group], password)
 					mutex.Unlock()
 				}
 			}
+
 		}(group)
 	}
 	wg.Wait()
 
 	return groupsMapped, nil
+}
+
+func groupIsEmpty(group string, passwords []models.Password) bool {
+	var count int
+	for _, v := range passwords {
+		if v.Settings.Group == group {
+			count++
+		}
+	}
+
+	return count == 0
 }

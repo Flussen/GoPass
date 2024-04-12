@@ -192,6 +192,9 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 	defer cleanup()
 	c := assert.New(t)
 
+	// groups -> "secured", "google", "grupo_vacio"
+	// grupo_vacio == An empty group means that no passwords are assigned.
+
 	_, err := auth.Register(db, "account_to_test", "mailtest@mail.com",
 		"testpassword", models.Config{})
 	c.NoError(err)
