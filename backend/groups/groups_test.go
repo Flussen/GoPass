@@ -227,21 +227,21 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 			account:   account.Account,
 			expectErr: false,
 		},
-		// {
-		// 	name:      "fail account",
-		// 	account:   "fakeaccount",
-		// 	expectErr: true,
-		// },
-		// {
-		// 	name:      "none of the parameters can be empty.",
-		// 	account:   "",
-		// 	expectErr: true,
-		// },
-		// {
-		// 	name:      "the account don't have passwords",
-		// 	account:   "account_to_test",
-		// 	expectErr: true,
-		// },
+		{
+			name:      "fail account",
+			account:   "fakeaccount",
+			expectErr: true,
+		},
+		{
+			name:      "none of the parameters can be empty.",
+			account:   "",
+			expectErr: true,
+		},
+		{
+			name:      "the account don't have passwords",
+			account:   "account_to_test",
+			expectErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -251,12 +251,9 @@ func TestGetAllCredentialsByGroup(t *testing.T) {
 				c.Error(err)
 				c.Nil(groupsMap)
 			} else {
-				// for k := range groupsMap {
-				// 	log.Println(k)
-				// }
-				log.Println(groupsMap)
 				c.NoError(err)
 				c.NotNil(groupsMap)
+				log.Println(groupsMap)
 			}
 		})
 	}
