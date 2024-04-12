@@ -133,9 +133,9 @@ func GetGroups(db *bbolt.DB, account string) ([]string, error) {
 	return groups, nil
 }
 
-func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (map[string][]models.Password, error) {
+func GetAllCredentialsByGroup(db *bbolt.DB, account string) (map[string][]models.Password, error) {
 
-	if groups == nil || account == "" {
+	if account == "" {
 		return nil, eh.ErrEmptyParameter
 	}
 
@@ -146,36 +146,49 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (ma
 		return nil, err
 	}
 
-	_, err = GetGroups(db, account)
+	accountGroups, err := GetGroups(db, account)
 	if err != nil {
 		return nil, err
 	}
 
 	var wg sync.WaitGroup
-	for _, group := range groups {
+	for _, group := range accountGroups {
 		wg.Add(1)
 		go func(group string) {
 			defer wg.Done()
+			if groupIsEmpty(group, passwords) {
+				mutex.Lock()
+				groupsMapped[group] = append(groupsMapped[group], models.Password{
+					Settings: models.Settings{
+						Group:  "default",
+						Icon:   "default",
+						Status: "default",
+					}})
+				mutex.Unlock()
+			}
+
 			for _, password := range passwords {
-				if password.Settings.Group == group {
+				if group == password.Settings.Group {
 					mutex.Lock()
 					groupsMapped[group] = append(groupsMapped[group], password)
 					mutex.Unlock()
 				}
 			}
+
 		}(group)
 	}
 	wg.Wait()
 
-	for _, group := range groups {
-		if groupsMapped[group] == nil {
-			return nil, eh.NewGoPassError("1 - no group corresponds to the user's groups")
+	return groupsMapped, nil
+}
+
+func groupIsEmpty(group string, passwords []models.Password) bool {
+	var count int
+	for _, v := range passwords {
+		if v.Settings.Group == group {
+			count++
 		}
 	}
 
-	if groupsMapped == nil {
-		return nil, eh.NewGoPassError("2 - no group corresponds to the user's groups")
-	}
-
-	return groupsMapped, nil
+	return count == 0
 }

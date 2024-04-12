@@ -27,7 +27,7 @@ func NewPassword(db *bbolt.DB, account, userKey string, rqst request.Password) (
 	}
 
 	if rqst.Settings.Group == "" {
-		rqst.Settings.Group = "none"
+		rqst.Settings.Group = "default"
 	}
 
 	if rqst.Settings.Icon == "" {
@@ -144,7 +144,7 @@ func UpdatePassword(db *bbolt.DB, account, id, userKey string, rqst request.Pass
 				Pwd:       encryptedPassword,
 				Username:  rqst.Username,
 				CreatedAt: time.Now(),
-				Settings:  oldPass.Settings,
+				Settings:  rqst.Settings,
 			}
 
 			dataBytes, err := json.Marshal(newPasswordData)

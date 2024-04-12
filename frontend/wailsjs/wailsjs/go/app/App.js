@@ -26,6 +26,14 @@ export function DoDeletePassword(arg1, arg2) {
   return window['go']['app']['App']['DoDeletePassword'](arg1, arg2);
 }
 
+export function DoExport(arg1, arg2) {
+  return window['go']['app']['App']['DoExport'](arg1, arg2);
+}
+
+export function DoImport(arg1) {
+  return window['go']['app']['App']['DoImport'](arg1);
+}
+
 export function DoLogin(arg1) {
   return window['go']['app']['App']['DoLogin'](arg1);
 }
@@ -68,6 +76,10 @@ export function GetAccountInfo(arg1) {
 
 export function GetAllCards(arg1) {
   return window['go']['app']['App']['GetAllCards'](arg1);
+}
+
+export function GetAllCredentialsByGroup(arg1, arg2) {
+  return window['go']['app']['App']['GetAllCredentialsByGroup'](arg1, arg2);
 }
 
 export function GetAllPasswords(arg1) {

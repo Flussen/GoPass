@@ -12,7 +12,7 @@ import (
 
 func InitTestProfile() (*bbolt.DB, request.Register, response.Login, func()) {
 	db, cleanup := test.CreateTestDB()
-	groups := []string{"secured", "google"}
+	groups := []string{"secured", "google", "grupo_vacio"}
 	// Register process
 	rRegister := request.Register{
 		Account:  "flussen",
