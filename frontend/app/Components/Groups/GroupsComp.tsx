@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
-import { GetGroups } from "@/wailsjs/wailsjs/go/app/App";
+import { GetAllPasswords, GetGroups } from "@/wailsjs/wailsjs/go/app/App";
 import Visa from "../../../public/visa.svg"
 import MasterCard from "../../../public/mastercard.svg"
 import Defaulte from "../../../public/key.svg"
@@ -10,17 +10,20 @@ import Image from "next/image";
 import zIndex from "@mui/material/styles/zIndex";
 import { GetAllCredentialsByGroup } from "@/wailsjs/wailsjs/go/app/App";
 import { eventNames } from "process";
-
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 interface GroupProps {
     userName: string;
     search: string;
 }
 
 const GroupComp: React.FC<GroupProps> = ({ userName, search }) => {
+    const [showPass, setShowPass] = useState<Record<string, boolean>>({});
+    const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
 
-    const [grupos, setGrupos] = useState(['Prueba1', 'Prueba2'])
+    const [grupos, setGrupos] = useState<string[]>([])
     const [allGroupsNames, setAllGroupsNames] = useState([''])
-    const [allGroups, setAllGroups] = useState<models.Password[]>([])
+    const [allGroups, setAllGroups] = useState<{ [key: string]: models.Password[] }>({});
     async function GetNameGroups() {
         try {
             const response = await GetGroups(userName)
@@ -32,37 +35,36 @@ const GroupComp: React.FC<GroupProps> = ({ userName, search }) => {
         }
     }
 
-    useEffect(() => {
-        GetNameGroups();
-    }, [])
-
-
     async function GetAllGroups() {
         try {
-            console.log('empieza')
-            console.log(allGroupsNames)
-            const response = await GetAllCredentialsByGroup(userName, grupos);
-            console.log('Response: ' + response)
 
-            for (let id in response){
-                console.log(id)
-                response[id].forEach(element => {
-                    console.log(element)
-                });
-            }
+            console.log('empieza')
+            const response = await GetAllCredentialsByGroup(userName, allGroupsNames);
+            setAllGroups(response)
+
+
 
 
         } catch (e) {
             console.log('Error in GetAllGroups: ', e);
         }
     }
+    useEffect(() => {
+        GetNameGroups();
 
-    // useEffect(() => {
-    //     if (allGroupsNames.length > 0) {
-    //         GetAllGroups();
-    //     }
-    // }, [allGroupsNames]); // Depend on allGroupsNames to fetch credentials when names are set
+    }, [])
 
+
+    useEffect(() => {
+        if (allGroupsNames.length > 0) {
+            GetAllGroups();
+        }
+    }, [allGroupsNames]);
+
+    const toggleCvvVisibility = (groupId: string) => {
+        setActiveGroupId(prevGroupId => prevGroupId === groupId ? null : groupId);
+    };
+    
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         GetAllGroups();
@@ -71,23 +73,33 @@ const GroupComp: React.FC<GroupProps> = ({ userName, search }) => {
     // const searchGroups = allGroups.filter((group) => group.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <>
-            {
-                true ? (
-                    <>
-                        <div className="grid grid-cols-2 w-full  ">
-                            <button onClick={handleSubmit} className="p-2 bg-primary">
-                                Prueba
-                            </button>
+    <>
+        <div className="grid grid-cols-2 gap-6 w-full">
+            {Object.entries(allGroups).map(([groupKey, passwords]) => (
+                <div key={groupKey} onClick={() => toggleCvvVisibility(groupKey)} className={`bg-darkgray rounded-lg text-white p-6 flex-col cursor-pointer group ${activeGroupId !== groupKey ? 'max-h-[4.5rem]':''}`}>
+                    <div className="flex justify-between">
+                        <div>{groupKey}</div>
+                        <div className="flex items-center space-x-1 text-gray group-hover:text-white">
+                            <div> {activeGroupId === groupKey ? 'Close' : 'Show'}</div>
+                            {activeGroupId === groupKey ? <KeyboardArrowUpRoundedIcon /> : <KeyboardArrowDownRoundedIcon />}
                         </div>
+                    </div>
+                    {activeGroupId === groupKey && (
+                        <div className="mt-6">
+                            {passwords.map((password, index) => (
+                                <div key={index} className="flex justify-between ">
+                                    <p>{password.title}</p>
+                                    <p>{password.username}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    </>
+);
 
-                    </>
-
-                ) : null
-            }
-
-        </>
-    )
 }
 
 export default GroupComp;
