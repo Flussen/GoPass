@@ -210,6 +210,7 @@ func TestUpdatePassword(t *testing.T) {
 				Title:    "Updated Title",
 				Username: "updatedUser",
 				Pwd:      "updatedPwd",
+				Settings: models.Settings{Group: "TEST"},
 			},
 			expectError: false,
 		},
@@ -249,6 +250,8 @@ func TestUpdatePassword(t *testing.T) {
 				assert.NoError(err)
 				assert.Equal(tt.request.Title, updatedPassword.Title)
 				assert.Equal(tt.request.Username, updatedPassword.Username)
+				log.Println(updatedPassword.Settings.Group)
+				assert.Equal(tt.request.Settings.Group, updatedPassword.Settings.Group)
 			}
 		})
 	}

@@ -25,6 +25,8 @@ func Register(db *bbolt.DB, account, email, password string, configs models.Conf
 
 	newSeeds := recovery.GenerateSeedPhrase(15)
 
+	configs.Groups = append(configs.Groups, "default")
+
 	newUser := models.User{
 		ID:        uuid.New().String(),
 		Account:   account,

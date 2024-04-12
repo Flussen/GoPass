@@ -133,9 +133,9 @@ func GetGroups(db *bbolt.DB, account string) ([]string, error) {
 	return groups, nil
 }
 
-func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (map[string][]models.Password, error) {
+func GetAllCredentialsByGroup(db *bbolt.DB, account string) (map[string][]models.Password, error) {
 
-	if groups == nil || account == "" {
+	if account == "" {
 		return nil, eh.ErrEmptyParameter
 	}
 
@@ -146,13 +146,13 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (ma
 		return nil, err
 	}
 
-	_, err = GetGroups(db, account)
+	accountGroups, err := GetGroups(db, account)
 	if err != nil {
 		return nil, err
 	}
 
 	var wg sync.WaitGroup
-	for _, group := range groups {
+	for _, group := range accountGroups {
 		wg.Add(1)
 		go func(group string) {
 			defer wg.Done()
@@ -166,16 +166,6 @@ func GetAllCredentialsByGroup(db *bbolt.DB, account string, groups []string) (ma
 		}(group)
 	}
 	wg.Wait()
-
-	for _, group := range groups {
-		if groupsMapped[group] == nil {
-			return nil, eh.NewGoPassError("1 - no group corresponds to the user's groups")
-		}
-	}
-
-	if groupsMapped == nil {
-		return nil, eh.NewGoPassError("2 - no group corresponds to the user's groups")
-	}
 
 	return groupsMapped, nil
 }
