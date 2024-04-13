@@ -13,7 +13,7 @@ import SettingsPage from "./Components/Settings/SettingsPage"
 import GroupsComp from "./Components/Groups/GroupsPage"
 import CardsComp from "./Components/Cards/CardsPage"
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
-
+import { GetAccountInfo } from '@/wailsjs/wailsjs/go/app/App';
 
 export default function Home() {
   const [showSignup, setShowSignup] = useState(false);
@@ -29,6 +29,7 @@ export default function Home() {
   const [optionName, setOptionName] = useState('')
 
   const [lastSession, setLastSession] = useState<models.LastSession[]>([]);
+  const [theme, setTheme] = useState('dark')
 
 
   async function GetToken() {
@@ -41,9 +42,10 @@ export default function Home() {
 
       setUserName(response.username)
       setToken(response.token)
-
+      
       if (response.token !== null && response.username !== null) {
-
+        const accountTheme = await GetAccountInfo(userName)
+        setTheme(accountTheme.config.ui)
         const resultado = await VerifyToken(response.token);
         if (resultado) {
           setShowDashboard(true)
@@ -81,13 +83,13 @@ export default function Home() {
 
         {
           optionName == 'Generator' ?
-            (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} />) :
+            (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} setTheme={setTheme} theme={theme} />) :
             optionName == 'Groups' ?
-              (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />) :
+              (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />) :
               optionName == 'Cards' ?
-                (<CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+                (<CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />)
                 :
-                (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} />)
+                (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />)
 
         }
 
@@ -105,9 +107,9 @@ export default function Home() {
           :
           <div className=' h-screen dark:bg-black bg-whitebg'>
             {showSignup ? (
-              <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
+              <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version}   />
             ) : (
-              <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} />
+              <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} setTheme={setTheme} theme={theme} />
             )}
           </div>
       }

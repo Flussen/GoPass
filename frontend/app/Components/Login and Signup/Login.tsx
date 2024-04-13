@@ -30,16 +30,19 @@ interface LoginProps {
   setShowDashboard: (show: boolean) => void;
   setIsLoading: (show: boolean) => void;
   setToken: (toke: string) => void;
+  setTheme:(theme:string)=>void;
+  theme:string;
 }
 
 interface LoginState {
   token: string;
   userKey: string;
+
 }
 
 
 
-const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUserName, setShowDashboard, setIsLoading, setToken }) => {
+const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUserName, setShowDashboard, setIsLoading, setToken, setTheme, theme }) => {
 
 
   const [name, setName] = useState('');
@@ -116,7 +119,7 @@ const Login: React.FC<LoginProps> = ({ setShowSignup, version, setUserKey, setUs
       <RegisterOverlay setIsLoading={setIsLoading} isOpen={showRegister} onClose={() => setShowRegister(!showRegister)} setShowSeed={setShowSeed} setSeedList={setSeedList} setStartTemp={setSartTemp}>
         <></>
       </RegisterOverlay>
-      <LoginOverlay isOpen={showLogin} onClose={() => setShowLogin(!showLogin)} setShowRecover={setShowRecover} setUserKey={setUserKey}  setUserName={setUserName}  setShowDashboard={setShowDashboard}>
+      <LoginOverlay isOpen={showLogin} onClose={() => setShowLogin(!showLogin)} setShowRecover={setShowRecover} setUserKey={setUserKey}  setUserName={setUserName}  setShowDashboard={setShowDashboard} setTheme={setTheme} theme={theme}>
         <></>
       </LoginOverlay>
       <RegiResult isOpen={showSeed} onClose={() => setShowSeed(!showSeed)} seedList={seedList} startTemp={startTemp} setStartTemp={setSartTemp}/>

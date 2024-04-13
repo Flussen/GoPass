@@ -22,11 +22,13 @@ interface DashboardProps {
   setShowDashboard: (show: boolean) => void;
   setShowProfile: (show: boolean) => void;
   showDashboard: boolean;
+  setTheme:(theme:string)=>void;
+    theme:string;
 }
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName }) => {
+const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName, setTheme, theme }) => {
   const [email, setEmail] = useState("example@gmail.com");
   const emailchange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
@@ -52,7 +54,7 @@ const Dashboard: React.FC<DashboardProps> = ({ showDashboard, setShowProfile, se
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-      <HeaderComp optionName={optionName} userName={userName}/>
+      <HeaderComp optionName={optionName} userName={userName} setTheme={setTheme} theme={theme} />
         
         <div className=" flex w-full space-x-6 h-5/6 ">
           <div className="xl:w-[65%] w-[70%]   ">

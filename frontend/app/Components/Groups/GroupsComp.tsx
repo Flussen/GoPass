@@ -24,42 +24,24 @@ const GroupComp: React.FC<GroupProps> = ({ userName, search }) => {
     const [grupos, setGrupos] = useState<string[]>([])
     const [allGroupsNames, setAllGroupsNames] = useState([''])
     const [allGroups, setAllGroups] = useState<{ [key: string]: models.Password[] }>({});
-    async function GetNameGroups() {
-        try {
-            const response = await GetGroups(userName)
-            setAllGroupsNames(response)
-            console.log('Los grupos: ' + response)
-
-        } catch (e) {
-            console.log('error getting groups: ' + e)
-        }
-    }
-
+   
     async function GetAllGroups() {
         try {
 
             console.log('empieza')
-            const response = await GetAllCredentialsByGroup(userName, allGroupsNames);
+            const response = await GetAllCredentialsByGroup(userName);
             setAllGroups(response)
-
-
-
-
         } catch (e) {
             console.log('Error in GetAllGroups: ', e);
         }
     }
     useEffect(() => {
-        GetNameGroups();
+        GetAllGroups();
 
     }, [])
 
 
-    useEffect(() => {
-        if (allGroupsNames.length > 0) {
-            GetAllGroups();
-        }
-    }, [allGroupsNames]);
+    
 
     const toggleCvvVisibility = (groupId: string) => {
         setActiveGroupId(prevGroupId => prevGroupId === groupId ? null : groupId);
@@ -76,12 +58,12 @@ const GroupComp: React.FC<GroupProps> = ({ userName, search }) => {
     <>
         <div className="grid grid-cols-2 gap-6 w-full">
             {Object.entries(allGroups).map(([groupKey, passwords]) => (
-                <div key={groupKey} onClick={() => toggleCvvVisibility(groupKey)} className={`bg-darkgray rounded-lg text-white p-6 flex-col cursor-pointer group ${activeGroupId !== groupKey ? 'max-h-[4.5rem]':''}`}>
+                <div key={groupKey} onClick={() => toggleCvvVisibility(groupKey)} className={`bg-white rounded-lg text-black dark:text-white p-6 flex-col cursor-pointer group dark:bg-darkgray ${activeGroupId !== groupKey ? 'max-h-[4.5rem]':''}`}>
                     <div className="flex justify-between">
                         <div>{groupKey}</div>
-                        <div className="flex items-center space-x-1 text-gray group-hover:text-white">
+                        <div className="flex items-center space-x-1 dark:text-gray text-whitegray dark:group-hover:text-white group-hover:text-gray ">
                             <div> {activeGroupId === groupKey ? 'Close' : 'Show'}</div>
-                            {activeGroupId === groupKey ? <KeyboardArrowUpRoundedIcon /> : <KeyboardArrowDownRoundedIcon />}
+                            {activeGroupId === groupKey  ? <KeyboardArrowUpRoundedIcon /> : <KeyboardArrowDownRoundedIcon />}
                         </div>
                     </div>
                     {activeGroupId === groupKey && (

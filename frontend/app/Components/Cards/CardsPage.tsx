@@ -25,9 +25,11 @@ interface CardsProps {
   setShowDashboard: (show: boolean) => void;
   setShowProfile: (show: boolean) => void;
   showDashboard: boolean;
+  setTheme:(theme:string)=>void;
+    theme:string;
 }
 
-const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName }) => {
+const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDashboard, setOptionName, optionName, userKey, userName, setTheme, theme }) => {
   const [titlee, setTitlee] = useState('')
 
   const [areFavCards, setAreFavCards] = useState(true)
@@ -51,7 +53,7 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
         <></>
       </OptionsOverlay>
       <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-        <HeaderComp optionName={optionName} userName={userName} />
+        <HeaderComp optionName={optionName} userName={userName}  setTheme={setTheme} theme={theme}  />
 
         <div className=" flex w-full space-x-6 h-5/6 ">
           <div className={`${areFavCards ? '2xl:w-[65%] w-[70%]' : ' w-full'}  `}>

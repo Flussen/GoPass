@@ -29,6 +29,8 @@ interface GeneratorProps {
     userName: string;
     setShowDashboard: (show: boolean) => void;
     setShowProfile: (show: boolean) => void;
+    setTheme:(theme:string)=>void;
+    theme:string;
 
 }
 const PrettoSlider = styled(Slider)({
@@ -71,7 +73,7 @@ const PrettoSlider = styled(Slider)({
         },
     },
 });
-const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard, setOptionName, optionName, userName }) => {
+const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard, setOptionName, optionName, userName, setTheme, theme }) => {
     const [includeUppercase, setIncludeUppercase] = useState(true);
     const [includeLowercase, setIncludeLowercase] = useState(true);
     const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -152,7 +154,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
                 <></>
             </OptionsOverlay>
             <div className="flex flex-col justify-start items-start  xl:w-[84%] w-full xl:ml-[16%] ml-[75px] p-12 h-full ">
-                     <HeaderComp optionName={optionName} userName={userName}/>
+                     <HeaderComp optionName={optionName} userName={userName} setTheme={setTheme} theme={theme} />
 
                 <div className="flex-col justify-center w-full items-start">
                     

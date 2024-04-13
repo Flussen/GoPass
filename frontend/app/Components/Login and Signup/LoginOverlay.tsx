@@ -8,7 +8,8 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
 import LoadingComp from "../Loading";
-
+import { DoChangeAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
+import { GetAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
 interface RegisterProps {
     isOpen: boolean;
     onClose: () => void;
@@ -17,15 +18,27 @@ interface RegisterProps {
     setUserKey: (userKey: string) => void;
     setUserName: (userKey: string) => void;
     setShowDashboard: (show: boolean) => void;
-
+    setTheme: (theme: string) => void;
+    theme: string;
 }
 
 
-const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setShowRecover, setShowDashboard, setUserKey, setUserName }) => {
+const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setShowRecover, setShowDashboard, setUserKey, setUserName, setTheme, theme }) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordIncorrect, setPasswordIncorrect] = useState(false);
     const [loadingIsOpen, setLoadingIsOpen] = useState(false);
+    const [email, setEmail] = useState('');
+    const [group, setGroup] = useState<string[]>([])
+    const AccountData = new models.UserRequest({
+        account: name,
+        email: email,
+        config: new models.Config({
+            ui: theme,
+            groups:group,
+            lenguage:''
+        })
+    })
     const LoginData = new request.Login({
         account: name,
         password: password
@@ -39,6 +52,9 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
             console.log(result)
             if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
                 setUserKey(result.userKey);
+                const response = await GetAccountInfo(name)
+                setEmail(response.email)
+                setGroup(response.config.groups)
                 setShowDashboard(true);
                 console.log('Token Saved:' + result.token)
                 setUserName(name)
