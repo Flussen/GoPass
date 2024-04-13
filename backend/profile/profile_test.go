@@ -196,3 +196,64 @@ func TestChangeAccountPassword(t *testing.T) {
 		})
 	}
 }
+
+func TestDoChangeAccountConfigs(t *testing.T) {
+	db, rqstR, _, cleanup := InitTestProfile() // Asume una función que inicializa una base de datos de prueba y devuelve un cleanup.
+	defer cleanup()
+
+	assert := assert.New(t)
+	tests := []struct {
+		name           string
+		account        string
+		configs        models.Config
+		expectError    bool
+		expectedConfig models.Config
+	}{
+		{
+			name:        "empty account parameter",
+			account:     "",
+			configs:     models.Config{},
+			expectError: true,
+		},
+		{
+			name:        "error getting account info",
+			account:     "testAccount",
+			configs:     models.Config{},
+			expectError: true,
+		},
+		{
+			name:        "bucket not exist",
+			account:     "testAccount",
+			configs:     models.Config{},
+			expectError: true,
+		},
+		{
+			name:        "marshall error",
+			account:     "testAccount",
+			configs:     models.Config{},
+			expectError: true,
+		},
+		{
+			name:           "successful update",
+			account:        rqstR.Account,
+			configs:        models.Config{Groups: []string{"group1", "group2"}, UI: "newUI"},
+			expectError:    false,
+			expectedConfig: models.Config{Groups: []string{"group1", "group2"}, UI: "newUI"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := DoChangeAccountConfigs(db, tt.account, tt.configs)
+
+			if tt.expectError {
+				assert.Error(err)
+			} else {
+				assert.NoError(err)
+				// Optionally verify that the config has been updated correctly
+				userModel, _ := GetAccountInfo(db, tt.account)
+				assert.Equal(tt.expectedConfig, userModel.Config)
+			}
+		})
+	}
+}

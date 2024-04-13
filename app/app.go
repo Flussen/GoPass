@@ -165,6 +165,10 @@ func (a *App) GetAccountInfo(account string) (models.User, error) {
 	return profile.GetAccountInfo(a.DB, account)
 }
 
+func (a *App) DoChangeAccountConfigs(account string, configs models.Config) error {
+	return profile.DoChangeAccountConfigs(a.DB, account, configs)
+}
+
 /*
    -------------------Groups--------------------
 	Groups

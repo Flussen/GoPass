@@ -193,3 +193,33 @@ func GetAccountInfo(db *bbolt.DB, account string) (models.User, error) {
 
 	return storedUser, nil
 }
+
+func DoChangeAccountConfigs(db *bbolt.DB, account string, configs models.Config) error {
+	if account == "" {
+		return eh.ErrEmptyParameter
+	}
+
+	userModel, err := GetAccountInfo(db, account)
+	if err != nil {
+		return err
+	}
+
+	return db.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(database.BucketUsers))
+		if bucket == nil {
+			log.Println("bucket users not exist")
+			return eh.ErrInternalServer
+		}
+
+		userModel.Config = configs
+
+		userByte, err := json.Marshal(userModel)
+
+		if err != nil {
+			log.Println("marshall error")
+			return eh.ErrInternalServer
+		}
+
+		return bucket.Put([]byte(account), userByte)
+	})
+}
