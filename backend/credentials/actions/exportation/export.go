@@ -64,9 +64,7 @@ func Export(db *bbolt.DB, account string, rqst request.Export) error {
 		}
 
 	}
-
 	return nil
-
 }
 
 func jsonExport(account, typeExport string, container any) error {
@@ -82,7 +80,6 @@ func jsonExport(account, typeExport string, container any) error {
 		log.Println(err)
 		return eh.ErrInternalServer
 	}
-
 	return nil
 }
 
@@ -150,6 +147,5 @@ func csvExport(account, typeExport string, container any) error {
 			return eh.ErrInternalServer
 		}
 	}
-
 	return nil
 }
