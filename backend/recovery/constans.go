@@ -10,6 +10,6 @@ var words = []string{
 	"lychee", "marionberry", "navel", "oat", "persimmon", "quinoa", "rowan", "sapote", "thimbleberry", "ulluco",
 	"velvet apple", "wineberry", "xenia", "yellow", "zapote", "almond", "beet", "carrot", "daikon", "endive",
 	"fennel", "ginger", "horseradish", "iceberg", "jicama", "kale", "leek", "mustard", "nopales", "okra",
-	"parsley", "quail", "rutabaga", "spinach", "turnip", "upland cress", "vanilla", "wasabi", "xoconostle", "yautia",
+	"parsley", "quail", "rutabaga", "spinach", "turnip", "cool", "vanilla", "wasabi", "xoconostle", "yautia",
 	"zedoary", "margarita", "flussen", "busta",
 }

@@ -211,7 +211,8 @@ func DoChangeAccountConfigs(db *bbolt.DB, account string, configs models.Config)
 			return eh.ErrInternalServer
 		}
 
-		userModel.Config = configs
+		userModel.Config.UI = configs.UI
+		userModel.Config.Language = configs.Language
 
 		userByte, err := json.Marshal(userModel)
 
