@@ -21,5 +21,5 @@ type Config struct {
 type UserRequest struct {
 	Account string `json:"account"`
 	Email   string `json:"email"`
-	Config  Config `json:"Preference"`
+	Config  Config `json:"config"`
 }

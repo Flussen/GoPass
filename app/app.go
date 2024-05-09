@@ -10,23 +10,21 @@
 package app
 
 import (
-	// Package imports
-
 	"GoPass/backend/auth"
-	"GoPass/backend/cards"
-	"GoPass/backend/controllers"
+	"GoPass/backend/credentials/actions/exportation"
+	"GoPass/backend/credentials/actions/importation"
+	"GoPass/backend/credentials/cards"
+	"GoPass/backend/credentials/passwords"
 	database "GoPass/backend/db" // Importing a custom package, renamed for clarity
-	"GoPass/backend/encryption"
-	eh "GoPass/backend/errorHandler" // Error handler
+	"GoPass/backend/encryption"  // Error handler
+	"GoPass/backend/groups"
 	"GoPass/backend/models"
-	"GoPass/backend/passwords"
 	"GoPass/backend/pkg/request"
 	"GoPass/backend/pkg/response"
+	"GoPass/backend/profile"
 	"GoPass/backend/recovery"
 	"GoPass/backend/sessiontoken"
-
-	"encoding/json"
-	"time"
+	"context"
 
 	"go.etcd.io/bbolt"
 )
@@ -35,7 +33,8 @@ import (
 // be added to main.go so that wails go compiles. This is the way to
 // improve the abstraction of the program so that the program scales.
 type App struct {
-	DB *bbolt.DB
+	DB  *bbolt.DB
+	ctx context.Context
 }
 
 // NewApp create an instance for wails to work on in the main package and receive the app
@@ -47,6 +46,10 @@ func NewAppWithDB(db *bbolt.DB) *App {
 	return &App{DB: db}
 }
 
+func (a *App) Startup(ctx context.Context) {
+	a.ctx = ctx
+}
+
 /*
    ----------------------Auth----------------------
   	Functions for authentication flow, registration,
@@ -56,10 +59,6 @@ func NewAppWithDB(db *bbolt.DB) *App {
 
 // Register registers a new user with the given username, email, and password
 func (a *App) DoRegister(request request.Register) (response.Register, error) {
-	if request.Account == "" || request.Email == "" ||
-		request.Password == "" {
-		return response.Register{}, eh.NewGoPassError(eh.ErrEmptyParameters)
-	}
 	return auth.Register(a.DB, request.Account, request.Email, request.Password, request.Configs)
 }
 
@@ -95,14 +94,8 @@ func (a *App) DoRecovery(request request.Recovery) error {
 */
 
 // saves a password for the given username and service.
-func (a *App) DoSavePassword(account string, request request.Password) (string, error) {
-	date := time.Now().Format(time.DateTime)
-	id, err := passwords.SavePassword(a.DB, account, request.UserKey, request.Username,
-		request.Title, request.Password, date, request.Settings)
-	if err != nil {
-		return "", err
-	}
-	return id, nil
+func (a *App) DoNewPassword(account, userKey string, rqst request.Password) (string, error) {
+	return passwords.NewPassword(a.DB, account, userKey, rqst)
 }
 
 // removes a password, which requires the user to whom that password belongs and the password id.
@@ -110,10 +103,8 @@ func (a *App) DoDeletePassword(username, id string) error {
 	return passwords.DeletePassword(a.DB, username, id)
 }
 
-func (a *App) DoUpdatePassword(account, userKey string, password request.SimplePassword) error {
-	newDate := time.Now().Format(time.DateTime)
-	return passwords.UpdatePassword(a.DB, account, password.ID, userKey, password.Title,
-		password.Password, password.Username, newDate)
+func (a *App) DoUpdatePassword(account, id, userKey string, rqst request.Password) error {
+	return passwords.UpdatePassword(a.DB, account, id, userKey, rqst)
 }
 
 func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) error {
@@ -121,30 +112,17 @@ func (a *App) DoSetPasswordSettings(account, id string, data models.Settings) er
 }
 
 func (a *App) GetPasswordById(account, id string) (models.Password, error) {
-	password, err := passwords.GetPasswordByID(a.DB, account, id)
-	if err != nil {
-		return models.Password{}, err
-	}
-	return password, nil
+	return passwords.GetPasswordByID(a.DB, account, id)
 }
 
 // Get all passwords by a account
 func (a *App) GetAllPasswords(account string) ([]models.Password, error) {
-	pwds, err := passwords.GetAllPasswords(a.DB, account)
-	if err != nil {
-		return []models.Password{}, err
-	}
-
-	if pwds == nil {
-		return []models.Password{}, eh.ErrNotFound
-	}
-
-	return pwds, nil
+	return passwords.GetAllPasswords(a.DB, account)
 }
 
 /*
    -------------------Cards--------------------
-
+	Cards functions
    ------------------------------------------------
 */
 
@@ -165,7 +143,7 @@ func (a *App) UpdateCard(account, id string, request request.Card) error {
 }
 
 func (a *App) DeleteCard(account, id string) error {
-	panic("not implemented")
+	return cards.DeleteCard(a.DB, account, id)
 }
 
 /*
@@ -176,24 +154,41 @@ func (a *App) DeleteCard(account, id string) error {
 
 // Change password for the user ACCOUNT!!
 func (a *App) DoChangeAccountPassword(username, originalPwd, newPwd string) error {
-	return controllers.ChangeUserPassword(a.DB, username, originalPwd, newPwd)
+	return profile.ChangeAccountPassword(a.DB, username, originalPwd, newPwd)
 }
 
 func (a *App) DoChangeAccountInfo(username string, newModel models.UserRequest) error {
-	return controllers.UpdateProfile(a.DB, username, newModel)
+	return profile.UpdateProfile(a.DB, username, newModel)
 }
 
-func (a *App) GetAccountInfo(username string) (string, error) {
-	model, err := controllers.GetUserInfo(a.DB, username)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
+func (a *App) GetAccountInfo(account string) (models.User, error) {
+	return profile.GetAccountInfo(a.DB, account)
+}
 
-	byteModel, err := json.Marshal(model)
-	if err != nil {
-		eh.NewGoPassErrorf("ERROR: %v", err)
-	}
-	return string(byteModel), nil
+func (a *App) DoChangeAccountConfigs(account string, configs models.Config) error {
+	return profile.DoChangeAccountConfigs(a.DB, account, configs)
+}
+
+/*
+   -------------------Groups--------------------
+	Groups
+   ------------------------------------------------
+*/
+
+func (a *App) DoNewGroup(account string, grps []string) error {
+	return groups.NewGroup(a.DB, account, grps)
+}
+
+func (a *App) DeleteGroup(account, group string) error {
+	return groups.DeleteGroup(a.DB, account, group)
+}
+
+func (a *App) GetGroups(account string) ([]string, error) {
+	return groups.GetGroups(a.DB, account)
+}
+
+func (a *App) GetAllCredentialsByGroup(account string) (map[string][]models.Password, error) {
+	return groups.GetAllCredentialsByGroup(a.DB, account)
 }
 
 /*
@@ -206,37 +201,11 @@ func (a *App) GetAccountInfo(username string) (string, error) {
 // Verifies the validity of a session token and return to the app
 // true if the session is valid and false if the session invalid
 func (a *App) VerifyToken(token string) (bool, error) {
-	valid, err := sessiontoken.VerifyToken(token)
-	if err != nil {
-		return false, err
-	}
-
-	if !valid {
-		sessiontoken.CleanSessionToken(a.DB)
-	}
-
-	return valid, nil
+	return sessiontoken.VerifyToken(a.DB, token)
 }
 
-func (a *App) GetLastSession() (string, error) {
-
-	var sessionBytes []byte
-
-	a.DB.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte("LastSessionSaved"))
-		if b == nil {
-			return eh.NewGoPassError(eh.ErrBucketNotFound)
-		}
-
-		sessionBytes = b.Get([]byte("lastsession"))
-		if sessionBytes == nil {
-			return eh.NewGoPassError("the last session is empty or was deleted, login again")
-		}
-
-		return nil
-	})
-
-	return string(sessionBytes), nil
+func (a *App) GetLastSession() (models.LastSession, error) {
+	return sessiontoken.GetSession(a.DB)
 }
 
 /*
@@ -246,38 +215,8 @@ func (a *App) GetLastSession() (string, error) {
 */
 
 // Shows the password by the userKey decryption method
-func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
-
-	var dataPassword models.Password
-
-	err := a.DB.View(func(tx *bbolt.Tx) error {
-		userBucket := tx.Bucket([]byte(username))
-		if userBucket == nil {
-			return eh.ErrUserNotFound
-		}
-
-		encryptedPasswordBytes := userBucket.Get([]byte(id))
-		if encryptedPasswordBytes == nil {
-			return eh.NewGoPassErrorf("password not found for %s", id)
-		}
-		// encryptedPassword = string(encryptedPasswordBytes)
-		err := json.Unmarshal(encryptedPasswordBytes, &dataPassword)
-		if err != nil {
-			return eh.NewGoPassErrorf("error unmarshal in ShowPassword %v", err)
-		}
-		return nil
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	decrypted, err := encryption.RevealPassword(dataPassword.Pwd, userKey)
-	if err != nil {
-		return "", err
-	}
-
-	return decrypted, nil
+func (a *App) PasswordDecrypt(account, userKey, id string) (string, error) {
+	return encryption.RevealPassword(a.DB, account, userKey, id)
 }
 
 /*
@@ -288,13 +227,21 @@ func (a *App) PasswordDecrypt(username, id, userKey string) (string, error) {
 */
 
 // ListUsers retrieves user information concurrently
-func (a *App) GetListAccounts() (string, error) {
-	return controllers.GetUsersConcurrently(a.DB)
+func (a *App) GetListAccounts() ([]models.User, error) {
+	return profile.GetUsersConcurrently(a.DB)
 }
 
 // GetVersion returns the version of the application. Example 1.0.1
 func (a *App) GetVersion() string {
-	return "0.1.1 BETA - Rejewski"
+	return "0.1.3 BETA - Rejewski"
+}
+
+func (a *App) DoExport(account string, rqst request.Export) error {
+	return exportation.Export(a.DB, account, rqst)
+}
+
+func (a *App) DoImport(rqst request.Import) error {
+	return importation.Import(a.DB, rqst)
 }
 
 // -----------------> TEST's <-----------------
