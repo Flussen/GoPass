@@ -13,7 +13,6 @@ func VerifyToken(db *bbolt.DB, tokenString string) (bool, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signature method: %v", token.Header["alg"])
 		}
-
 		key, err := getKey()
 		if err != nil {
 			return nil, err
