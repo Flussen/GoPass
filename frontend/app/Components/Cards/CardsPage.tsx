@@ -76,7 +76,7 @@ const Cards: React.FC<CardsProps> = ({ showDashboard, setShowProfile, setShowDas
 
                     <AddCardRoundedIcon sx={{ fontSize: 24 }} />
                     <div >
-                      New Pass
+                      New Card
                     </div>
                   </div>
                 </div>
