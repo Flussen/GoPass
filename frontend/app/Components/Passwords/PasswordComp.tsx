@@ -27,15 +27,7 @@ interface PassProps {
     showDashboard: boolean;
 }
 
-interface PasswordsProps {
-    title: string;
-    id: string;
-    pwd: string;
-    username: string;
-    icon: string;
-    status: string;
-    created_date: string;
-}
+
 
 const SvgLogos: { [key: string]: any } = {
 
