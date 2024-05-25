@@ -149,8 +149,11 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey }) 
             </>
             ):(
 
-                <div className="bg-primary">
-                    NoCards
+                <div className="flex-col flex  justify-center items-center font-semibold text-lg space-y-6 dark:text-white text-black">
+                    <div>
+                    Add your first Card!
+                    </div> 
+                    
                 </div>
             )
             
