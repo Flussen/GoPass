@@ -83,10 +83,7 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
     const [barColor3, setBarColor3] = useState('bg-black');
     const [barColor4, setBarColor4] = useState('bg-black');
 
-    const [titlee, setTitlee] = useState('')
-    const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setTitlee(event.target.value);
-    };
+    
     const [sliderValue, setSliderValue] = useState<number>(25);
     const [password, setPassword] = useState<string>("");
     const calculateBarWidth = (value: number) => {
@@ -102,10 +99,8 @@ const Generator: React.FC<GeneratorProps> = ({ setShowProfile, setShowDashboard,
 
 
     const handleCheckboxChange = (stateSetter: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, currentValue: boolean) => {
-        // Contar cuántos checkboxes están actualmente seleccionados
         const totalSelected = [includeUppercase, includeLowercase, includeNumbers, includeSymbols].filter(Boolean).length;
 
-        // Si el checkbox actual está seleccionado (y es el último seleccionado), evitar que se deseleccione
         if (!currentValue || totalSelected > 1) {
             stateSetter(!currentValue);
         }
