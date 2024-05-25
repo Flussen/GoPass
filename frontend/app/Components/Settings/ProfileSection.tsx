@@ -29,7 +29,7 @@ const ProfileSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
     async function GetInfo() {
         try {
             const result = await GetAccountInfo(userName);
-            //agregar el setEmail
+            setEmail(result.email)
             console.log(result)
         } catch {
 
