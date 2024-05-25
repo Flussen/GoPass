@@ -27,16 +27,7 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, se
     const [id, setId] = useState('');
     const [showFullNumber, setShowFullNumber] = useState(false);
     const [showCvv, setShowCvv] = useState<Record<string, boolean>>({});
-    async function GetCards() {
-        try {
-            const response = await GetAllCards(userName)
-            setAllCards(response)
-
-
-        } catch (e) {
-            console.log('Erro geting cards: ' + e)
-        }
-    }
+ 
     const formatCardNumber = (number?: number) => {
         if (typeof number !== 'number') {
             return '';
@@ -51,8 +42,22 @@ const CardsComp: React.FC<CardsProps> = ({ userName, search, isOpen, userKey, se
         return formattedNumber;
     };
     useEffect(() => {
-        GetCards();
-    }, [isOpen, openEditOverlayId])
+        async function fetchCards() {
+            try {
+                const response = await GetAllCards(userName);
+                setAllCards(response);
+                // Update favorite cards state based on response
+                const isFavPresent = response.some(card => card.settings.favorite);
+                setAreFavCards(isFavPresent);
+            } catch (e) {
+                console.log('Error getting cards: ' + e);
+            }
+        }
+    
+        fetchCards();
+        // Add necessary dependencies here
+    }, [userName, isOpen, openEditOverlayId, setAreFavCards]); // Include all dependencies used within useEffect
+    
 
     const favCards = allCards.filter((card) => card.settings.favorite);
     const copyToClipboard = async (pwd: number) => {
