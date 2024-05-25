@@ -76,7 +76,7 @@ const Groups: React.FC<GroupProps> = ({ showDashboard, setShowProfile, setShowDa
                 <div onClick={()=>setTwoColum(true)} className={`flex justify-center items-center text-base space-x-2 ${twoColum? 'dark:text-black text-whitebg  bg-primary':'dark:text-gray dark:hover:text-whitebg dark:bg-darkgray text-whitegray hover:text-gray bg-white '}  h-12  rounded-full w-12 cursor-pointer`}>
                   <GridViewRoundedIcon sx={{ fontSize: 24 }} />
                 </div>
-                <div onClick={() => setIsAddOverlayOpen(true)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-48 text-xl space-x-2.5 ">
+                <div onClick={() => setIsAddOverlayOpen(true)} className="flex justify-center items-center h-12 bg-primary rounded-full cursor-pointer w-48 text-xl space-x-2.5 text-whitebg dark:text-black">
 
                   <DashboardCustomizeRoundedIcon sx={{ fontSize: 24 }} />
                   <div >
@@ -87,7 +87,7 @@ const Groups: React.FC<GroupProps> = ({ showDashboard, setShowProfile, setShowDa
               <AddGroup onClose={()=>setIsAddOverlayOpen(!isAddOverlayOpen)}  isOpen={isAddOverlayOpen} userName={userName}/>
 
             </div>
-            <GroupComp userName={userName} search={titlee} />
+            <GroupComp userName={userName} search={titlee} twoColum={twoColum} />
 
           </div>
 
