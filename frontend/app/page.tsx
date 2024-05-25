@@ -31,42 +31,60 @@ export default function Home() {
   const [lastSession, setLastSession] = useState<models.LastSession[]>([]);
   const [theme, setTheme] = useState('dark')
 
+  
 
   async function GetToken() {
 
     try {
       setVersion(await GetVersion())
       const response = await GetLastSession();
-      console.log('Last sesion'+response)
+      console.log('Last sesion' + response)
       setUserKey(response.userKey)
 
       setUserName(response.username)
       setToken(response.token)
-      
+      console.log('Username: ' + response.username)
       if (response.token !== null && response.username !== null) {
-        const accountTheme = await GetAccountInfo(userName)
-        setTheme(accountTheme.config.ui)
+
         const resultado = await VerifyToken(response.token);
         if (resultado) {
+          console.log('dentro del if' + response.username)
+
           setShowDashboard(true)
+
+
         }
       }
+    
     } catch (error) {
       console.log('Not a saved session' + error)
     } finally {
       setIsLoading(false)
     }
   }
-
+  async function ChangeTheme() {
+    if (userName) { 
+      try {
+        const response = await GetAccountInfo(userName);
+        setTheme(response.config.ui);
+      } catch (e) {
+        console.log(e);
+      }finally {
+        setIsLoading(false)
+      }
+    }
+  }
 
   useEffect(() => {
-    GetToken();
-  }, []);
+    GetToken()
+  }, [])
+ 
 
   useEffect(() => {
-    // Este código se ejecuta después de que `userKey` se haya actualizado.
-    console.log(userKey);
-  }, [userKey]);
+    ChangeTheme();
+  }, [userName]); 
+  
+  
 
 
 
@@ -75,7 +93,7 @@ export default function Home() {
 
   } else if (showProfile) {
     return (
-      <SettingsPage setShowProfile={setShowProfile} setIsLoading={setIsLoading} userName={userName} />
+      <SettingsPage setShowProfile={setShowProfile} setIsLoading={setIsLoading} userName={userName} setTheme={setTheme} theme={theme} />
     )
   } else if (showDashboard) {
     return (
@@ -85,11 +103,11 @@ export default function Home() {
           optionName == 'Generator' ?
             (<Generator setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} setTheme={setTheme} theme={theme} />) :
             optionName == 'Groups' ?
-              (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />) :
+              (<GroupsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} setTheme={setTheme} theme={theme} />) :
               optionName == 'Cards' ?
-                (<CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />)
+                (<CardsComp showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} setTheme={setTheme} theme={theme} />)
                 :
-                (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey}  setTheme={setTheme} theme={theme}  />)
+                (<Dashboard showDashboard={showDashboard} setShowProfile={setShowProfile} setShowDashboard={setShowDashboard} setOptionName={setOptionName} optionName={optionName} userName={userName} userKey={userKey} setTheme={setTheme} theme={theme} />)
 
         }
 
@@ -107,7 +125,7 @@ export default function Home() {
           :
           <div className=' h-screen dark:bg-black bg-whitebg'>
             {showSignup ? (
-              <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version}   />
+              <SignupComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} version={version} />
             ) : (
               <LoginComp setIsLoading={setIsLoading} setShowSignup={setShowSignup} setShowDashboard={setShowDashboard} version={version} token={''} userKey={''} setUserKey={setUserKey} setToken={setToken} setUserName={setUserName} setTheme={setTheme} theme={theme} />
             )}
