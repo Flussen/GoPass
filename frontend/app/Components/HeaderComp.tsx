@@ -6,19 +6,45 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { GetAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
+import { DoChangeAccountConfigs } from "@/wailsjs/wailsjs/go/app/App";
+import { request, response, models } from '@/wailsjs/wailsjs/go/models';
 
 interface HeaderProps {
     optionName: string;
     userName: string;
-    setTheme:(theme:string)=>void;
-    theme:string;
+    setTheme: (theme: string) => void;
+    theme: string;
 }
 
 const HeaderComp: React.FC<HeaderProps> = ({ optionName, userName, setTheme, theme }) => {
 
     const [profileOption, setProfileOptions] = useState(false);
     const [titlee, setTitlee] = useState('');
+    const [group, setGroup] = useState<string[]>([])
 
+    const AccountData = new models.Config({
+        ui: theme,
+        group: group,
+        lenguage: ''
+    })
+
+    async function ChangeTheme() {
+        try {
+
+            const info = await GetAccountInfo(userName)
+            console.log('Group' + info.config.groups)
+            setGroup(info.config.groups)
+            console.log('Grupo :  ' + group)
+            const response = await DoChangeAccountConfigs(userName, AccountData)
+            console.log('COnsole despues de cambiar el tema')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    useEffect(() => {
+        ChangeTheme()
+    }, [theme])
     useEffect(() => {
         if (theme == "dark") {
             document.querySelector('html')?.classList.add('dark')
@@ -28,10 +54,11 @@ const HeaderComp: React.FC<HeaderProps> = ({ optionName, userName, setTheme, the
         }
     }, [theme])
 
+
     const handleChangeTheme = () => {
         setTheme(theme === 'light' ? 'dark' : 'light');
-      };
-    
+    };
+
 
     const titlesearch = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setTitlee(event.target.value);
@@ -52,13 +79,13 @@ const HeaderComp: React.FC<HeaderProps> = ({ optionName, userName, setTheme, the
                 <div onClick={handleChangeTheme} className="flex items-center cursor-pointer">
                     <div className={`flex absolute justify-center items-center h-12 w-12 bg-primary rounded-full font-semibold space-x-2 transition-transform ${theme !== 'dark' ? 'translate-x-12 text-whitebg' : ''} `}>
                         {
-                            theme == 'dark' ? <DarkModeRoundedIcon sx={{ fontSize: 24 }} /> : <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
+                            theme == 'dark' ? <DarkModeRoundedIcon sx={{ fontSize: 24 }} /> :  <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
                         }
 
                     </div>
                     <div className={`flex dark:justify-end justify-start items-center dark:pr-2.5 pl-2.5 h-11 w-24 border-2 dark:border-gray border-blackwhite  rounded-full dark:text-whitebg text-darkgray  `}>
                         {
-                            theme !== 'dark' ? <DarkModeRoundedIcon sx={{ fontSize: 24 }}  /> : <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
+                            theme !== 'dark' ? <DarkModeRoundedIcon sx={{ fontSize: 24 }} /> : <WbSunnyRoundedIcon sx={{ fontSize: 24 }} />
                         }
                     </div>
                 </div>
