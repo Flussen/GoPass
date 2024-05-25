@@ -17,10 +17,11 @@ interface ProfileProps {
     userName: string;
     setIsLoading: (show: boolean) => void;
     setShowProfile: (show: boolean) => void;
-
+    setTheme: (theme:string)=>void;
+    theme:string
 
 }
-const OptionPage: React.FC<ProfileProps> = ({ setShowProfile, userName, setIsLoading }) => {
+const OptionPage: React.FC<ProfileProps> = ({ setShowProfile, userName, setIsLoading , setTheme, theme}) => {
     const [email, setEmail] = useState('')
     const [newPasswordOpen, setNewPasswordOpen] = useState(false);
     const [actualPass, setActualPass] = useState('');
@@ -68,7 +69,7 @@ const OptionPage: React.FC<ProfileProps> = ({ setShowProfile, userName, setIsLoa
             <SettingOverlay setShowProfile={setShowProfile} setOptionName={setOptionName} optionName={optionName} />
             {optionName == '' ?
                 <ProfileSection userName={userName} setIsLoading={setIsLoading} />
-                :optionName=='Apparence'?                 <ApparenceSection userName={userName} setIsLoading={setIsLoading} />
+                :optionName=='Apparence'?                 <ApparenceSection userName={userName} setIsLoading={setIsLoading}  setTheme={setTheme} theme={theme}/>
                 :
                 <></>}
 
