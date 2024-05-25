@@ -14,13 +14,15 @@ import PersonIcon from '@mui/icons-material/PersonRounded';
 import KeyIcon from '@mui/icons-material/KeyRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
+import { DoChangeAccountConfigs } from '@/wailsjs/wailsjs/go/app/App';
 interface ProfileProps {
     userName: string;
     setIsLoading: (show: boolean) => void;
-
+    setTheme: (theme:string)=>void;
+    theme:string
 }
 
-const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) => {
+const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading , setTheme, theme}) => {
     const [email, setEmail] = useState('')
     const [actualPass, setActualPass] = useState('');
     const [newPass, setNewPass] = useState('');
@@ -30,8 +32,7 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
     async function GetInfo() {
         try {
             const result = await GetAccountInfo(userName);
-            //agregar el setEmail
-            console.log(result)
+            
         } catch {
 
         }
@@ -54,6 +55,39 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
         }
     }
 
+
+    const AccountData = new models.Config({
+        ui: theme,
+        group: '',
+        lenguage: ''
+    })
+
+    async function ChangeTheme() {
+        try {
+
+            
+            const response = await DoChangeAccountConfigs(userName, AccountData)
+            console.log('COnsole despues de cambiar el tema')
+        } catch (e) {
+            console.log(e)
+        }finally{
+            setShowThemes(true)
+        }
+    }
+    useEffect(() => {
+        ChangeTheme()
+    }, [theme])
+    useEffect(() => {
+        if (theme == "dark") {
+            document.querySelector('html')?.classList.add('dark')
+        } else {
+            document.querySelector('html')?.classList.remove('dark')
+
+        }
+    }, [theme])
+
+
+   
 
     useEffect(() => {
         GetInfo();
@@ -108,16 +142,16 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
 
 
                                 </div>
-                                <div className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-whitebg text-black font-semibold'>
-                                    <div className='rounded-full h-6 w-6 border-2 dark:border-gray border-blackwhite dark:bg-darkgray bg-white'>
+                                <div onClick={()=>setTheme('light')} className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-whitebg text-black font-semibold'>
+                                    <div className={`rounded-full h-6 w-6 border-2  ${theme=='light'? 'bg-primary border-blue-400 ':'dark:bg-darkgray bg-white dark:border-gray border-blackwhite'}  `}>
 
                                     </div>
                                     <div>
                                         Light Mode
                                     </div>
                                 </div>
-                                <div className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-black font-semibold text-whitebg'>
-                                    <div className='rounded-full h-6 w-6 border-2 dark:border-gray border-blackwhite dark:bg-darkgray bg-white'>
+                                <div onClick={()=>setTheme('dark')} className='p-3 border-2 w-64 dark:border-gray border-blackwhite rounded-lg flex items-center justify-start space-x-2 bg-black font-semibold text-whitebg'>
+                                    <div className={`rounded-full h-6 w-6 border-2  ${theme=='dark'? 'bg-primary border-blue-400':'dark:bg-darkgray bg-white dark:border-gray border-blackwhite'}  `}>
 
                                     </div>
                                     <div>
@@ -129,7 +163,7 @@ const ApparenceSection: React.FC<ProfileProps> = ({ userName, setIsLoading }) =>
                     ) : null
                 }
             </div>
-            <div className='bg-darkgray w-full  rounded-lg text-whitebg  p-6 font-semibold flex justify-between items-center'>
+            <div className='dark:bg-darkgray w-full bg-white rounded-lg dark:text-whitebg text-darkgray  p-6 font-semibold flex justify-between items-center'>
 
                 <div>
                     Principal Color
