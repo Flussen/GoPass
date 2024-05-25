@@ -6,10 +6,10 @@ import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { request, response, models } from '@/wailsjs/wailsjs/go/models';
-import { DoLogin } from '@/wailsjs/wailsjs/go/app/App';
+import { DoLogin, GetAccountInfo } from '@/wailsjs/wailsjs/go/app/App';
 import LoadingComp from "../Loading";
-import { DoChangeAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
-import { GetAccountInfo } from "@/wailsjs/wailsjs/go/app/App";
+import { DoChangeAccountConfigs} from "@/wailsjs/wailsjs/go/app/App";
+
 interface RegisterProps {
     isOpen: boolean;
     onClose: () => void;
@@ -30,14 +30,10 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
     const [loadingIsOpen, setLoadingIsOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [group, setGroup] = useState<string[]>([])
-    const AccountData = new models.UserRequest({
-        account: name,
-        email: email,
-        config: new models.Config({
-            ui: theme,
-            groups:group,
-            lenguage:''
-        })
+    const AccountData = new  models.Config({
+        ui: theme,
+        groups:group,
+        lenguage:''
     })
     const LoginData = new request.Login({
         account: name,
@@ -52,9 +48,11 @@ const LoginOverlay: React.FC<RegisterProps> = ({ isOpen, onClose, children, setS
             console.log(result)
             if (result.token !== null && result.token !== '' && result.userKey !== null && result.userKey !== '') {
                 setUserKey(result.userKey);
-                const response = await GetAccountInfo(name)
-                setEmail(response.email)
-                setGroup(response.config.groups)
+                console.log(' Empieza el get info')
+
+                const accountIngo = await GetAccountInfo(name)
+                console.log(' Empieza el theme')
+                const userTheme =  await DoChangeAccountConfigs(name,AccountData)
                 setShowDashboard(true);
                 console.log('Token Saved:' + result.token)
                 setUserName(name)
