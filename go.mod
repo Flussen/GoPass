@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/wailsapp/wails/v2 v2.8.0
+	github.com/wailsapp/wails/v2 v2.9.1
 )
 
 require (
@@ -38,9 +38,9 @@ require (
 	github.com/wailsapp/go-webview2 v1.0.10 // indirect
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	go.etcd.io/bbolt v1.3.8
-	golang.org/x/crypto v0.19.0
+	golang.org/x/crypto v0.23.0
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
-	golang.org/x/net v0.21.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
 )
