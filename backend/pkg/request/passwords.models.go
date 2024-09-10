@@ -3,16 +3,10 @@ package request
 import "GoPass/backend/models"
 
 type Password struct {
-	UserKey  string `json:"userKey"`
-	Title    string `json:"title"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Settings models.Settings
-}
-
-type DeletePassword struct {
-	Account string `json:"account"`
-	ID      string `json:"id"`
+	Title    string          `json:"title"`
+	Username string          `json:"username"`
+	Pwd      string          `json:"pwd"`
+	Settings models.Settings `json:"settings"`
 }
 
 type SimplePassword struct {

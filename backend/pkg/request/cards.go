@@ -10,6 +10,6 @@ type Card struct {
 	Number       uint            `json:"number"`
 	SecurityCode uint            `json:"security_code"`
 	Month        int             `json:"month"`
-	Year         int             `json:"day"`
+	Year         int             `json:"year"`
 	Settings     models.Settings `json:"settings"`
 }

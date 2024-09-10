@@ -12,4 +12,5 @@ type Card struct {
 	Expiry       time.Time `json:"expiry"`
 	SecurityCode uint      `json:"security_code"`
 	Settings     Settings  `json:"settings"`
+	CreatedAt    time.Time `json:"created_at"`
 }

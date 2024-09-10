@@ -1,12 +1,14 @@
 package models
 
+import "time"
+
 type Password struct {
-	ID          string   `json:"id"`
-	Title       string   `json:"title"`
-	Username    string   `json:"username"`
-	Pwd         string   `json:"pwd"`
-	Data        Settings `json:"settings"`
-	CreatedDate string   `json:"created_date"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Username  string    `json:"username"`
+	Pwd       string    `json:"pwd"`
+	Settings  Settings  `json:"settings"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type PasswordsContainer struct {

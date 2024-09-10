@@ -44,6 +44,7 @@ func main() {
 		Logger:            nil,
 		LogLevel:          logger.DEBUG,
 		WindowStartState:  options.Normal,
+		OnStartup:         myApp.Startup,
 		Bind: []interface{}{
 			myApp,
 		},

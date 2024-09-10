@@ -6,7 +6,6 @@ import (
 	"GoPass/backend/pkg/response"
 	"GoPass/backend/sessiontoken"
 	"encoding/json"
-	"errors"
 
 	"go.etcd.io/bbolt"
 	"golang.org/x/crypto/bcrypt"
@@ -36,12 +35,12 @@ func Login(db *bbolt.DB, username, password string) (response.Login, error) {
 
 	if err != nil {
 		eh.NewGoPassErrorf("error searching for user: %v", err)
-		return response.Login{}, errors.New(eh.ErrInvalidCredentils)
+		return response.Login{}, eh.ErrInvalidCredentils
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
 	if err != nil {
-		return response.Login{}, errors.New(eh.ErrInvalidCredentils)
+		return response.Login{}, eh.ErrInvalidCredentils
 	}
 
 	token, err := sessiontoken.CreateNewToken(storedUser.ID, storedUser.Account)

@@ -5,14 +5,14 @@ import (
 	"fmt"
 
 	"github.com/golang-jwt/jwt/v5"
+	"go.etcd.io/bbolt"
 )
 
-func VerifyToken(tokenString string) (bool, error) {
+func VerifyToken(db *bbolt.DB, tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signature method: %v", token.Header["alg"])
 		}
-
 		key, err := getKey()
 		if err != nil {
 			return nil, err
@@ -23,6 +23,10 @@ func VerifyToken(tokenString string) (bool, error) {
 
 	if err != nil {
 		return false, err
+	}
+
+	if !token.Valid {
+		CleanSessionToken(db)
 	}
 
 	return token.Valid, nil
